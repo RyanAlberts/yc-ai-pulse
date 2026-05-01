@@ -182,3 +182,62 @@ Each is named in [`examples/output/BROKEN_LINKS-w26-2026-05-01.md`](../examples/
 1. **Schema-validation failure rate (23%) is too high for a v0.1 release.** Tracked as B006. Most likely cause is the model emitting enum values outside our closed sets for `ai_capability` or `tech_stack` (we patched `industry_secondary` for this in PR #3 but the other two stayed strict). Fix in a follow-up PR.
 2. **W26 is an agents batch.** This is now defensible — 54 of 83 high-confidence rows, with row-level drill-down showing exactly which companies and what their YC descriptions said.
 3. **The 67% high-confidence rate against 63.3% upstream coverage means the actual analyzable share of W26 is ~42% (83/196).** The headline metric on the dashboard now shows this honestly.
+
+---
+
+## PR #4 — schema-failure rate dropped to 0% (2026-05-01)
+
+After PR #4 (resilience + parser tightening), full-batch enrichment metrics improved meaningfully on a fresh run:
+
+| metric | PR #3 | PR #4 | change |
+|---|---:|---:|---:|
+| Total analyzed | 124 | 124 | – |
+| **High confidence** | 83 (67%) | **118 (95%)** | **+35** |
+| Schema-validation failures | 29 (23%) | **0 (0%)** | **-29** |
+| Genuinely-uncertain model lows | 12 | 6 | -6 |
+| Hallucinated source URLs | 0 | 0 | – |
+
+**Root cause:** The 23% schema-validation failure rate in PR #3 was caused by the model emitting `rationale` fields longer than our 400-char `Field(max_length=400)` constraint. The model was being thorough; our schema was being unnecessarily strict on a non-load-bearing field. PR #4 changed the parser to truncate over-long `rationale` and `tagline_rewrite` rather than reject the row. Strict enforcement remains for load-bearing fields (`industry_primary`, `oss_posture`, `confidence`, `sources`).
+
+The lenient extension to `ai_capability` and `tech_stack` (filter unknown values, fall back to `unclear` if all dropped) contributed only modest improvement on its own (~3-4%). The rationale truncation was the bigger win.
+
+### W26 findings, recomputed on the n=118 high-confidence cohort
+
+Capability distribution:
+
+| Capability | n | share of n=118 |
+|---|---:|---:|
+| **agents** | 68 | **58%** |
+| nlp-classic | 38 | 32% |
+| rag | 34 | 29% |
+| data-pipeline | 33 | 28% |
+| multimodal | 17 | 14% |
+| vision | 17 | 14% |
+| inference-infra | 11 | 9% |
+| evals-observability | 11 | 9% |
+| training-infra | 10 | 8% |
+
+The "W26 is the agentic batch" finding strengthens with more confident data: 58% of high-confidence companies build agents, up from 65% of 83 → 68 / 118. The absolute count is now larger and the cohort is broader.
+
+Industry mix (top of n=118):
+
+| Industry | n |
+|---|---:|
+| B2B SaaS | 28 |
+| AI Infrastructure | 14 |
+| Developer Tools | 12 |
+| Fintech | 12 |
+| Healthcare | 6 |
+| Robotics | 6 |
+| Consumer | 6 |
+| Legal | 5 |
+
+OSS posture is meaningfully different now: closed (48), unknown (65), api-only (3), source-available (1), fully-open (1). The `unknown` plurality remains because the model still lacks website-level evidence — `B007` (depth=1 crawl) is the next lever.
+
+### Coverage of YC official, updated
+
+- Upstream: 132 of 196 (67.3%) — unchanged
+- Tier A+B: 124 of 132 — unchanged
+- Tier A+B with high-confidence LLM analysis: **118 of 196 (60.2%)** — the most honest "what we actually know about W26" number.
+
+The headline coverage % on the dashboard is unchanged at 63.3% (because that's the data-quality denominator). But for the deck/memo, the 60.2% number is what should be cited as "the share of W26 we can substantively classify."

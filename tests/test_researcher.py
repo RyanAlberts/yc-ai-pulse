@@ -358,3 +358,117 @@ def test_environ_api_key_creates_api_backend(monkeypatch: pytest.MonkeyPatch) ->
     monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-test-from-env")
     backend = make_default_backend()
     assert isinstance(backend, AnthropicAPIBackend)
+
+
+# ----- lenient parsing (PR #4) ---------------------------------------------------------------
+
+
+def test_lenient_parser_drops_unknown_capability_keeps_known() -> None:
+    payload = json.loads(_good_response("acme-ai"))
+    payload["ai_capability"] = ["agents", "synthetic-data", "unicorn-mode"]
+    out = _parse_response(json.dumps(payload), slug="acme-ai")
+    assert out is not None
+    cap_values = [c.value for c in out.ai_capability]
+    assert "agents" in cap_values
+    assert "synthetic-data" not in cap_values
+    assert "unicorn-mode" not in cap_values
+
+
+def test_lenient_parser_falls_back_to_unclear_when_all_capabilities_unknown() -> None:
+    payload = json.loads(_good_response("acme-ai"))
+    payload["ai_capability"] = ["unicorn-mode", "magic-mode"]
+    out = _parse_response(json.dumps(payload), slug="acme-ai")
+    assert out is not None
+    assert [c.value for c in out.ai_capability] == ["unclear"]
+
+
+def test_lenient_parser_drops_unknown_tech_stack_entries() -> None:
+    payload = json.loads(_good_response("acme-ai"))
+    payload["tech_stack"] = ["anthropic", "made-up-stack", "openai", "future-model"]
+    out = _parse_response(json.dumps(payload), slug="acme-ai")
+    assert out is not None
+    stack_values = [s.value for s in out.tech_stack]
+    assert "anthropic" in stack_values
+    assert "openai" in stack_values
+    assert "made-up-stack" not in stack_values
+
+
+def test_lenient_parser_keeps_industry_primary_strict() -> None:
+    payload = json.loads(_good_response("acme-ai"))
+    payload["industry_primary"] = "Made-Up Vertical"
+    out = _parse_response(json.dumps(payload), slug="acme-ai")
+    assert out is None
+
+
+def test_lenient_parser_keeps_oss_posture_strict() -> None:
+    payload = json.loads(_good_response("acme-ai"))
+    payload["oss_posture"] = "kinda-open-i-guess"
+    out = _parse_response(json.dumps(payload), slug="acme-ai")
+    assert out is None
+
+
+def test_lenient_parser_truncates_overlong_rationale() -> None:
+    payload = json.loads(_good_response("acme-ai"))
+    payload["rationale"] = "x" * 800
+    out = _parse_response(json.dumps(payload), slug="acme-ai")
+    assert out is not None
+    assert len(out.rationale) <= 400
+    assert out.rationale.endswith("…")  # ellipsis marker
+
+
+def test_lenient_parser_truncates_overlong_tagline() -> None:
+    payload = json.loads(_good_response("acme-ai"))
+    payload["tagline_rewrite"] = "y" * 200
+    out = _parse_response(json.dumps(payload), slug="acme-ai")
+    assert out is not None
+    assert len(out.tagline_rewrite) <= 140
+    assert out.tagline_rewrite.endswith("…")
+
+
+# ----- raw-failure capture (PR #4) -----------------------------------------------------------
+
+
+def test_raw_failure_log_captures_schema_failures(tmp_path: Path) -> None:
+    backend = MockBackend({})
+    log_path = tmp_path / "raw_failures.jsonl"
+    company = _make_company()
+    asyncio.run(analyze(company, backend, raw_failure_log=log_path))
+    assert log_path.exists()
+    lines = log_path.read_text().splitlines()
+    assert len(lines) == 1
+    record = json.loads(lines[0])
+    assert record["slug"] == "acme-ai"
+    assert record["reason"] == "schema-validation-failure"
+    assert "ts" in record
+
+
+def test_raw_failure_log_captures_hallucinated_url(tmp_path: Path) -> None:
+    payload = json.loads(_good_response("acme-ai"))
+    payload["sources"] = ["https://invented.example/research"]
+    backend = MockBackend({"acme-ai": {"1": json.dumps(payload)}})
+    log_path = tmp_path / "raw_failures.jsonl"
+    asyncio.run(analyze(_make_company(), backend, raw_failure_log=log_path))
+    assert log_path.exists()
+    record = json.loads(log_path.read_text().splitlines()[0])
+    assert record["reason"] == "hallucinated-source-url"
+
+
+def test_raw_failure_log_silent_when_no_path() -> None:
+    """No raw_failure_log argument → no error even on failure."""
+    backend = MockBackend({})
+    # Should not raise.
+    asyncio.run(analyze(_make_company(), backend))
+
+
+def test_raw_failure_log_appends_across_calls(tmp_path: Path) -> None:
+    backend = MockBackend({})
+    log_path = tmp_path / "raw_failures.jsonl"
+    for slug in ("a", "b", "c"):
+        asyncio.run(
+            analyze(
+                _make_company(slug=slug, website=f"https://{slug}.example"),
+                backend,
+                raw_failure_log=log_path,
+            )
+        )
+    assert len(log_path.read_text().splitlines()) == 3
