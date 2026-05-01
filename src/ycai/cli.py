@@ -1,22 +1,34 @@
-"""Typer CLI. Phase 1 PR #1 ships ``run-coverage`` — fetch + classify + dashboard,
-no LLM calls yet. The full ``run`` command (with classifier + researcher) lands
-in subsequent PRs.
+"""Typer CLI. Phase 1 PR #1 ships ``run-coverage`` — fetch + classify + dashboard.
+PR #2 adds ``--enrich`` for LLM-based AI/stack/OSS classification.
 """
 
 from __future__ import annotations
 
+import asyncio
+import json
 import logging
 from datetime import UTC, datetime
 from pathlib import Path
 
 import typer
 from rich.console import Console
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 from rich.table import Table
 
 from ycai import __version__
 from ycai.coverage import compute_coverage, coverage_summary_lines
 from ycai.dashboard import render as render_dashboard
-from ycai.schemas import RawCompany
+from ycai.researcher import (
+    DEFAULT_MODEL,
+    Backend,
+    analyze,
+    make_default_backend,
+)
+from ycai.schemas import (
+    CompanyAnalysis,
+    CoverageTier,
+    RawCompany,
+)
 from ycai.scraper import UpstreamError, fetch_batch, upstream_age_hours
 from ycai.verifier import check_urls, split_by_status
 
@@ -44,6 +56,25 @@ def run_coverage(
     skip_link_check: bool = typer.Option(
         False, help="Skip HEAD/GET verification of company websites (faster but Tier A drops to 'unknown')."
     ),
+    enrich: bool = typer.Option(
+        False,
+        "--enrich",
+        help="Run LLM-based classification (industry / capability / stack / OSS) on Tier A+B "
+        "companies. Costs subscription quota or API tokens depending on backend.",
+    ),
+    enrich_limit: int = typer.Option(
+        0,
+        "--enrich-limit",
+        help="Cap the number of companies sent through enrichment. 0 = no cap. Useful for smoke runs.",
+    ),
+    api_key: str | None = typer.Option(
+        None,
+        "--api-key",
+        help="Anthropic API key. Falls back to ANTHROPIC_API_KEY env var. "
+        "If unset, uses claude-agent-sdk against your subscription. "
+        "Never logged, never written to disk.",
+    ),
+    model: str = typer.Option(DEFAULT_MODEL, "--model", help="Sonnet model to use during --enrich."),
     verbose: bool = typer.Option(False, "-v", help="Verbose logging."),
 ) -> None:
     """Phase 1 quality probe: fetch the batch, classify by tier, write a coverage dashboard.
@@ -123,6 +154,25 @@ def run_coverage(
     coverage_path.write_text(coverage.model_dump_json(indent=2))
     console.print(f"[green]✓[/green] wrote coverage.json → {coverage_path}")
 
+    if enrich:
+        analyzable_slugs = {r.slug for r in coverage.records if r.tier in (CoverageTier.A, CoverageTier.B)}
+        keepers = [c for c in companies if c.slug in analyzable_slugs]
+        if enrich_limit > 0:
+            keepers = keepers[:enrich_limit]
+            console.print(f"[yellow]⚠ enrichment capped at {enrich_limit} companies[/yellow]")
+        try:
+            backend = make_default_backend(api_key=api_key)
+        except RuntimeError as exc:
+            console.print(f"[red]✗ no LLM backend available:[/red] {exc}")
+            raise typer.Exit(3) from exc
+        backend_name = backend.__class__.__name__
+        console.print(f"[cyan]→[/cyan] enriching {len(keepers)} companies with {backend_name} " f"(model={model})…")
+        analyses = asyncio.run(_run_enrichment(keepers, backend, model=model))
+        analyses_path = run_dir / "analyses.json"
+        analyses_path.write_text(json.dumps([a.model_dump(mode="json") for a in analyses], indent=2))
+        console.print(f"[green]✓[/green] wrote analyses.json → {analyses_path}")
+        _print_enrichment_summary(analyses)
+
     dashboard_path = render_dashboard(
         coverage=coverage,
         companies=companies,
@@ -175,6 +225,66 @@ def _write_csv(companies: list[RawCompany], path: Path) -> None:
             row["tags"] = ";".join(row.get("tags") or [])
             row["regions"] = ";".join(row.get("regions") or [])
             writer.writerow({k: row.get(k, "") for k in fields})
+
+
+async def _run_enrichment(
+    companies: list[RawCompany],
+    backend: Backend,
+    *,
+    model: str,
+) -> list[CompanyAnalysis]:
+    """Drive the enrichment pipeline with a Rich progress bar."""
+    semaphore = asyncio.Semaphore(8)  # respect subscription rate limits
+    results: list[CompanyAnalysis] = []
+
+    async def one(company: RawCompany) -> CompanyAnalysis:
+        async with semaphore:
+            analysis, _cross = await analyze(company, backend, model=model)
+            return analysis
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TextColumn("{task.completed}/{task.total}"),
+        TimeElapsedColumn(),
+        console=console,
+    ) as progress:
+        task = progress.add_task("enriching", total=len(companies))
+        coros = [one(c) for c in companies]
+        for coro in asyncio.as_completed(coros):
+            analysis = await coro
+            results.append(analysis)
+            progress.advance(task)
+
+    return results
+
+
+def _print_enrichment_summary(analyses: list[CompanyAnalysis]) -> None:
+    from collections import Counter
+
+    by_conf: Counter[str] = Counter(a.confidence for a in analyses)
+    by_industry: Counter[str] = Counter(a.industry_primary.value for a in analyses)
+    by_capability: Counter[str] = Counter(cap.value for a in analyses for cap in a.ai_capability)
+    by_stack: Counter[str] = Counter(stack.value for a in analyses for stack in a.tech_stack)
+    by_oss: Counter[str] = Counter(a.oss_posture.value for a in analyses)
+
+    table = Table(title="Enrichment summary")
+    table.add_column("Field", style="bold")
+    table.add_column("Top 5", justify="left")
+    table.add_row("confidence", _fmt_counter(by_conf))
+    table.add_row("industry", _fmt_counter(by_industry, top=5))
+    table.add_row("ai_capability", _fmt_counter(by_capability, top=5))
+    table.add_row("tech_stack", _fmt_counter(by_stack, top=5))
+    table.add_row("oss_posture", _fmt_counter(by_oss))
+    console.print(table)
+
+
+def _fmt_counter(counter: object, top: int = 6) -> str:
+    from collections import Counter as _Counter
+
+    assert isinstance(counter, _Counter)
+    return ", ".join(f"{name} ({count})" for name, count in counter.most_common(top))
 
 
 def _entrypoint() -> None:
