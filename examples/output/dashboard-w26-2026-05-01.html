@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Winter 2026 — yc-ai-pulse coverage report</title>
+<style>
+  :root {
+    --bg: #F5F1E8;
+    --fg: #1B1B1B;
+    --muted: #6B6B6B;
+    --accent: #D24E01;
+    --warn: #B45309;
+    --ok: #15803D;
+    --bad: #B91C1C;
+    --line: #DDD8CB;
+  }
+  body { background: var(--bg); color: var(--fg); font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Source Serif Pro", Georgia, serif; margin: 0; padding: 0; }
+  .wrap { max-width: 1100px; margin: 40px auto; padding: 0 24px; }
+  h1 { font-size: 36px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); margin: 0 0 32px; }
+  .headline { background: white; border: 1px solid var(--line); padding: 24px 28px; margin: 0 0 24px; }
+  .headline-num { font-size: 64px; font-weight: 600; letter-spacing: -1px; line-height: 1; color: var(--accent); }
+  .headline-num small { font-size: 24px; color: var(--muted); font-weight: 400; }
+  .headline-label { color: var(--muted); margin-top: 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 24px 0; }
+  .stat { background: white; border: 1px solid var(--line); padding: 18px 20px; }
+  .stat .num { font-size: 32px; font-weight: 600; }
+  .stat .label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .ok { color: var(--ok); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+  details { border: 1px solid var(--line); background: white; padding: 14px 20px; margin: 16px 0; }
+  summary { cursor: pointer; font-weight: 500; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  th { background: #FAFAFA; font-weight: 600; }
+  td.reason { color: var(--muted); font-family: ui-monospace, monospace; font-size: 12px; }
+  .chart-card { background: white; border: 1px solid var(--line); padding: 20px; margin: 16px 0; }
+  .chart-card h2 { margin: 0 0 16px; font-size: 18px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin: 4px 0; font-size: 14px; }
+  .bar-row .name { flex: 0 0 240px; color: var(--fg); }
+  .bar-row .bar { flex: 1; height: 18px; background: var(--accent); }
+  .bar-row .count { flex: 0 0 60px; text-align: right; color: var(--muted); }
+  footer { color: var(--muted); font-size: 13px; margin: 48px 0 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .alert { background: #FFF7ED; border-left: 4px solid var(--warn); padding: 14px 18px; margin: 16px 0; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: 500; background: #EEE; color: #555; }
+  .badge.tier-A { background: #DCFCE7; color: #15803D; }
+  .badge.tier-B { background: #FEF3C7; color: #B45309; }
+  .badge.tier-C { background: #FEE2E2; color: #B91C1C; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The State of AI in Winter 2026</h1>
+  <p class="subtitle">yc-ai-pulse coverage report · generated 2026-05-01 18:55 UTC · source yc-oss/api</p>
+
+  <div class="headline">
+    <div class="headline-num">63.3%<small> of Winter 2026</small></div>
+    <div class="headline-label">analyzed in this report</div>
+    <p style="margin: 12px 0 0; color: var(--muted); max-width: 70ch;">
+      124 of 196 companies passed the data-quality gate.
+      Tier A and B feed every chart in this report. Tier C companies are
+      <a href="#dropped">acknowledged below</a> with the specific reason they were excluded — no quiet drops.
+    </p>
+  </div>
+
+  <div class="alert"><strong>Upstream gap:</strong> our data source (yc-oss/api) lists 132 companies for Winter 2026, but the actual batch has 196 (64 missing, 67.3% present). Likely upstream staleness.<br/><strong>Per-company drops:</strong> 8 companies in the upstream feed were excluded due to missing required fields. They are listed by name in the <a href="#dropped">dropped register</a> below.</div>
+
+  <div class="grid">
+    <div class="stat"><div class="num ok">120</div><div class="label">Tier A · full classification</div></div>
+    <div class="stat"><div class="num warn">4</div><div class="label">Tier B · partial (website unreachable)</div></div>
+    <div class="stat"><div class="num bad">8</div><div class="label">Tier C · excluded</div></div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Industry distribution (Tier A + B only)</h2>
+    <div class="bar-row"><div class="name">B2B</div><div class="bar" style="width: 100.0%"></div><div class="count">80 · 64.5%</div></div>
+<div class="bar-row"><div class="name">Industrials</div><div class="bar" style="width: 22.5%"></div><div class="count">18 · 14.5%</div></div>
+<div class="bar-row"><div class="name">Healthcare</div><div class="bar" style="width: 11.2%"></div><div class="count">9 · 7.3%</div></div>
+<div class="bar-row"><div class="name">Fintech</div><div class="bar" style="width: 10.0%"></div><div class="count">8 · 6.5%</div></div>
+<div class="bar-row"><div class="name">Consumer</div><div class="bar" style="width: 7.5%"></div><div class="count">6 · 4.8%</div></div>
+<div class="bar-row"><div class="name">Real Estate and Construction</div><div class="bar" style="width: 3.8%"></div><div class="count">3 · 2.4%</div></div>
+    <details>
+      <summary>See source rows (124 companies)</summary>
+      <table>
+        <thead><tr><th>Slug</th><th>Name</th><th>Industry</th><th>Tier</th></tr></thead>
+        <tbody><tr><td><code>bidflow</code></td><td>Bidflow</td><td>Real Estate and Construction</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>galactic-resource-utilization-space-inc-gru-space</code></td><td>Galactic Resource Utilization Space, Inc. (GRU Space)</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>autumn-ai</code></td><td>Autumn AI</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>velum-labs</code></td><td>Velum Labs</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>travo</code></td><td>Travo</td><td>Real Estate and Construction</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>oxus</code></td><td>Oxus</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>voltair</code></td><td>Voltair</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>inviscid-ai</code></td><td>Inviscid AI</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>haladir</code></td><td>Haladir</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>mantis-biotechnology</code></td><td>Mantis Biotechnology</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>catchback-cards</code></td><td>CatchBack Cards</td><td>Consumer</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>fullseam</code></td><td>FullSeam</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>corvera</code></td><td>Corvera</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>arc-prize-foundation</code></td><td>ARC Prize Foundation</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>valgo</code></td><td>Valgo</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>hlabs</code></td><td>Hlabs</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>origin-bio</code></td><td>Origin</td><td>Healthcare</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>panta</code></td><td>Panta</td><td>Fintech</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>tensol</code></td><td>Tensol</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>didit</code></td><td>Didit</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>kita</code></td><td>Kita</td><td>Fintech</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>bits-2</code></td><td>Bits</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>ruma-care</code></td><td>Ruma Care</td><td>Healthcare</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>lucent</code></td><td>Lucent</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>runanywhere</code></td><td>RunAnywhere</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>lance</code></td><td>Lance</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>sonarly</code></td><td>Sonarly</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>axis-2</code></td><td>Axis</td><td>Fintech</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>lexius</code></td><td>Lexius</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>rev1</code></td><td>REV1</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>10x-science</code></td><td>10x Science</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>sentrial</code></td><td>Sentrial</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>legalos</code></td><td>LegalOS</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>baseframe</code></td><td>BaseFrame</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>strand-ai</code></td><td>Strand AI</td><td>Healthcare</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>beacon-health</code></td><td>Beacon Health</td><td>Healthcare</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>burt</code></td><td>Burt</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>kyten-technologies</code></td><td>Kyten Technologies</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>avoice</code></td><td>Avoice</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>1code-21stdev</code></td><td>1code (21st.dev)</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>cumulus-labs</code></td><td>Cumulus Labs</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>verdex</code></td><td>Verdex</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>autositu</code></td><td>AutoSitu</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>mousecat</code></td><td>MouseCat</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>skillsync</code></td><td>Skillsync</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>robodock</code></td><td>RoboDock</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>luel</code></td><td>Luel</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>codewisp</code></td><td>CodeWisp</td><td>Consumer</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>octapulse</code></td><td>OctaPulse</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>beyond-reach-labs</code></td><td>Beyond Reach Labs</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>dronetector</code></td><td>DroneTector</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>ramain</code></td><td>RamAIn</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>arcline</code></td><td>Arcline</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>salus</code></td><td>Salus</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>eigenpal</code></td><td>EigenPal</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>sparkles</code></td><td>Sparkles</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>ishiki-labs</code></td><td>Ishiki Labs</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>perfectly</code></td><td>Perfectly</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>orthogonal</code></td><td>Orthogonal</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>q2q</code></td><td>Q2Q</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>opalite-health</code></td><td>Opalite Health</td><td>Healthcare</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>compresr</code></td><td>Compresr</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>unisson</code></td><td>Unisson</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>stilta</code></td><td>Stilta</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>laurence</code></td><td>Laurence</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>hex-security</code></td><td>Hex Security</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>pax-historia</code></td><td>Pax Historia</td><td>Consumer</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>rhizome-ai</code></td><td>Rhizome AI</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>prana-health</code></td><td>Prana</td><td>Healthcare</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>cardboard</code></td><td>Cardboard</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>jinba</code></td><td>Jinba</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>seeing-systems</code></td><td>Seeing Systems</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>synthetic-sciences</code></td><td>Synthetic Sciences</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>visibl-semiconductors</code></td><td>Visibl Semiconductors</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>patientdeskai</code></td><td>Patientdesk.ai</td><td>Healthcare</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>chamber</code></td><td>Chamber</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>fenrock-ai-yc-w26</code></td><td>Fenrock AI (YC W26)</td><td>Fintech</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>maywood</code></td><td>Maywood</td><td>Fintech</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>sidekit</code></td><td>SideKit</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>ressl-ai</code></td><td>Ressl AI</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>robby</code></td><td>Robby</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>sitefire</code></td><td>sitefire</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>forum</code></td><td>Forum</td><td>Fintech</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>human-archive</code></td><td>Human Archive</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>samora-ai</code></td><td>Samora AI</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>caretta</code></td><td>Caretta</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>oximy</code></td><td>Oximy</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>axionorbital-space</code></td><td>AxionOrbital Space</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>mendral</code></td><td>Mendral</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>constellation-space</code></td><td>Constellation Space</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>pocket</code></td><td>Pocket</td><td>Consumer</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>bubble-lab</code></td><td>Bubble Lab</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>polymath</code></td><td>Polymath</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>voxel-energy</code></td><td>Voxel Energy</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>arzule</code></td><td>Arzule</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>servo7</code></td><td>Servo7</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>ditto-biosciences</code></td><td>Ditto Biosciences</td><td>Healthcare</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>sequence-markets</code></td><td>Sequence Markets</td><td>Fintech</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>o11</code></td><td>o11</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>chasi</code></td><td>Chasi</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>getbalance</code></td><td>Balance</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>fort</code></td><td>Fort</td><td>Consumer</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>general-legal</code></td><td>General Legal</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>corelayer</code></td><td>Corelayer</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>booko</code></td><td>Booko</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>scout-out</code></td><td>Scout Out</td><td>Real Estate and Construction</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>crow</code></td><td>Crow</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>squid</code></td><td>Squid</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>fed10</code></td><td>Fed10</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>beesafe-ai</code></td><td>BeeSafe AI</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>maven</code></td><td>Maven</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>veriad</code></td><td>Veriad</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>vela</code></td><td>Vela</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>voygr</code></td><td>VOYGR</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>spotpay</code></td><td>SpotPay</td><td>Fintech</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>pollinate</code></td><td>Pollinate</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>ritivel</code></td><td>Ritivel</td><td>Healthcare</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>librar-labs</code></td><td>Librar Labs</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>grazemate</code></td><td>GrazeMate</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>daivin</code></td><td>DAIVIN!</td><td>Industrials</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>aurorin-cad</code></td><td>Aurorin CAD</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>shofo</code></td><td>Shofo</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>resonate</code></td><td>Resonate</td><td>Consumer</td><td><span class="badge tier-A">A</span></td></tr>
+<tr><td><code>martini</code></td><td>Martini</td><td>B2B</td><td><span class="badge tier-A">A</span></td></tr></tbody>
+      </table>
+    </details>
+  </div>
+
+  <div class="chart-card">
+    <h2>YC tag distribution (top 20)</h2>
+    <div class="bar-row"><div class="name">Artificial Intelligence</div><div class="bar" style="width: 100.0%"></div><div class="count">41 · 33.1%</div></div>
+<div class="bar-row"><div class="name">AI</div><div class="bar" style="width: 90.2%"></div><div class="count">37 · 29.8%</div></div>
+<div class="bar-row"><div class="name">B2B</div><div class="bar" style="width: 70.7%"></div><div class="count">29 · 23.4%</div></div>
+<div class="bar-row"><div class="name">SaaS</div><div class="bar" style="width: 48.8%"></div><div class="count">20 · 16.1%</div></div>
+<div class="bar-row"><div class="name">Developer Tools</div><div class="bar" style="width: 36.6%"></div><div class="count">15 · 12.1%</div></div>
+<div class="bar-row"><div class="name">Enterprise Software</div><div class="bar" style="width: 34.1%"></div><div class="count">14 · 11.3%</div></div>
+<div class="bar-row"><div class="name">Fintech</div><div class="bar" style="width: 29.3%"></div><div class="count">12 · 9.7%</div></div>
+<div class="bar-row"><div class="name">Generative AI</div><div class="bar" style="width: 19.5%"></div><div class="count">8 · 6.5%</div></div>
+<div class="bar-row"><div class="name">Robotics</div><div class="bar" style="width: 19.5%"></div><div class="count">8 · 6.5%</div></div>
+<div class="bar-row"><div class="name">Infrastructure</div><div class="bar" style="width: 17.1%"></div><div class="count">7 · 5.6%</div></div>
+<div class="bar-row"><div class="name">Workflow Automation</div><div class="bar" style="width: 17.1%"></div><div class="count">7 · 5.6%</div></div>
+<div class="bar-row"><div class="name">Hardware</div><div class="bar" style="width: 17.1%"></div><div class="count">7 · 5.6%</div></div>
+<div class="bar-row"><div class="name">AI Assistant</div><div class="bar" style="width: 14.6%"></div><div class="count">6 · 4.8%</div></div>
+<div class="bar-row"><div class="name">Aerospace</div><div class="bar" style="width: 14.6%"></div><div class="count">6 · 4.8%</div></div>
+<div class="bar-row"><div class="name">Machine Learning</div><div class="bar" style="width: 14.6%"></div><div class="count">6 · 4.8%</div></div>
+<div class="bar-row"><div class="name">Compliance</div><div class="bar" style="width: 12.2%"></div><div class="count">5 · 4.0%</div></div>
+<div class="bar-row"><div class="name">Biotech</div><div class="bar" style="width: 12.2%"></div><div class="count">5 · 4.0%</div></div>
+<div class="bar-row"><div class="name">Hard Tech</div><div class="bar" style="width: 12.2%"></div><div class="count">5 · 4.0%</div></div>
+<div class="bar-row"><div class="name">API</div><div class="bar" style="width: 12.2%"></div><div class="count">5 · 4.0%</div></div>
+<div class="bar-row"><div class="name">Construction</div><div class="bar" style="width: 9.8%"></div><div class="count">4 · 3.2%</div></div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Region distribution (top 12)</h2>
+    <div class="bar-row"><div class="name">United States of America</div><div class="bar" style="width: 100.0%"></div><div class="count">101 · 81.5%</div></div>
+<div class="bar-row"><div class="name">America / Canada</div><div class="bar" style="width: 100.0%"></div><div class="count">101 · 81.5%</div></div>
+<div class="bar-row"><div class="name">Remote</div><div class="bar" style="width: 22.8%"></div><div class="count">23 · 18.5%</div></div>
+<div class="bar-row"><div class="name">Partly Remote</div><div class="bar" style="width: 17.8%"></div><div class="count">18 · 14.5%</div></div>
+<div class="bar-row"><div class="name">Unspecified</div><div class="bar" style="width: 15.8%"></div><div class="count">16 · 12.9%</div></div>
+<div class="bar-row"><div class="name">Fully Remote</div><div class="bar" style="width: 5.0%"></div><div class="count">5 · 4.0%</div></div>
+<div class="bar-row"><div class="name">Netherlands</div><div class="bar" style="width: 1.0%"></div><div class="count">1 · 0.8%</div></div>
+<div class="bar-row"><div class="name">Europe</div><div class="bar" style="width: 1.0%"></div><div class="count">1 · 0.8%</div></div>
+  </div>
+
+  <h2 id="dropped" style="margin-top: 48px;">Dropped register · 8 excluded companies</h2>
+  <p style="color: var(--muted); max-width: 70ch;">
+    Every company excluded from the analysis above is listed here with the
+    specific reason. We do not silently drop data.
+  </p>
+  <table><thead><tr><th>Slug</th><th>Name</th><th>Reasons</th></tr></thead><tbody><tr><td><code>byteport</code></td><td>Byteport</td><td class="reason">no_description</td></tr><tr><td><code>condor-energy</code></td><td>Condor Energy</td><td class="reason">no_website</td></tr><tr><td><code>grade</code></td><td>Grade</td><td class="reason">no_description</td></tr><tr><td><code>moda</code></td><td>Moda</td><td class="reason">no_description</td></tr><tr><td><code>protent</code></td><td>Protent</td><td class="reason">no_description</td></tr><tr><td><code>traverse</code></td><td>Traverse</td><td class="reason">no_description</td></tr><tr><td><code>zerosettle</code></td><td>ZeroSettle</td><td class="reason">no_description</td></tr><tr><td><code>zymbly</code></td><td>Zymbly</td><td class="reason">no_description</td></tr></tbody></table>
+
+  <footer>
+    <p><strong>Methodology.</strong>
+    Data fetched from yc-oss/api (last upstream refresh: 2026-02-08 01:49:11.368000+00:00). yc-oss/api is the only sanctioned source per ADR 0001 — see <a href="https://github.com/RyanAlberts/yc-ai-pulse/blob/main/docs/decisions/0001-yc-data-source.md">the ADR</a> for why. Tier A = required fields present and website returned 2xx/3xx. Tier B = required fields present but website unreachable (analysis flagged in charts). Tier C = required field missing — excluded from charts and listed individually above.
+    </p>
+    <p><strong>Reproduce this run.</strong>
+    Source code: <a href="https://github.com/RyanAlberts/yc-ai-pulse">github.com/RyanAlberts/yc-ai-pulse</a>.
+    Run <code>ycai run --batch winter-2026</code> to regenerate.
+    </p>
+  </footer>
+
+  <script type="application/json" id="raw-data">{&quot;batch_slug&quot;: &quot;winter-2026&quot;, &quot;fetched_at&quot;: &quot;2026-05-01T18:55:26.859143+00:00&quot;, &quot;tier_a&quot;: 120, &quot;tier_b&quot;: 4, &quot;tier_c&quot;: 8, &quot;industries&quot;: {&quot;Real Estate and Construction&quot;: 3, &quot;Industrials&quot;: 18, &quot;B2B&quot;: 80, &quot;Consumer&quot;: 6, &quot;Healthcare&quot;: 9, &quot;Fintech&quot;: 8}, &quot;tags&quot;: {&quot;SaaS&quot;: 20, &quot;Construction&quot;: 4, &quot;Infrastructure&quot;: 7, &quot;AI Assistant&quot;: 6, &quot;Space Exploration&quot;: 2, &quot;Travel&quot;: 1, &quot;Aerospace&quot;: 6, &quot;Artificial Intelligence&quot;: 41, &quot;Sales&quot;: 2, &quot;Search&quot;: 3, &quot;Machine Learning&quot;: 6, &quot;Security&quot;: 3, &quot;Open Source&quot;: 3, &quot;Privacy&quot;: 1, &quot;Real Estate&quot;: 3, &quot;AI&quot;: 37, &quot;B2B&quot;: 29, &quot;Workflow Automation&quot;: 7, &quot;Compliance&quot;: 5, &quot;Drones&quot;: 3, &quot;Energy&quot;: 3, &quot;Warehouse Management Tech&quot;: 1, &quot;IoT&quot;: 2, &quot;Sustainability&quot;: 1, &quot;Proptech&quot;: 2, &quot;Data Engineering&quot;: 1, &quot;Enterprise Software&quot;: 14, &quot;Sports Tech&quot;: 1, &quot;Biotech&quot;: 5, &quot;Architecture&quot;: 2, &quot;Biotechnology&quot;: 2, &quot;Crypto / Web3&quot;: 2, &quot;Consumer&quot;: 4, &quot;NFT&quot;: 1, &quot;FinOps&quot;: 1, &quot;Fintech&quot;: 12, &quot;AIOps&quot;: 3, &quot;Supply Chain&quot;: 2, &quot;Generative AI&quot;: 8, &quot;Robotics&quot;: 8, &quot;Trust &amp; Safety&quot;: 1, &quot;Self-Driving Vehicles&quot;: 1, &quot;Hardware&quot;: 7, &quot;Electronics&quot;: 2, &quot;AI-powered Drug Discovery&quot;: 1, &quot;Gene Therapy&quot;: 1, &quot;Cell Therapy&quot;: 1, &quot;Insurance&quot;: 1, &quot;Productivity&quot;: 2, &quot;Identity&quot;: 1, &quot;Emerging Markets&quot;: 1, &quot;Deep Learning&quot;: 3, &quot;Healthcare&quot;: 2, &quot;Developer Tools&quot;: 15, &quot;Enterprise&quot;: 4, &quot;Customer Service&quot;: 2, &quot;Conversational AI&quot;: 4, &quot;Computer Vision&quot;: 4, &quot;Hard Tech&quot;: 5, &quot;Design&quot;: 1, &quot;Manufacturing&quot;: 3, &quot;Legal&quot;: 4, &quot;HR Tech&quot;: 2, &quot;Immigration&quot;: 1, &quot;Health Tech&quot;: 3, &quot;Primary Care&quot;: 1, &quot;Reinforcement Learning&quot;: 4, &quot;Design Tools&quot;: 2, &quot;Agriculture&quot;: 1, &quot;GovTech&quot;: 2, &quot;LegalTech&quot;: 4, &quot;Fraud Detection&quot;: 2, &quot;Recruiting&quot;: 3, &quot;Electric Vehicles&quot;: 1, &quot;Automation&quot;: 4, &quot;Marketplace&quot;: 3, &quot;Big Data&quot;: 3, &quot;Gaming&quot;: 2, &quot;Web Development&quot;: 1, &quot;Food Tech&quot;: 1, &quot;Maritime&quot;: 2, &quot;Satellites&quot;: 3, &quot;API&quot;: 5, &quot;Documents&quot;: 1, &quot;Payments&quot;: 1, &quot;Digital Health&quot;: 2, &quot;Marketing&quot;: 3, &quot;Advertising&quot;: 1, &quot;Trading&quot;: 2, &quot;Cybersecurity&quot;: 2, &quot;Video&quot;: 2, &quot;Media&quot;: 2, &quot;Swarm AI&quot;: 1, &quot;Semiconductors&quot;: 1, &quot;Call Center&quot;: 1, &quot;Finance&quot;: 3, &quot;Operations&quot;: 2, &quot;Home Services&quot;: 1, &quot;Investing&quot;: 1, &quot;Data Labeling&quot;: 2, &quot;Sales Enablement&quot;: 1, &quot;Weather&quot;: 1, &quot;DevOps&quot;: 1, &quot;Renewable Energy&quot;: 1, &quot;Market Research&quot;: 1, &quot;Logistics&quot;: 2, &quot;Therapeutics&quot;: 1, &quot;Drug discovery&quot;: 1, &quot;Cryptocurrency&quot;: 1, &quot;Industrial&quot;: 1, &quot;Consumer Health Services&quot;: 1, &quot;Health &amp; Wellness&quot;: 1, &quot;Analytics&quot;: 1, &quot;Chatbot&quot;: 1, &quot;Fraud Prevention&quot;: 1, &quot;Calendar&quot;: 1, &quot;Geographic Information System&quot;: 1, &quot;Regtech&quot;: 1, &quot;Livestock Health&quot;: 1, &quot;Sustainable Agriculture&quot;: 1, &quot;Fuel Cells&quot;: 1, &quot;Social Media&quot;: 1, &quot;Entertainment&quot;: 1}, &quot;regions&quot;: {&quot;United States of America&quot;: 101, &quot;America / Canada&quot;: 101, &quot;Remote&quot;: 23, &quot;Fully Remote&quot;: 5, &quot;Partly Remote&quot;: 18, &quot;Unspecified&quot;: 16, &quot;Netherlands&quot;: 1, &quot;Europe&quot;: 1}}</script>
+</div>
+</body>
+</html>

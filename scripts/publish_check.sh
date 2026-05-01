@@ -21,7 +21,12 @@ if git ls-files | grep -qE '^\.env$'; then
 fi
 
 # 3. No real-looking key material.
-SUSPICIOUS=$(git ls-files | grep -v -E '^(\.secrets\.baseline|scripts/secret_scan\.sh|scripts/publish_check\.sh)$' \
+# Excludes:
+#   - .secrets.baseline (audited fingerprints)
+#   - scripts/{secret_scan,publish_check}.sh (these files name the patterns)
+#   - tests/test_sanitizer.py (test fixtures must contain the patterns)
+SUSPICIOUS=$(git ls-files \
+  | grep -v -E '^(\.secrets\.baseline|scripts/secret_scan\.sh|scripts/publish_check\.sh|tests/test_sanitizer\.py)$' \
   | xargs grep -l -E -i 'sk-ant-[A-Za-z0-9_\-]{20,}|ghp_[A-Za-z0-9]{36}|AKIA[0-9A-Z]{16}' 2>/dev/null || true)
 if [[ -n "$SUSPICIOUS" ]]; then
   echo "❌ suspicious credential strings found in:"

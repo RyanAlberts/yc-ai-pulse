@@ -1,0 +1,1094 @@
+{
+  "batch_slug": "winter-2026",
+  "batch_label": "Winter 2026",
+  "source": "yc-oss/api",
+  "source_last_updated": "2026-02-08T01:49:11.368000Z",
+  "fetched_at": "2026-05-01T18:55:26.859143Z",
+  "upstream_company_count": 132,
+  "yc_official_count": 196,
+  "tier_a_count": 120,
+  "tier_b_count": 4,
+  "tier_c_count": 8,
+  "records": [
+    {
+      "slug": "bidflow",
+      "name": "Bidflow",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "galactic-resource-utilization-space-inc-gru-space",
+      "name": "Galactic Resource Utilization Space, Inc. (GRU Space)",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "autumn-ai",
+      "name": "Autumn AI",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "velum-labs",
+      "name": "Velum Labs",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "travo",
+      "name": "Travo",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "oxus",
+      "name": "Oxus",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "voltair",
+      "name": "Voltair",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "inviscid-ai",
+      "name": "Inviscid AI",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "haladir",
+      "name": "Haladir",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "mantis-biotechnology",
+      "name": "Mantis Biotechnology",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "catchback-cards",
+      "name": "CatchBack Cards",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "fullseam",
+      "name": "FullSeam",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "corvera",
+      "name": "Corvera",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "arc-prize-foundation",
+      "name": "ARC Prize Foundation",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "valgo",
+      "name": "Valgo",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "hlabs",
+      "name": "Hlabs",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "origin-bio",
+      "name": "Origin",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "panta",
+      "name": "Panta",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "tensol",
+      "name": "Tensol",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "didit",
+      "name": "Didit",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "kita",
+      "name": "Kita",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "bits-2",
+      "name": "Bits",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "ruma-care",
+      "name": "Ruma Care",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "lucent",
+      "name": "Lucent",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "runanywhere",
+      "name": "RunAnywhere",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "lance",
+      "name": "Lance",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "sonarly",
+      "name": "Sonarly",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "axis-2",
+      "name": "Axis",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "lexius",
+      "name": "Lexius",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "rev1",
+      "name": "REV1",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "10x-science",
+      "name": "10x Science",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "sentrial",
+      "name": "Sentrial",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "legalos",
+      "name": "LegalOS",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "protent",
+      "name": "Protent",
+      "tier": "C",
+      "drop_reasons": [
+        "no_description"
+      ],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "baseframe",
+      "name": "BaseFrame",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "strand-ai",
+      "name": "Strand AI",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "beacon-health",
+      "name": "Beacon Health",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "burt",
+      "name": "Burt",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "zerosettle",
+      "name": "ZeroSettle",
+      "tier": "C",
+      "drop_reasons": [
+        "no_description"
+      ],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "kyten-technologies",
+      "name": "Kyten Technologies",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "avoice",
+      "name": "Avoice",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "1code-21stdev",
+      "name": "1code (21st.dev)",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "cumulus-labs",
+      "name": "Cumulus Labs",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "verdex",
+      "name": "Verdex",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "autositu",
+      "name": "AutoSitu",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "mousecat",
+      "name": "MouseCat",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "skillsync",
+      "name": "Skillsync",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "robodock",
+      "name": "RoboDock",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "luel",
+      "name": "Luel",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "codewisp",
+      "name": "CodeWisp",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "octapulse",
+      "name": "OctaPulse",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "beyond-reach-labs",
+      "name": "Beyond Reach Labs",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "dronetector",
+      "name": "DroneTector",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "ramain",
+      "name": "RamAIn",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "arcline",
+      "name": "Arcline",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "salus",
+      "name": "Salus",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "eigenpal",
+      "name": "EigenPal",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "sparkles",
+      "name": "Sparkles",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "ishiki-labs",
+      "name": "Ishiki Labs",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "perfectly",
+      "name": "Perfectly",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "orthogonal",
+      "name": "Orthogonal",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "q2q",
+      "name": "Q2Q",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "opalite-health",
+      "name": "Opalite Health",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "compresr",
+      "name": "Compresr",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "unisson",
+      "name": "Unisson",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "stilta",
+      "name": "Stilta",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "laurence",
+      "name": "Laurence",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "hex-security",
+      "name": "Hex Security",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "pax-historia",
+      "name": "Pax Historia",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "rhizome-ai",
+      "name": "Rhizome AI",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "prana-health",
+      "name": "Prana",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "cardboard",
+      "name": "Cardboard",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "jinba",
+      "name": "Jinba",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "seeing-systems",
+      "name": "Seeing Systems",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "synthetic-sciences",
+      "name": "Synthetic Sciences",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "visibl-semiconductors",
+      "name": "Visibl Semiconductors",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "patientdeskai",
+      "name": "Patientdesk.ai",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "chamber",
+      "name": "Chamber",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "fenrock-ai-yc-w26",
+      "name": "Fenrock AI (YC W26)",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "maywood",
+      "name": "Maywood",
+      "tier": "B",
+      "drop_reasons": [],
+      "website_status": "dead",
+      "notes": [
+        "website returned 4xx/5xx — analysis flagged"
+      ]
+    },
+    {
+      "slug": "traverse",
+      "name": "Traverse",
+      "tier": "C",
+      "drop_reasons": [
+        "no_description"
+      ],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "sidekit",
+      "name": "SideKit",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "ressl-ai",
+      "name": "Ressl AI",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "robby",
+      "name": "Robby",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "sitefire",
+      "name": "sitefire",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "forum",
+      "name": "Forum",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "human-archive",
+      "name": "Human Archive",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "samora-ai",
+      "name": "Samora AI",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "caretta",
+      "name": "Caretta",
+      "tier": "B",
+      "drop_reasons": [],
+      "website_status": "dead",
+      "notes": [
+        "website returned 4xx/5xx — analysis flagged"
+      ]
+    },
+    {
+      "slug": "oximy",
+      "name": "Oximy",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "axionorbital-space",
+      "name": "AxionOrbital Space",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "mendral",
+      "name": "Mendral",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "constellation-space",
+      "name": "Constellation Space",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "byteport",
+      "name": "Byteport",
+      "tier": "C",
+      "drop_reasons": [
+        "no_description"
+      ],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "pocket",
+      "name": "Pocket",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "bubble-lab",
+      "name": "Bubble Lab",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "polymath",
+      "name": "Polymath",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "voxel-energy",
+      "name": "Voxel Energy",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "arzule",
+      "name": "Arzule",
+      "tier": "B",
+      "drop_reasons": [],
+      "website_status": "dead",
+      "notes": [
+        "website returned 4xx/5xx — analysis flagged"
+      ]
+    },
+    {
+      "slug": "servo7",
+      "name": "Servo7",
+      "tier": "B",
+      "drop_reasons": [],
+      "website_status": "dead",
+      "notes": [
+        "website returned 4xx/5xx — analysis flagged"
+      ]
+    },
+    {
+      "slug": "ditto-biosciences",
+      "name": "Ditto Biosciences",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "sequence-markets",
+      "name": "Sequence Markets",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "o11",
+      "name": "o11",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "chasi",
+      "name": "Chasi",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "getbalance",
+      "name": "Balance",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "fort",
+      "name": "Fort",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "general-legal",
+      "name": "General Legal",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "corelayer",
+      "name": "Corelayer",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "booko",
+      "name": "Booko",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "scout-out",
+      "name": "Scout Out",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "crow",
+      "name": "Crow",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "squid",
+      "name": "Squid",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "fed10",
+      "name": "Fed10",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "beesafe-ai",
+      "name": "BeeSafe AI",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "moda",
+      "name": "Moda",
+      "tier": "C",
+      "drop_reasons": [
+        "no_description"
+      ],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "maven",
+      "name": "Maven",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "grade",
+      "name": "Grade",
+      "tier": "C",
+      "drop_reasons": [
+        "no_description"
+      ],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "veriad",
+      "name": "Veriad",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "vela",
+      "name": "Vela",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "voygr",
+      "name": "VOYGR",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "spotpay",
+      "name": "SpotPay",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "pollinate",
+      "name": "Pollinate",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "ritivel",
+      "name": "Ritivel",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "zymbly",
+      "name": "Zymbly",
+      "tier": "C",
+      "drop_reasons": [
+        "no_description"
+      ],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "librar-labs",
+      "name": "Librar Labs",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "grazemate",
+      "name": "GrazeMate",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "daivin",
+      "name": "DAIVIN!",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "aurorin-cad",
+      "name": "Aurorin CAD",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "shofo",
+      "name": "Shofo",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "resonate",
+      "name": "Resonate",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    },
+    {
+      "slug": "condor-energy",
+      "name": "Condor Energy",
+      "tier": "C",
+      "drop_reasons": [
+        "no_website"
+      ],
+      "website_status": null,
+      "notes": []
+    },
+    {
+      "slug": "martini",
+      "name": "Martini",
+      "tier": "A",
+      "drop_reasons": [],
+      "website_status": "ok",
+      "notes": []
+    }
+  ]
+}
