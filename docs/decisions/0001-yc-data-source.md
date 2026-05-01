@@ -36,3 +36,23 @@ Use **yc-oss/api as the primary source**, with a direct-scrape fallback only whe
 ## Verification
 
 PR #1 will add a small `scripts/check_yc_oss.py` that runs in CI and warns (does not fail) if `yc-oss/api`'s latest-batch JSON hasn't been updated in >48h, so we notice upstream staleness early.
+
+## Addendum 2026-05-01 — robots.txt audited
+
+Fetched `https://www.ycombinator.com/robots.txt` and recorded the relevant excerpt:
+
+```
+User-Agent: *
+Disallow: /companies?*
+Allow: /
+```
+
+Implications:
+
+- ❌ `https://www.ycombinator.com/companies?batch=Winter+2026` — **disallowed**. Originally proposed as the fallback when yc-oss/api is stale; we will **not** use it.
+- ✅ `https://www.ycombinator.com/companies/<slug>` — allowed (no query string).
+- ✅ `https://yc-oss.github.io/api/...` — out of scope for ycombinator.com's robots.txt; governed by GitHub Pages.
+
+**Updated decision:** yc-oss/api is not merely primary — it is the **only** sanctioned source for the batch listing. If yc-oss is unreachable, the pipeline fails loudly with an actionable error rather than scraping a disallowed URL. Detail-page enrichment via `/companies/<slug>` remains permitted (and is what a real user clicking around the directory would request).
+
+Cross-check: a separate `scripts/check_yc_oss.py` cron (Phase 1) warns if yc-oss/api hasn't refreshed in >48h, which is the only realistic single-point-of-failure left.
