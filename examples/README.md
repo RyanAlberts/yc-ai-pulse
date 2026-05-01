@@ -4,9 +4,10 @@ Sanitized sample artifacts. Every commit goes through `make publish-check` so PI
 
 | File | What |
 |---|---|
-| [`output/dashboard-w26-pr11-2026-05-01.html`](output/dashboard-w26-pr11-2026-05-01.html) | **PR #11 dashboard — current best.** Depth=1 crawl enabled. OSS posture `unknown` rate dropped 55%→21% on the same W26 cohort. Tech-stack identified mentions 14→41. |
-| [`output/analyses-w26-pr11-2026-05-01.json`](output/analyses-w26-pr11-2026-05-01.json) | PR #11 enrichment with crawled context. 113/124 high-confidence. |
-| [`output/dashboard-w26-pr4-2026-05-01.html`](output/dashboard-w26-pr4-2026-05-01.html) | PR #4 / v0.1.0 dashboard. Useful baseline to compare against PR #11 (no crawl, 65 OSS-unknown rows). |
+| [`output/dashboard-w26-pr12-2026-05-01.html`](output/dashboard-w26-pr12-2026-05-01.html) | **PR #12 dashboard — current best.** Same W26 data as PR #11 (depth=1 crawl, 113/124 high-confidence) but charts upgraded to Apache ECharts: real heatmap, pies with click-to-isolate, bars with axis tooltips. Loads via CDN with SRI; `<noscript>` fallback if JS disabled. |
+| [`output/dashboard-w26-pr11-2026-05-01.html`](output/dashboard-w26-pr11-2026-05-01.html) | PR #11 dashboard with the depth=1 crawl but static CSS bars. Useful for comparing visual fidelity vs. PR #12. |
+| [`output/analyses-w26-pr11-2026-05-01.json`](output/analyses-w26-pr11-2026-05-01.json) | Source data for both PR #11 and PR #12 dashboards. 113/124 high-confidence. |
+| [`output/dashboard-w26-pr4-2026-05-01.html`](output/dashboard-w26-pr4-2026-05-01.html) | PR #4 / v0.1.0 dashboard. Useful baseline (no crawl, 65 OSS-unknown rows; static CSS bars). |
 | [`output/analyses-w26-pr4-2026-05-01.json`](output/analyses-w26-pr4-2026-05-01.json) | **PR #4 enrichment.** 124 companies, 0 schema failures, 6 genuine model lows, 0 hallucinated source URLs. |
 | [`output/dashboard-w26-enriched-2026-05-01.html`](output/dashboard-w26-enriched-2026-05-01.html) | PR #3 dashboard, kept as before/after comparison (67% high-confidence, 23% schema failures). |
 | [`output/dashboard-w26-2026-05-01.html`](output/dashboard-w26-2026-05-01.html) | PR #1 baseline (coverage-only mode, no LLM). |

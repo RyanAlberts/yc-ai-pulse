@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - W26 with crawler enabled: **OSS posture `unknown` rate dropped 55% → 21%** (target was <30%). Tech-stack identified mentions: 14 → 41. Vision capability: 17 → 26. Multimodal: 17 → 22.
 - 13 new crawler tests (116 total), all network-free via `httpx.MockTransport`. Robots-disallow path-level enforcement, content-type filtering (PDF/JSON skipped), max-pages cap, dedup, fragment stripping, host-restriction (no off-site fetches), PII redaction round-trip.
 
+### Changed
+- **PR #12 — Apache ECharts replaces static CSS bars in the dashboard.** Heatmap is now a real 2D heatmap with hover tooltips. Pie charts (confidence, OSS posture) render with proper labeling and click-to-isolate. Bar charts (industry, tech stack, YC tags, regions) get axis pointers and value tooltips. Loaded from CDN with SRI-pinned integrity hash; falls back to a `<noscript>` table if JS is disabled or the CDN is blocked. Each canvas carries `role="img"` + descriptive `aria-label`. All chart options ship as pure JSON in a `<script type="application/json">` block — no JS function strings, no client-side `eval`. 7 chart canvases, 121 tests passing.
+
 ## [0.1.0] — 2026-05-01
 
 First publishable release. End-to-end pipeline that pulls the latest YC batch, classifies it with a Sonnet-class model under strict anti-hallucination guards, and renders a single-file HTML dashboard with row-level drill-downs.

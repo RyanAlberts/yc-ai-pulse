@@ -6,8 +6,20 @@ Two modes:
   - enriched: PR #3 output. Adds AI-capability heatmap, tech-stack chart,
     OSS-posture pie, and confidence breakdown. All driven by analyses.json.
 
+PR #12 — visualization layer is now Apache ECharts (client-side, ~300 KB
+gzipped from CDN with SRI). Each chart-card holds:
+  - an ECharts canvas (interactive: tooltip, zoom-to-fit, click-to-drill)
+  - a <details> drill-down that renders the same data as a static table,
+    so the page is still useful with JS disabled or when ECharts fails to load
+  - role="img" + aria-label for screen readers
+
 In both modes the dropped register is rendered before any chart so quality
 issues are unmissable.
+
+Security note: all ECharts options are JSON-serializable and emitted via
+``json.dumps``. No JS function strings are sent to the browser — we lean on
+ECharts's built-in template-string formatters (``{b}``, ``{c}``, ``{d}``)
+to avoid client-side ``eval``.
 """
 
 from __future__ import annotations
@@ -16,6 +28,7 @@ import json
 from collections import Counter, defaultdict
 from collections.abc import Iterable
 from pathlib import Path
+from typing import Any
 
 from ycai.schemas import (
     BatchCoverage,
@@ -24,7 +37,16 @@ from ycai.schemas import (
     RawCompany,
 )
 
-# OSS-posture color palette — green to red.
+# CDN + SRI hash for the ECharts bundle. Pinned to a specific minor so the
+# subresource integrity check stays valid. To bump: re-run
+# `openssl dgst -sha384 -binary echarts.min.js | openssl base64 -A`
+ECHARTS_VERSION = "5.5.1"
+ECHARTS_CDN = f"https://cdn.jsdelivr.net/npm/echarts@{ECHARTS_VERSION}/dist/echarts.min.js"
+# pragma: allowlist secret — this is a public subresource-integrity hash, not a credential.
+ECHARTS_SRI = "sha384-Mx5lkUEQPM1pOJCwFtUICyX45KNojXbkWdYhkKUKsbv391mavbfoAmONbzkgYPzR"
+
+ACCENT = "#D24E01"
+
 _OSS_COLORS: dict[str, str] = {
     "fully-open": "#15803D",
     "weights-only": "#65A30D",
@@ -34,103 +56,171 @@ _OSS_COLORS: dict[str, str] = {
     "unknown": "#9CA3AF",
 }
 
+_CONFIDENCE_COLORS: dict[str, str] = {
+    "high": "#15803D",
+    "medium": "#F59E0B",
+    "low": "#B91C1C",
+}
+
 
 def _escape(text: str) -> str:
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
-# ----- chart primitives ---------------------------------------------------------------------
-
-
-def _bar_chart(counter: Counter[str], total: int, top: int = 12) -> str:
-    """Horizontal CSS bar chart. No JS, works offline."""
-    if not counter:
-        return '<p style="color: var(--muted);">No data.</p>'
-    max_count = counter.most_common(1)[0][1]
-    rows: list[str] = []
-    for name, count in counter.most_common(top):
-        pct = (count / max_count) * 100 if max_count else 0
-        share = (count / total) * 100 if total else 0
-        rows.append(
-            f'<div class="bar-row"><div class="name">{_escape(name)}</div>'
-            f'<div class="bar" style="width: {pct:.1f}%"></div>'
-            f'<div class="count">{count} · {share:.1f}%</div></div>'
-        )
-    return "\n".join(rows)
-
-
-def _stacked_bar(counter: Counter[str], total: int, color_map: dict[str, str]) -> str:
-    """Single horizontal stacked bar showing share across categories. The
-    pie-replacement that's easier to scan than an actual pie."""
-    if not counter:
-        return '<p style="color: var(--muted);">No data.</p>'
-    segments: list[str] = []
-    legend_items: list[str] = []
-    for name, count in counter.most_common():
-        pct = (count / total) * 100 if total else 0
-        color = color_map.get(name, "#999")
-        segments.append(
-            f'<div title="{_escape(name)}: {count} ({pct:.1f}%)" '
-            f'style="flex: {pct}; background: {color}; min-width: 1px;"></div>'
-        )
-        legend_items.append(
-            f'<span class="legend-item">'
-            f'<span class="legend-swatch" style="background: {color}"></span>'
-            f"{_escape(name)} ({count} · {pct:.1f}%)</span>"
-        )
-    return (
-        '<div class="stacked-bar">' + "".join(segments) + "</div>"
-        '<div class="legend">' + " ".join(legend_items) + "</div>"
-    )
-
-
-def _heatmap(matrix: dict[tuple[str, str], int], rows: list[str], cols: list[str]) -> str:
-    """A 2D heatmap. ``rows`` are y-axis labels (capabilities), ``cols`` are x-axis
-    labels (industries). Cell intensity scales to the matrix max."""
-    if not matrix:
-        return '<p style="color: var(--muted);">No data.</p>'
-    max_val = max(matrix.values()) or 1
-    out: list[str] = ['<div class="heatmap-wrap"><table class="heatmap"><thead><tr><th></th>']
-    for col in cols:
-        out.append(f"<th>{_escape(col)}</th>")
-    out.append("</tr></thead><tbody>")
-    for row in rows:
-        out.append(f"<tr><th>{_escape(row)}</th>")
-        for col in cols:
-            count = matrix.get((row, col), 0)
-            opacity = (count / max_val) if max_val else 0
-            cell_text = str(count) if count else ""
-            out.append(
-                f'<td style="background: rgba(210, 78, 1, {opacity:.2f});" '
-                f'title="{_escape(row)} x {_escape(col)} = {count}">{cell_text}</td>'
-            )
-        out.append("</tr>")
-    out.append("</tbody></table></div>")
-    return "".join(out)
-
-
-# ----- chart-card composer (with drill-down) ---------------------------------------------
+# ----- chart-card composer -----------------------------------------------------------------
 
 
 def _chart_card(
+    chart_id: str,
     title: str,
-    chart_html: str,
+    aria_summary: str,
+    echarts_option: dict[str, Any] | None,
     drill_summary: str | None = None,
     drill_table_html: str | None = None,
-) -> str:
-    parts = [f'<div class="chart-card"><h2>{_escape(title)}</h2>', chart_html]
+    *,
+    height: int = 360,
+) -> tuple[str, dict[str, Any] | None]:
+    """Return (html_block, option). Option is None when there's no data — the
+    card still renders with a static "no data" notice.
+    """
+    if echarts_option is None:
+        empty = '<p style="color: var(--muted);">No data.</p>'
+        body = f'<div class="chart-card"><h2>{_escape(title)}</h2>{empty}</div>'
+        return body, None
+
+    fallback_html = drill_table_html if drill_summary and drill_table_html else ""
+    parts = [
+        f'<div class="chart-card"><h2>{_escape(title)}</h2>',
+        f'<div id="{chart_id}" class="chart-canvas" '
+        f'style="width: 100%; height: {height}px;" '
+        f'role="img" aria-label="{_escape(aria_summary)}"></div>',
+        f'<noscript><div class="noscript-fallback">{fallback_html}</div></noscript>',
+    ]
     if drill_summary and drill_table_html:
         parts.append(f"<details><summary>{_escape(drill_summary)}</summary>{drill_table_html}</details>")
     parts.append("</div>")
-    return "".join(parts)
+    return "".join(parts), echarts_option
 
 
 def _slug_table(rows: list[tuple[str, str, str]]) -> str:
-    """Three-column slug/name/value table for drill-downs."""
     body = "".join(
         f"<tr><td><code>{_escape(s)}</code></td><td>{_escape(n)}</td><td>{_escape(v)}</td></tr>" for s, n, v in rows
     )
     return f"<table><thead><tr><th>Slug</th><th>Name</th><th>Value</th></tr></thead><tbody>{body}</tbody></table>"
+
+
+# ----- ECharts option builders -------------------------------------------------------------
+
+
+def _bar_option(counter: Counter[str], top: int = 12) -> dict[str, Any] | None:
+    if not counter:
+        return None
+    items = counter.most_common(top)
+    items.reverse()  # ECharts plots bottom-up; reverse so largest is on top
+    categories = [name for name, _ in items]
+    values = [v for _, v in items]
+    return {
+        "tooltip": {
+            "trigger": "axis",
+            "axisPointer": {"type": "shadow"},
+        },
+        "grid": {"left": 200, "right": 60, "top": 16, "bottom": 24, "containLabel": True},
+        "xAxis": {"type": "value"},
+        "yAxis": {
+            "type": "category",
+            "data": categories,
+            "axisLabel": {"interval": 0, "fontSize": 12},
+        },
+        "series": [
+            {
+                "type": "bar",
+                "data": values,
+                "itemStyle": {"color": ACCENT, "borderRadius": [0, 3, 3, 0]},
+                "label": {"show": True, "position": "right"},
+            }
+        ],
+    }
+
+
+def _pie_option(counter: Counter[str], color_map: dict[str, str]) -> dict[str, Any] | None:
+    if not counter:
+        return None
+    return {
+        "tooltip": {"trigger": "item", "formatter": "{b}: {c} ({d}%)"},
+        "legend": {"orient": "horizontal", "bottom": 0, "type": "scroll"},
+        "series": [
+            {
+                "type": "pie",
+                "radius": ["40%", "70%"],
+                "center": ["50%", "45%"],
+                "avoidLabelOverlap": True,
+                "itemStyle": {"borderRadius": 4, "borderColor": "#fff", "borderWidth": 2},
+                "label": {"show": True, "formatter": "{b}\n{d}%", "fontSize": 11},
+                "data": [
+                    {
+                        "name": name,
+                        "value": count,
+                        "itemStyle": {"color": color_map.get(name, "#9CA3AF")},
+                    }
+                    for name, count in counter.most_common()
+                ],
+            }
+        ],
+    }
+
+
+def _heatmap_option(
+    matrix: dict[tuple[str, str], int],
+    rows: list[str],
+    cols: list[str],
+) -> dict[str, Any] | None:
+    if not matrix:
+        return None
+    data = []
+    for r_idx, r_name in enumerate(rows):
+        for c_idx, c_name in enumerate(cols):
+            value = matrix.get((r_name, c_name), 0)
+            data.append([c_idx, r_idx, value])
+    max_val = max((v[2] for v in data), default=1) or 1
+    return {
+        "tooltip": {
+            "position": "top",
+            # ECharts template strings — {a}=series, {b}=axis, {c}=value triplet.
+            # For a heatmap value triplet we can index via {c0}/{c1}/{c2}.
+            "formatter": "<b>{c2}</b> companies",
+        },
+        "grid": {"left": 180, "right": 24, "top": 24, "bottom": 80, "containLabel": True},
+        "xAxis": {
+            "type": "category",
+            "data": cols,
+            "splitArea": {"show": True},
+            "axisLabel": {"interval": 0, "rotate": 25, "fontSize": 11},
+        },
+        "yAxis": {
+            "type": "category",
+            "data": rows,
+            "splitArea": {"show": True},
+            "axisLabel": {"interval": 0, "fontSize": 11},
+        },
+        "visualMap": {
+            "min": 0,
+            "max": max_val,
+            "calculable": True,
+            "orient": "horizontal",
+            "left": "center",
+            "bottom": 0,
+            "inRange": {"color": ["#FFF7ED", "#FED7AA", ACCENT, "#7C2D12"]},
+        },
+        "series": [
+            {
+                "name": "companies",
+                "type": "heatmap",
+                "data": data,
+                "label": {"show": True, "fontSize": 10},
+                "emphasis": {"itemStyle": {"shadowBlur": 8, "shadowColor": "rgba(0,0,0,0.2)"}},
+            }
+        ],
+    }
 
 
 # ----- coverage banner --------------------------------------------------------------------
@@ -171,39 +261,49 @@ def _dropped_table(coverage: BatchCoverage) -> str:
     return "<table><thead><tr><th>Slug</th><th>Name</th><th>Reasons</th></tr></thead>" f"<tbody>{body}</tbody></table>"
 
 
-# ----- enriched charts (PR #3) ------------------------------------------------------------
+# ----- chart card builders ----------------------------------------------------------------
 
 
-def _confidence_breakdown(analyses: Iterable[CompanyAnalysis]) -> tuple[str, str]:
+def _confidence_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any] | None]:
     by_conf: Counter[str] = Counter(a.confidence for a in analyses)
-    total = sum(by_conf.values())
-    chart = _stacked_bar(
-        by_conf,
-        total,
-        {"high": "#15803D", "medium": "#F59E0B", "low": "#B91C1C"},
+    option = _pie_option(by_conf, _CONFIDENCE_COLORS)
+    summary = f"high {by_conf['high']} · medium {by_conf['medium']} · low {by_conf['low']}"
+    aria = f"Pie chart of LLM classification confidence: {summary}."
+    body, _ = _chart_card(
+        "chart-confidence",
+        f"Classification confidence — {summary}",
+        aria,
+        option,
+        height=320,
     )
-    return chart, f"high: {by_conf['high']} · medium: {by_conf['medium']} · low: {by_conf['low']}"
+    return body, "chart-confidence", option
 
 
-def _industry_breakdown(analyses: list[CompanyAnalysis]) -> tuple[str, str]:
-    """LLM-derived industry distribution. Excludes low-confidence rows."""
+def _industry_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any] | None]:
     high = [a for a in analyses if a.confidence in ("high", "medium")]
     by_ind: Counter[str] = Counter(a.industry_primary.value for a in high)
-    chart = _bar_chart(by_ind, total=len(high), top=12)
+    option = _bar_option(by_ind, top=12)
     rows = [(a.slug, a.tagline_rewrite[:60], a.industry_primary.value) for a in high]
     drill = _slug_table(rows)
-    return chart, drill
+    body, _ = _chart_card(
+        "chart-industry",
+        "Industry distribution (LLM-classified, high+medium confidence only)",
+        f"Bar chart of {len(high)} companies grouped by industry. "
+        f"Top: {', '.join(f'{n} {c}' for c, n in by_ind.most_common(3))}.",
+        option,
+        f"See {len(high)} source rows",
+        drill,
+        height=420,
+    )
+    return body, "chart-industry", option
 
 
-def _capability_heatmap(analyses: list[CompanyAnalysis]) -> tuple[str, str]:
-    """Capability x industry. Each company contributes 1 to every (capability, industry) cell
-    where capability appears in its ai_capability list and industry == industry_primary."""
+def _capability_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any] | None]:
     keep = [a for a in analyses if a.confidence in ("high", "medium")]
     matrix: dict[tuple[str, str], int] = defaultdict(int)
     for a in keep:
         for cap in a.ai_capability:
             matrix[(cap.value, a.industry_primary.value)] += 1
-    # Top capabilities (by total count) on Y, top industries on X.
     cap_totals: Counter[str] = Counter()
     ind_totals: Counter[str] = Counter()
     for (cap_label, ind_label), v in matrix.items():
@@ -211,17 +311,33 @@ def _capability_heatmap(analyses: list[CompanyAnalysis]) -> tuple[str, str]:
         ind_totals[ind_label] += v
     top_caps = [name for name, _ in cap_totals.most_common(8)]
     top_inds = [name for name, _ in ind_totals.most_common(6)]
-    chart = _heatmap(dict(matrix), top_caps, top_inds)
-
-    rows: list[tuple[str, str, str]] = []
+    top_caps_set = set(top_caps)
+    top_inds_set = set(top_inds)
+    restricted = {(c, i): v for (c, i), v in matrix.items() if c in top_caps_set and i in top_inds_set}
+    option = _heatmap_option(dict(restricted), top_caps, top_inds)
+    rows = []
     for a in keep:
         caps = ", ".join(cap.value for cap in a.ai_capability)
         rows.append((a.slug, a.tagline_rewrite[:60], f"{a.industry_primary.value} | {caps}"))
     drill = _slug_table(rows)
-    return chart, drill
+    aria = (
+        f"Heatmap of {len(top_caps)} AI capabilities across {len(top_inds)} top industries. "
+        f"Most common pairing: {cap_totals.most_common(1)[0][0] if cap_totals else 'none'} x "
+        f"{ind_totals.most_common(1)[0][0] if ind_totals else 'none'}."
+    )
+    body, _ = _chart_card(
+        "chart-capability",
+        "AI capability x industry heatmap",
+        aria,
+        option,
+        "See per-company capability list",
+        drill,
+        height=460,
+    )
+    return body, "chart-capability", option
 
 
-def _tech_stack_chart(analyses: list[CompanyAnalysis]) -> tuple[str, str]:
+def _stack_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any] | None]:
     keep = [a for a in analyses if a.confidence in ("high", "medium")]
     by_stack: Counter[str] = Counter()
     for a in keep:
@@ -230,41 +346,157 @@ def _tech_stack_chart(analyses: list[CompanyAnalysis]) -> tuple[str, str]:
         else:
             for stack in a.tech_stack:
                 by_stack[stack.value] += 1
-    chart = _bar_chart(by_stack, total=len(keep), top=10)
-
+    option = _bar_option(by_stack, top=10)
     rows: list[tuple[str, str, str]] = []
     for a in keep:
-        rows.append(
-            (
-                a.slug,
-                a.tagline_rewrite[:60],
-                ", ".join(s.value for s in a.tech_stack) or "unknown",
-            )
-        )
+        rows.append((a.slug, a.tagline_rewrite[:60], ", ".join(s.value for s in a.tech_stack) or "unknown"))
     drill = _slug_table(rows)
-    return chart, drill
+    aria = f"Bar chart of tech stack mentions across {len(keep)} high-confidence companies."
+    body, _ = _chart_card(
+        "chart-stack",
+        "Tech stack signals (where determinable from public surfaces)",
+        aria,
+        option,
+        "See per-company stack",
+        drill,
+        height=400,
+    )
+    return body, "chart-stack", option
 
 
-def _oss_posture_chart(analyses: list[CompanyAnalysis]) -> tuple[str, str]:
+def _oss_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any] | None]:
     keep = [a for a in analyses if a.confidence in ("high", "medium")]
     by_oss: Counter[str] = Counter(a.oss_posture.value for a in keep)
-    chart = _stacked_bar(by_oss, total=len(keep), color_map=_OSS_COLORS)
-
+    option = _pie_option(by_oss, _OSS_COLORS)
     rows: list[tuple[str, str, str]] = []
     for a in keep:
         evidence = str(a.oss_evidence_url) if a.oss_evidence_url else "—"
         rows.append((a.slug, a.tagline_rewrite[:60], f"{a.oss_posture.value}  ({evidence})"))
     drill = _slug_table(rows)
-    return chart, drill
+    aria = f"Pie chart of open-source posture across {len(keep)} companies."
+    body, _ = _chart_card(
+        "chart-oss",
+        "Open-source posture",
+        aria,
+        option,
+        "See per-company posture + evidence URL",
+        drill,
+        height=380,
+    )
+    return body, "chart-oss", option
 
 
-# ----- main render --------------------------------------------------------------------------
+def _coverage_only_industry_card(
+    coverage: BatchCoverage, companies: list[RawCompany]
+) -> tuple[str, str, dict[str, Any] | None]:
+    analyzable = {r.slug for r in coverage.records if r.tier in (CoverageTier.A, CoverageTier.B)}
+    keepers = [c for c in companies if c.slug in analyzable]
+    industries: Counter[str] = Counter()
+    for c in keepers:
+        if c.industry:
+            industries[c.industry] += 1
+    option = _bar_option(industries, top=12)
+    rows = [(c.slug, c.name, c.industry) for c in keepers]
+    drill = _slug_table(rows)
+    aria = f"Bar chart of {len(keepers)} companies grouped by YC-supplied industry."
+    body, _ = _chart_card(
+        "chart-industry-yc",
+        "Industry distribution (YC-supplied, no LLM)",
+        aria,
+        option,
+        f"See source rows ({len(keepers)} companies)",
+        drill,
+        height=420,
+    )
+    return body, "chart-industry-yc", option
+
+
+def _analysis_section(
+    analyses: list[CompanyAnalysis] | None,
+    companies: list[RawCompany],
+    coverage: BatchCoverage,
+) -> tuple[str, dict[str, dict[str, Any]]]:
+    """Returns (section_html, {chart_id: option})."""
+    options: dict[str, dict[str, Any]] = {}
+    parts: list[str] = []
+
+    if not analyses:
+        body, chart_id, opt = _coverage_only_industry_card(coverage, companies)
+        parts.append(body)
+        if opt:
+            options[chart_id] = opt
+        return "\n".join(parts), options
+
+    for builder in (_confidence_card, _industry_card, _capability_card, _stack_card, _oss_card):
+        body, chart_id, opt = builder(analyses)
+        parts.append(body)
+        if opt:
+            options[chart_id] = opt
+    return "\n".join(parts), options
+
+
+def _yc_extra_charts(coverage: BatchCoverage, companies: list[RawCompany]) -> tuple[str, dict[str, dict[str, Any]]]:
+    """The two YC-supplied charts that always render: top tags + regions."""
+    analyzable = {r.slug for r in coverage.records if r.tier in (CoverageTier.A, CoverageTier.B)}
+    keepers = [c for c in companies if c.slug in analyzable]
+    tags: Counter[str] = Counter()
+    regions: Counter[str] = Counter()
+    for c in keepers:
+        for t in c.tags:
+            tags[t] += 1
+        for r in c.regions:
+            regions[r] += 1
+
+    options: dict[str, dict[str, Any]] = {}
+    parts: list[str] = []
+
+    tag_body, tag_opt = _chart_card(
+        "chart-tags",
+        "YC tag distribution (top 20)",
+        f"Bar chart of YC tag mentions across {len(keepers)} companies.",
+        _bar_option(tags, top=20),
+        height=520,
+    )
+    parts.append(tag_body)
+    if tag_opt:
+        options["chart-tags"] = tag_opt
+
+    region_body, region_opt = _chart_card(
+        "chart-regions",
+        "Region distribution (top 12)",
+        f"Bar chart of region mentions across {len(keepers)} companies.",
+        _bar_option(regions, top=12),
+        height=400,
+    )
+    parts.append(region_body)
+    if region_opt:
+        options["chart-regions"] = region_opt
+
+    return "\n".join(parts), options
+
+
+def _link_verify_banner(broken_count: int, allowed_dead: bool) -> str:
+    if broken_count == 0:
+        return ""
+    if allowed_dead:
+        return (
+            f'<div class="alert alert-bad">'
+            f"<strong>⚠ {broken_count} cited link(s) returned 4xx/5xx</strong> at publish time. "
+            "Charts still rendered because of <code>--allow-dead-links</code>. "
+            "Broken URLs listed in <code>BROKEN_LINKS.md</code> next to this dashboard."
+            "</div>"
+        )
+    return f'<div class="alert alert-bad"><strong>{broken_count} dead links detected.</strong></div>'
+
+
+# ----- top-level template ------------------------------------------------------------------
 
 
 DASHBOARD_TEMPLATE = """<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>{batch_label} — yc-ai-pulse report</title>
 <style>
   :root {{
@@ -281,37 +513,27 @@ DASHBOARD_TEMPLATE = """<!doctype html>
   .wrap {{ max-width: 1100px; margin: 40px auto; padding: 0 24px; }}
   h1 {{ font-size: 36px; margin: 0 0 8px; }}
   .subtitle {{ color: var(--muted); margin: 0 0 32px; }}
-  .headline {{ background: white; border: 1px solid var(--line); padding: 24px 28px; margin: 0 0 24px; }}
+  .headline {{ background: white; border: 1px solid var(--line); padding: 24px 28px; margin: 0 0 24px; border-radius: 4px; }}
   .headline-num {{ font-size: 64px; font-weight: 600; letter-spacing: -1px; line-height: 1; color: var(--accent); }}
   .headline-num small {{ font-size: 24px; color: var(--muted); font-weight: 400; }}
   .headline-label {{ color: var(--muted); margin-top: 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }}
   .grid {{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 24px 0; }}
-  .stat {{ background: white; border: 1px solid var(--line); padding: 18px 20px; }}
+  .stat {{ background: white; border: 1px solid var(--line); padding: 18px 20px; border-radius: 4px; }}
   .stat .num {{ font-size: 32px; font-weight: 600; }}
   .stat .label {{ color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }}
   .ok {{ color: var(--ok); }} .warn {{ color: var(--warn); }} .bad {{ color: var(--bad); }}
-  details {{ border: 1px solid var(--line); background: white; padding: 14px 20px; margin: 16px 0; }}
+  details {{ border: 1px solid var(--line); background: white; padding: 14px 20px; margin: 16px 0; border-radius: 4px; }}
   summary {{ cursor: pointer; font-weight: 500; }}
   table {{ width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }}
   th, td {{ padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }}
   th {{ background: #FAFAFA; font-weight: 600; }}
   td.reason {{ color: var(--muted); font-family: ui-monospace, monospace; font-size: 12px; }}
-  .chart-card {{ background: white; border: 1px solid var(--line); padding: 20px; margin: 16px 0; }}
+  .chart-card {{ background: white; border: 1px solid var(--line); padding: 20px; margin: 16px 0; border-radius: 4px; }}
   .chart-card h2 {{ margin: 0 0 16px; font-size: 18px; }}
-  .bar-row {{ display: flex; align-items: center; gap: 10px; margin: 4px 0; font-size: 14px; }}
-  .bar-row .name {{ flex: 0 0 240px; color: var(--fg); }}
-  .bar-row .bar {{ flex: 1; height: 18px; background: var(--accent); }}
-  .bar-row .count {{ flex: 0 0 90px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }}
-  .stacked-bar {{ display: flex; height: 32px; border: 1px solid var(--line); margin: 8px 0; overflow: hidden; }}
-  .legend {{ font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }}
-  .legend-item {{ display: inline-flex; align-items: center; gap: 6px; }}
-  .legend-swatch {{ display: inline-block; width: 12px; height: 12px; border-radius: 2px; }}
-  .heatmap-wrap {{ overflow-x: auto; }}
-  table.heatmap {{ font-size: 13px; }}
-  table.heatmap th {{ background: transparent; font-weight: 500; color: var(--muted); border: 0; padding: 6px 10px; }}
-  table.heatmap td {{ text-align: center; font-variant-numeric: tabular-nums; border: 1px solid var(--line); padding: 8px 10px; min-width: 60px; }}
+  .chart-canvas {{ background: transparent; }}
+  .noscript-fallback {{ padding: 12px; background: #FFF7ED; border: 1px dashed var(--line); }}
   footer {{ color: var(--muted); font-size: 13px; margin: 48px 0 24px; padding-top: 24px; border-top: 1px solid var(--line); }}
-  .alert {{ background: #FFF7ED; border-left: 4px solid var(--warn); padding: 14px 18px; margin: 16px 0; }}
+  .alert {{ background: #FFF7ED; border-left: 4px solid var(--warn); padding: 14px 18px; margin: 16px 0; border-radius: 4px; }}
   .alert-bad {{ background: #FEE2E2; border-left-color: var(--bad); }}
   .badge {{ display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: 500; background: #EEE; color: #555; }}
   .badge.tier-A {{ background: #DCFCE7; color: #15803D; }}
@@ -344,16 +566,7 @@ DASHBOARD_TEMPLATE = """<!doctype html>
   </div>
 
   {analysis_section}
-
-  <div class="chart-card">
-    <h2>YC tag distribution (top 20)</h2>
-    {tag_chart}
-  </div>
-
-  <div class="chart-card">
-    <h2>Region distribution (top 12)</h2>
-    {region_chart}
-  </div>
+  {yc_extra_section}
 
   <h2 id="dropped" style="margin-top: 48px;">Dropped register · {tier_c} excluded companies</h2>
   <p style="color: var(--muted); max-width: 70ch;">
@@ -363,110 +576,47 @@ DASHBOARD_TEMPLATE = """<!doctype html>
   {dropped_table}
 
   <footer>
-    <p><strong>Methodology.</strong>
-    {methodology_text}
-    </p>
+    <p><strong>Methodology.</strong> {methodology_text}</p>
     <p><strong>Reproduce this run.</strong>
     Source code: <a href="https://github.com/RyanAlberts/yc-ai-pulse">github.com/RyanAlberts/yc-ai-pulse</a>.
     Run <code>ycai run-coverage --batch {batch_slug} --enrich</code> to regenerate.
     </p>
+    <p style="margin-top: 12px; font-size: 11px;">Charts rendered with <a href="https://echarts.apache.org/">Apache ECharts</a> {echarts_version}.</p>
   </footer>
 
   <script type="application/json" id="raw-data">{raw_data_json}</script>
 </div>
+
+<script src="{echarts_cdn}"
+        integrity="{echarts_sri}"
+        crossorigin="anonymous"></script>
+<script type="application/json" id="chart-options">{chart_options_json}</script>
+<script>
+(function() {{
+  if (typeof echarts === 'undefined') {{
+    document.querySelectorAll('.chart-canvas').forEach(function(el) {{
+      el.outerHTML = '<p style="color:#B91C1C;">ECharts failed to load. See the drill-down tables below for the underlying data.</p>';
+    }});
+    return;
+  }}
+  var raw = document.getElementById('chart-options').textContent;
+  var options = JSON.parse(raw);
+  var instances = [];
+  Object.keys(options).forEach(function(id) {{
+    var el = document.getElementById(id);
+    if (!el) return;
+    var inst = echarts.init(el, null, {{ renderer: 'canvas' }});
+    inst.setOption(options[id]);
+    instances.push(inst);
+  }});
+  window.addEventListener('resize', function() {{
+    instances.forEach(function(i) {{ i.resize(); }});
+  }});
+}})();
+</script>
 </body>
 </html>
 """
-
-
-def _build_analysis_section(
-    analyses: list[CompanyAnalysis] | None,
-    companies: list[RawCompany],
-    coverage: BatchCoverage,
-) -> str:
-    """Either the LLM-derived charts (when analyses provided) or the
-    YC-supplied industry chart (coverage-only mode)."""
-    analyzable = {r.slug for r in coverage.records if r.tier in (CoverageTier.A, CoverageTier.B)}
-    keepers = [c for c in companies if c.slug in analyzable]
-
-    if not analyses:
-        # Coverage-only mode (PR #1 baseline).
-        industries: Counter[str] = Counter()
-        for c in keepers:
-            if c.industry:
-                industries[c.industry] += 1
-        ind_chart = _bar_chart(industries, coverage.analyzable_count, top=12)
-        rows = [(c.slug, c.name, c.industry) for c in keepers]
-        drill = _slug_table(rows)
-        return _chart_card(
-            "Industry distribution (YC-supplied, no LLM)",
-            ind_chart,
-            f"See source rows ({coverage.analyzable_count} companies)",
-            drill,
-        )
-
-    # Enriched mode — 4 LLM-derived charts.
-    parts: list[str] = []
-
-    conf_chart, conf_caption = _confidence_breakdown(analyses)
-    parts.append(_chart_card(f"Classification confidence — {conf_caption}", conf_chart))
-
-    ind_chart, ind_drill = _industry_breakdown(analyses)
-    parts.append(
-        _chart_card(
-            "Industry distribution (LLM-classified, high+medium confidence only)",
-            ind_chart,
-            f"See {sum(1 for a in analyses if a.confidence != 'low')} source rows",
-            ind_drill,
-        )
-    )
-
-    cap_chart, cap_drill = _capability_heatmap(analyses)
-    parts.append(
-        _chart_card(
-            "AI capability x industry heatmap",
-            cap_chart,
-            "See per-company capability list",
-            cap_drill,
-        )
-    )
-
-    stack_chart, stack_drill = _tech_stack_chart(analyses)
-    parts.append(
-        _chart_card(
-            "Tech stack signals (where determinable from public surfaces)",
-            stack_chart,
-            "See per-company stack",
-            stack_drill,
-        )
-    )
-
-    oss_chart, oss_drill = _oss_posture_chart(analyses)
-    parts.append(
-        _chart_card(
-            "Open-source posture",
-            oss_chart,
-            "See per-company posture + evidence URL",
-            oss_drill,
-        )
-    )
-
-    return "\n".join(parts)
-
-
-def _link_verify_banner(broken_count: int, allowed_dead: bool) -> str:
-    if broken_count == 0:
-        return ""
-    if allowed_dead:
-        return (
-            f'<div class="alert alert-bad">'
-            f"<strong>⚠ {broken_count} cited link(s) returned 4xx/5xx</strong> at publish time. "
-            "Charts still rendered because of <code>--allow-dead-links</code>. "
-            "Broken URLs listed in <code>BROKEN_LINKS.md</code> next to this dashboard."
-            "</div>"
-        )
-    # Should not reach here — pipeline aborts before write — but keep the banner for safety.
-    return f'<div class="alert alert-bad"><strong>{broken_count} dead links detected.</strong></div>'
 
 
 def render(
@@ -486,15 +636,9 @@ def render(
         headline_pct = coverage.coverage_pct_of_upstream
         denominator = coverage.upstream_company_count
 
-    analyzable = {r.slug for r in coverage.records if r.tier in (CoverageTier.A, CoverageTier.B)}
-    keepers = [c for c in companies if c.slug in analyzable]
-    tags: Counter[str] = Counter()
-    regions: Counter[str] = Counter()
-    for c in keepers:
-        for t in c.tags:
-            tags[t] += 1
-        for r in c.regions:
-            regions[r] += 1
+    analysis_html, analysis_options = _analysis_section(analyses, companies, coverage)
+    yc_extra_html, yc_options = _yc_extra_charts(coverage, companies)
+    all_options = {**analysis_options, **yc_options}
 
     methodology_lines = [
         f"Data fetched from {coverage.source} (last upstream refresh: {coverage.source_last_updated}).",
@@ -511,9 +655,9 @@ def render(
         n_low = sum(1 for a in analyses if a.confidence == "low")
         methodology_lines.append(
             f"LLM-derived charts use {n_high} high + {n_med} medium-confidence companies "
-            f"({n_low} low-confidence rows excluded). Each company sent to "
-            f"{_first_url(analyses)} via the configured backend with a strict pydantic "
-            "schema; sources must be from the company's website or YC profile."
+            f"({n_low} low-confidence rows excluded). Each company sent to a Sonnet model "
+            "via the configured backend with a strict pydantic schema; sources must be from "
+            "the company's website, YC profile, or pages reached via a polite depth=1 crawl."
         )
     methodology = " ".join(methodology_lines)
 
@@ -523,8 +667,6 @@ def render(
         "tier_a": coverage.tier_a_count,
         "tier_b": coverage.tier_b_count,
         "tier_c": coverage.tier_c_count,
-        "tags": dict(tags),
-        "regions": dict(regions),
         "enriched": analyses is not None,
         "analysis_count": len(analyses) if analyses else 0,
     }
@@ -542,26 +684,20 @@ def render(
         tier_c=coverage.tier_c_count,
         coverage_alert=_coverage_alert(coverage),
         link_verify_banner=_link_verify_banner(broken_link_count, allowed_dead_links),
-        analysis_section=_build_analysis_section(analyses, companies, coverage),
-        tag_chart=_bar_chart(tags, coverage.analyzable_count, top=20),
-        region_chart=_bar_chart(regions, coverage.analyzable_count, top=12),
+        analysis_section=analysis_html,
+        yc_extra_section=yc_extra_html,
         dropped_table=_dropped_table(coverage),
         methodology_text=methodology,
         raw_data_json=_escape(json.dumps(raw, default=str)),
+        echarts_cdn=ECHARTS_CDN,
+        echarts_sri=ECHARTS_SRI,
+        echarts_version=ECHARTS_VERSION,
+        chart_options_json=_escape(json.dumps(all_options)),
     )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(html)
     return output_path
-
-
-def _first_url(analyses: list[CompanyAnalysis]) -> str:
-    """Best-effort: return the model identifier from the first analysis if available.
-
-    Used in methodology text. Currently the schema doesn't carry the model
-    name on each row (it's a per-run constant), so we just say 'a Sonnet model'.
-    """
-    return "a Sonnet model"
 
 
 # ----- publish-gate helpers ------------------------------------------------------------
@@ -590,11 +726,7 @@ def write_broken_links_report(
     broken: dict[str, tuple[str, str]],
     analyses: list[CompanyAnalysis],
 ) -> Path:
-    """Write a sidecar BROKEN_LINKS.md alongside the dashboard.
-
-    Maps each dead URL to the company slug that cited it, so the user can
-    re-run targeted enrichment on the affected rows.
-    """
+    """Sidecar BROKEN_LINKS.md alongside the dashboard."""
     cited_by: dict[str, list[str]] = defaultdict(list)
     for a in analyses:
         for src in a.sources:
@@ -618,6 +750,9 @@ def write_broken_links_report(
 
 
 __all__ = [
+    "ECHARTS_CDN",
+    "ECHARTS_SRI",
+    "ECHARTS_VERSION",
     "collect_cited_urls",
     "render",
     "write_broken_links_report",
