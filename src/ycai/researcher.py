@@ -21,6 +21,8 @@ import os
 import re
 from abc import ABC, abstractmethod
 from collections.abc import Mapping
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any, Literal
 
 from pydantic import ValidationError
@@ -204,35 +206,70 @@ _JSON_BLOCK_RE = re.compile(r"\{.*\}", re.DOTALL)
 
 
 _VALID_INDUSTRY_VALUES = {i.value for i in Industry}
+_VALID_CAPABILITY_VALUES = {c.value for c in AICapability}
+_VALID_STACK_VALUES = {s.value for s in TechStack}
+_VALID_OSS_VALUES = {o.value for o in OSSPosture}
 
 
-def _drop_unknown_industries(payload: dict[str, Any], slug: str) -> None:
-    """Filter ``industry_secondary`` to enum members the model is allowed to emit.
+def _filter_list(payload: dict[str, Any], key: str, valid: set[str], *, fallback: list[str] | None = None) -> int:
+    """Drop list entries that aren't in ``valid``. If filtering empties the list
+    and a ``fallback`` is provided, set it. Returns the count dropped."""
+    raw = payload.get(key, [])
+    if not isinstance(raw, list):
+        payload[key] = fallback or []
+        return 0
+    cleaned = [item for item in raw if isinstance(item, str) and item in valid]
+    dropped = len(raw) - len(cleaned)
+    if not cleaned and fallback is not None:
+        cleaned = list(fallback)
+    payload[key] = cleaned
+    return dropped
 
-    Models trained on broad data sometimes emit reasonable categories that
-    aren't in our closed set (e.g. 'Productivity', 'Marketing'). Rather than
-    fail the entire row, drop the unrecognized secondaries and keep going.
-    Primary industry stays strict — that's the load-bearing field.
+
+_RATIONALE_MAX = 400
+_TAGLINE_MAX = 140
+
+
+def _normalize_payload(payload: dict[str, Any], slug: str) -> None:
+    """Apply lenient filters and normalizations the model occasionally trips on.
+
+    What stays strict (rejection on bad value):
+      - ``industry_primary``
+      - ``oss_posture``
+      - ``confidence``
+      - ``sources`` (must be valid HttpUrls, >=1 entry)
+
+    What gets leniently filtered:
+      - ``industry_secondary`` (drop unknown values; empty list is fine)
+      - ``ai_capability`` (drop unknown values; falls back to ['unclear'] if emptied)
+      - ``tech_stack`` (drop unknown values; empty list is fine)
+      - ``rationale`` (truncated at 400 chars rather than failing the row)
+      - ``tagline_rewrite`` (truncated at 140 chars rather than failing the row)
     """
-    raw_secondaries = payload.get("industry_secondary", [])
-    if not isinstance(raw_secondaries, list):
-        payload["industry_secondary"] = []
-        return
-    cleaned = [s for s in raw_secondaries if isinstance(s, str) and s in _VALID_INDUSTRY_VALUES]
-    if len(cleaned) != len(raw_secondaries):
-        log.debug(
-            "dropped %d unknown industry_secondary entries for %s",
-            len(raw_secondaries) - len(cleaned),
-            slug,
-        )
-    payload["industry_secondary"] = cleaned
+    payload.setdefault("slug", slug)
+    drops_total = 0
+    drops_total += _filter_list(payload, "industry_secondary", _VALID_INDUSTRY_VALUES)
+    drops_total += _filter_list(
+        payload, "ai_capability", _VALID_CAPABILITY_VALUES, fallback=[AICapability.UNCLEAR.value]
+    )
+    drops_total += _filter_list(payload, "tech_stack", _VALID_STACK_VALUES)
+    if drops_total:
+        log.debug("dropped %d unknown enum value(s) from %s payload", drops_total, slug)
+    # Truncate verbose free-text fields. The model often pushes past these
+    # caps when describing complex products; truncation is safer than dropping
+    # the whole classification.
+    rationale = payload.get("rationale")
+    if isinstance(rationale, str) and len(rationale) > _RATIONALE_MAX:
+        payload["rationale"] = rationale[: _RATIONALE_MAX - 1] + "…"
+    tagline = payload.get("tagline_rewrite")
+    if isinstance(tagline, str) and len(tagline) > _TAGLINE_MAX:
+        payload["tagline_rewrite"] = tagline[: _TAGLINE_MAX - 1] + "…"
 
 
 def _parse_response(raw: str, *, slug: str) -> CompanyAnalysis | None:
     """Strict-parse the model output. Returns ``None`` on any failure."""
     if not raw:
         return None
-    # Tolerate surrounding fences / prose by extracting the outermost JSON object.
     match = _JSON_BLOCK_RE.search(raw)
     if not match:
         return None
@@ -240,8 +277,7 @@ def _parse_response(raw: str, *, slug: str) -> CompanyAnalysis | None:
         payload = json.loads(match.group(0))
     except json.JSONDecodeError:
         return None
-    payload.setdefault("slug", slug)  # the model sometimes drops the slug
-    _drop_unknown_industries(payload, slug)
+    _normalize_payload(payload, slug)
     try:
         return CompanyAnalysis.model_validate(payload)
     except ValidationError as exc:
@@ -309,6 +345,7 @@ async def analyze(
     *,
     model: str = DEFAULT_MODEL,
     cross_check_uncertain: bool = True,
+    raw_failure_log: Path | None = None,
 ) -> tuple[CompanyAnalysis, CrossCheckResult | None]:
     """Run a single classification with all Layer 1 guards.
 
@@ -322,6 +359,9 @@ async def analyze(
          row to ``confidence=low``.
       4. Any failure in 1-3 -> low-confidence sentinel that survives in the CSV
          but is excluded from charts.
+
+    If ``raw_failure_log`` is set, raw model responses for any failure are
+    appended (one JSON line per record) so they can be audited / replayed.
     """
     prefill = map_industry(company.industry, company.subindustry, company.tags)
     prompt = _build_prompt(company, prefill)
@@ -329,8 +369,10 @@ async def analyze(
     raw1 = await backend.complete(prompt, model=model)
     pass_1 = _parse_response(raw1, slug=company.slug)
     if pass_1 is None:
+        _log_raw_failure(raw_failure_log, slug=company.slug, reason="schema-validation-failure", raw=raw1)
         return _force_low(company.slug, "schema-validation-failure"), None
     if not _validate_sources(pass_1, company):
+        _log_raw_failure(raw_failure_log, slug=company.slug, reason="hallucinated-source-url", raw=raw1)
         return _force_low(company.slug, "hallucinated-source-url"), None
 
     if pass_1.confidence in ("high", "low") or not cross_check_uncertain:
@@ -341,6 +383,7 @@ async def analyze(
     pass_2 = _parse_response(raw2, slug=company.slug)
     if pass_2 is None or not _validate_sources(pass_2, company):
         # The cross-check itself failed → keep pass 1 but downgrade to low.
+        _log_raw_failure(raw_failure_log, slug=company.slug, reason="cross-check-failed", raw=raw2)
         downgraded = pass_1.model_copy(update={"confidence": "low"})
         return downgraded, None
 
@@ -364,6 +407,25 @@ async def analyze(
         agreed_on_oss=agreed_oss,
         final_confidence=result_confidence,
     )
+
+
+def _log_raw_failure(path: Path | None, *, slug: str, reason: str, raw: str) -> None:
+    """Append a raw failure record to ``path`` (JSONL). No-op when path is None.
+
+    Truncates raw payloads at 4000 chars so the file stays small but a
+    representative sample is captured for B008-style debugging.
+    """
+    if path is None:
+        return
+    record = {
+        "ts": datetime.now(UTC).isoformat(),
+        "slug": slug,
+        "reason": reason,
+        "raw": (raw or "")[:4000],
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a") as f:
+        f.write(json.dumps(record) + "\n")
 
 
 def make_default_backend(api_key: str | None = None) -> Backend:

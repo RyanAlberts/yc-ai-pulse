@@ -7,6 +7,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -31,6 +32,7 @@ from ycai.researcher import (
     make_default_backend,
 )
 from ycai.schemas import (
+    BatchCoverage,
     CompanyAnalysis,
     CoverageTier,
     RawCompany,
@@ -46,6 +48,134 @@ console = Console()
 def version() -> None:
     """Print the installed package version."""
     console.print(f"yc-ai-pulse {__version__}")
+
+
+@app.command("dashboard")
+def dashboard_cmd(
+    run_dir: Path = typer.Argument(..., help="Path to a previously-generated run directory."),
+    allow_dead_links: bool = typer.Option(False, "--allow-dead-links", help="Skip the cited-URL re-verification step."),
+) -> None:
+    """Re-render the dashboard from existing artifacts. No LLM cost.
+
+    Useful when:
+      - You changed dashboard.py and want to regenerate the HTML without re-paying for the LLM.
+      - You want to inspect an older run with the latest dashboard chart layout.
+      - You ran out of subscription quota mid-run and need to render what you have.
+    """
+    coverage_path = run_dir / "coverage.json"
+    if not coverage_path.exists():
+        console.print(f"[red]✗ {coverage_path} not found[/red]")
+        raise typer.Exit(2)
+    coverage = BatchCoverage.model_validate_json(coverage_path.read_text())
+
+    raw_path = run_dir / "raw" / "yc_companies.json"
+    if not raw_path.exists():
+        console.print(f"[red]✗ {raw_path} not found[/red]")
+        raise typer.Exit(2)
+    raw_companies = json.loads(raw_path.read_text())
+    companies = [RawCompany.model_validate(c) for c in raw_companies]
+
+    analyses: list[CompanyAnalysis] | None = None
+    analyses_jsonl = run_dir / "analyses.jsonl"
+    analyses_json = run_dir / "analyses.json"
+    if analyses_jsonl.exists():
+        analyses = [
+            CompanyAnalysis.model_validate_json(line)
+            for line in analyses_jsonl.read_text().splitlines()
+            if line.strip()
+        ]
+    elif analyses_json.exists():
+        analyses = [CompanyAnalysis.model_validate(a) for a in json.loads(analyses_json.read_text())]
+
+    broken_link_count = 0
+    if analyses and not allow_dead_links:
+        cited = collect_cited_urls(analyses)
+        if cited:
+            console.print(f"[cyan]→[/cyan] re-verifying {len(cited)} cited URL(s)…")
+            statuses = check_urls(cited)
+            broken: dict[str, tuple[str, str]] = {
+                url: (status, reason) for url, (status, reason) in statuses.items() if status == "dead"
+            }
+            broken_link_count = len(broken)
+            if broken:
+                report = write_broken_links_report(run_dir, broken, analyses)
+                console.print(f"[red]✗ {broken_link_count} dead link(s); details: {report}[/red]")
+                console.print("[red]  pass --allow-dead-links to render anyway with a warning banner[/red]")
+                raise typer.Exit(4)
+
+    out = render_dashboard(
+        coverage=coverage,
+        companies=companies,
+        output_path=run_dir / "dashboard.html",
+        analyses=analyses,
+        broken_link_count=broken_link_count,
+        allowed_dead_links=allow_dead_links and broken_link_count > 0,
+    )
+    console.print(f"[green]✓[/green] wrote dashboard.html → {out}")
+
+
+@app.command("resume")
+def resume_cmd(
+    run_dir: Path = typer.Argument(..., help="Run directory from a previous (partial) enrichment."),
+    api_key: str | None = typer.Option(None, "--api-key"),
+    model: str = typer.Option(DEFAULT_MODEL, "--model"),
+) -> None:
+    """Resume an interrupted enrichment run.
+
+    Reads ``analyses.jsonl`` from the run directory, identifies which slugs
+    are still missing relative to ``coverage.json``, and enriches only those.
+    Re-renders the dashboard at the end.
+    """
+    coverage_path = run_dir / "coverage.json"
+    raw_path = run_dir / "raw" / "yc_companies.json"
+    jsonl_path = run_dir / "analyses.jsonl"
+    if not coverage_path.exists() or not raw_path.exists():
+        console.print(f"[red]✗ {run_dir} doesn't look like a valid run directory[/red]")
+        raise typer.Exit(2)
+
+    coverage = BatchCoverage.model_validate_json(coverage_path.read_text())
+    raw_companies = json.loads(raw_path.read_text())
+    companies = [RawCompany.model_validate(c) for c in raw_companies]
+    analyzable_slugs = {r.slug for r in coverage.records if r.tier in (CoverageTier.A, CoverageTier.B)}
+
+    completed_slugs: set[str] = set()
+    existing: list[CompanyAnalysis] = []
+    if jsonl_path.exists():
+        for line in jsonl_path.read_text().splitlines():
+            if not line.strip():
+                continue
+            analysis = CompanyAnalysis.model_validate_json(line)
+            existing.append(analysis)
+            completed_slugs.add(analysis.slug)
+
+    todo = [c for c in companies if c.slug in analyzable_slugs and c.slug not in completed_slugs]
+    if not todo:
+        console.print(f"[green]✓[/green] all {len(analyzable_slugs)} slugs already enriched")
+    else:
+        console.print(f"[cyan]→[/cyan] resuming: {len(completed_slugs)} done, {len(todo)} remaining")
+        try:
+            backend = make_default_backend(api_key=api_key)
+        except RuntimeError as exc:
+            console.print(f"[red]✗ no LLM backend available:[/red] {exc}")
+            raise typer.Exit(3) from exc
+        new_results = asyncio.run(
+            _run_enrichment(
+                todo,
+                backend,
+                model=model,
+                jsonl_path=jsonl_path,
+                raw_failure_path=run_dir / "raw_failures.jsonl",
+            )
+        )
+        existing.extend(new_results)
+
+    # Always rewrite analyses.json from the canonical jsonl.
+    analyses_json = run_dir / "analyses.json"
+    analyses_json.write_text(json.dumps([a.model_dump(mode="json") for a in existing], indent=2))
+    console.print(f"[green]✓[/green] wrote {analyses_json}")
+    _print_enrichment_summary(existing)
+    console.print()
+    console.print(f"[bold]next:[/bold] ycai dashboard {run_dir}")
 
 
 @app.command("run-coverage")
@@ -182,10 +312,23 @@ def run_coverage(
             raise typer.Exit(3) from exc
         backend_name = backend.__class__.__name__
         console.print(f"[cyan]→[/cyan] enriching {len(keepers)} companies with {backend_name} (model={model})…")
-        analyses = asyncio.run(_run_enrichment(keepers, backend, model=model))
+        jsonl_path = run_dir / "analyses.jsonl"
+        raw_failure_path = run_dir / "raw_failures.jsonl"
+        analyses = asyncio.run(
+            _run_enrichment(
+                keepers,
+                backend,
+                model=model,
+                jsonl_path=jsonl_path,
+                raw_failure_path=raw_failure_path,
+            )
+        )
         analyses_path = run_dir / "analyses.json"
         analyses_path.write_text(json.dumps([a.model_dump(mode="json") for a in analyses], indent=2))
         console.print(f"[green]✓[/green] wrote analyses.json → {analyses_path}")
+        if raw_failure_path.exists():
+            failure_count = sum(1 for _ in raw_failure_path.open())
+            console.print(f"[yellow]captured {failure_count} raw failure(s) for audit → {raw_failure_path}[/yellow]")
         _print_enrichment_summary(analyses)
 
         # Publish gate: re-verify every cited URL.
@@ -273,16 +416,29 @@ async def _run_enrichment(
     backend: Backend,
     *,
     model: str,
+    jsonl_path: Path,
+    raw_failure_path: Path | None = None,
 ) -> list[CompanyAnalysis]:
-    """Drive the enrichment pipeline with a Rich progress bar."""
+    """Drive the enrichment pipeline with a Rich progress bar.
+
+    Writes each completed analysis to ``jsonl_path`` immediately so a crash
+    or quota wall doesn't lose progress. Resume reads this file and skips
+    already-enriched slugs.
+    """
     semaphore = asyncio.Semaphore(8)  # respect subscription rate limits
     results: list[CompanyAnalysis] = []
+    counters: Counter[str] = Counter()
+    write_lock = asyncio.Lock()
 
     async def one(company: RawCompany) -> CompanyAnalysis:
         async with semaphore:
-            analysis, _cross = await analyze(company, backend, model=model)
+            analysis, _cross = await analyze(company, backend, model=model, raw_failure_log=raw_failure_path)
+            async with write_lock:
+                with jsonl_path.open("a") as f:
+                    f.write(json.dumps(analysis.model_dump(mode="json")) + "\n")
             return analysis
 
+    description = "enriching · {high}h {med}m {low}l"
     with Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
@@ -291,11 +447,16 @@ async def _run_enrichment(
         TimeElapsedColumn(),
         console=console,
     ) as progress:
-        task = progress.add_task("enriching", total=len(companies))
+        task = progress.add_task(description.format(high=0, med=0, low=0), total=len(companies))
         coros = [one(c) for c in companies]
         for coro in asyncio.as_completed(coros):
             analysis = await coro
             results.append(analysis)
+            counters[analysis.confidence] += 1
+            progress.update(
+                task,
+                description=description.format(high=counters["high"], med=counters["medium"], low=counters["low"]),
+            )
             progress.advance(task)
 
     return results
