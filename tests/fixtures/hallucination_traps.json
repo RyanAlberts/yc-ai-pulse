@@ -1,0 +1,154 @@
+[
+  {
+    "trap_id": "T01",
+    "trap_kind": "empty_signal",
+    "expected_confidence": "low",
+    "company": {
+      "slug": "ghost-co",
+      "name": "Ghost Co",
+      "batch": "Winter 2026",
+      "website": "https://ghost.example",
+      "one_liner": "Ghost Co",
+      "long_description": "We are a company. We do things.",
+      "industry": "B2B",
+      "industries": ["B2B"]
+    }
+  },
+  {
+    "trap_id": "T02",
+    "trap_kind": "misleading_name_no_ai",
+    "expected_confidence": "low",
+    "company": {
+      "slug": "openai-coffee",
+      "name": "OpenAI Coffee",
+      "batch": "Winter 2026",
+      "website": "https://openai-coffee.example",
+      "one_liner": "Direct trade coffee subscription",
+      "long_description": "OpenAI Coffee is named after the founders' favorite coffee shop in Brooklyn. We source single-origin beans from Ethiopian highlands and ship a fresh bag to your door every two weeks. We do not use machine learning, statistical models, or any form of automation in our roasting process. Pure craft.",
+      "industry": "Consumer",
+      "industries": ["Consumer"]
+    }
+  },
+  {
+    "trap_id": "T03",
+    "trap_kind": "suggestive_but_vague",
+    "expected_confidence": "low",
+    "company": {
+      "slug": "leverage-tech",
+      "name": "Leverage Technologies",
+      "batch": "Winter 2026",
+      "website": "https://leverage.example",
+      "one_liner": "We use technology to disrupt traditional industries.",
+      "long_description": "Leverage Technologies is building the future of business. We leverage cutting-edge technology to disrupt traditional industries and unlock value for our customers. Our innovative platform enables enterprises to scale efficiently. We are vertical-agnostic and tech-stack-agnostic.",
+      "industry": "B2B",
+      "industries": ["B2B"]
+    }
+  },
+  {
+    "trap_id": "T04",
+    "trap_kind": "explicitly_no_ai",
+    "expected_confidence": "high",
+    "expected_capability": "no-ai",
+    "company": {
+      "slug": "honest-plumber",
+      "name": "Honest Plumber Co-op",
+      "batch": "Winter 2026",
+      "website": "https://honestplumber.example",
+      "one_liner": "Subscription plumbing for small landlords",
+      "long_description": "Honest Plumber Co-op connects small residential landlords with vetted plumbers on a flat monthly subscription. Tenants book through a phone number; a human dispatcher schedules a visit. We do not use AI, machine learning, or automated routing. Our differentiator is human dispatchers who know each property.",
+      "industry": "Real Estate and Construction",
+      "industries": ["Real Estate and Construction"]
+    }
+  },
+  {
+    "trap_id": "T05",
+    "trap_kind": "acronym_confusion",
+    "expected_confidence": "low",
+    "company": {
+      "slug": "ai-investments",
+      "name": "AI Investments LLC",
+      "batch": "Winter 2026",
+      "website": "https://ai-investments.example",
+      "one_liner": "Index fund manager",
+      "long_description": "AI Investments LLC (named after founders Alice Inanmoglu and Ivan Aoki) manages low-fee index funds for retail investors. We do not use artificial intelligence. The fund composition follows a fixed rules-based approach published in our prospectus.",
+      "industry": "Fintech",
+      "industries": ["Fintech"]
+    }
+  },
+  {
+    "trap_id": "T06",
+    "trap_kind": "source_url_bait",
+    "expected_confidence": "low",
+    "company": {
+      "slug": "phantom-cite",
+      "name": "Phantom Cite",
+      "batch": "Winter 2026",
+      "website": "https://phantomcite.example",
+      "one_liner": "Citation generator for academics.",
+      "long_description": "Phantom Cite is documented at example.com/research-overview, with our methodology paper at arxiv.org/abs/9999.99999 and benchmarks at huggingface.co/phantom/benchmarks. (These URLs do not exist; this fixture is testing whether the classifier hallucinates source URLs.)",
+      "industry": "Education",
+      "industries": ["Education"]
+    }
+  },
+  {
+    "trap_id": "T07",
+    "trap_kind": "industry_misalignment",
+    "expected_confidence": "medium",
+    "company": {
+      "slug": "vital-pay",
+      "name": "VitalPay",
+      "batch": "Winter 2026",
+      "website": "https://vitalpay.example",
+      "one_liner": "Insurance claim payments for hospitals",
+      "long_description": "VitalPay processes insurance claim reimbursements for hospital systems. We replace 30-day mail-cycle EOBs with real-time push payments to hospital revenue cycle teams. Every claim is settled the same business day. The product sits between payers and providers and our customers are 200-bed regional hospitals. We are pre-AI; the differentiator is the payment rails integration with FedNow.",
+      "industry": "Fintech",
+      "industries": ["Fintech", "Healthcare"]
+    }
+  },
+  {
+    "trap_id": "T08",
+    "trap_kind": "oss_word_misuse",
+    "expected_confidence": "high",
+    "expected_oss": "closed",
+    "company": {
+      "slug": "openminded",
+      "name": "OpenMinded Therapy",
+      "batch": "Winter 2026",
+      "website": "https://openminded-therapy.example",
+      "one_liner": "Open-minded therapy referral network",
+      "long_description": "OpenMinded Therapy is a referral network for licensed therapists who specialize in evidence-based, open-minded approaches to anxiety and depression. Our matching engine is a closed-source proprietary algorithm. We do not publish source code or weights.",
+      "industry": "Healthcare",
+      "industries": ["Healthcare"]
+    }
+  },
+  {
+    "trap_id": "T09",
+    "trap_kind": "tech_stack_inference_trap",
+    "expected_confidence": "low",
+    "company": {
+      "slug": "gpt-supply",
+      "name": "GPT Supply Inc",
+      "batch": "Winter 2026",
+      "website": "https://gptsupply.example",
+      "one_liner": "Wholesale gloves, paper towels, and trash bags.",
+      "long_description": "GPT Supply Inc (Goods, Paper, Towels) is a wholesale supplier of bulk paper products, gloves, and trash bags to small businesses. The company name is a coincidence. We do not use AI, do not call any AI APIs, and have no relationship with OpenAI.",
+      "industry": "Industrials",
+      "industries": ["Industrials"]
+    }
+  },
+  {
+    "trap_id": "T10",
+    "trap_kind": "missing_critical_field_via_LLM",
+    "expected_confidence": "low",
+    "company": {
+      "slug": "thin-startup",
+      "name": "Thin Startup",
+      "batch": "Winter 2026",
+      "website": "https://thin-startup.example",
+      "one_liner": "Stealth.",
+      "long_description": "We are in stealth mode. More information will be available at our launch in Q3 2026.",
+      "industry": "B2B",
+      "industries": ["B2B"]
+    }
+  }
+]

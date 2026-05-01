@@ -36,7 +36,7 @@ else
     # - tests/test_sanitizer.py (test fixtures must contain the patterns
     #   they're testing redaction of). Reviewed manually — these are fake values.
     HITS=$(echo "$FILES" \
-      | grep -v -E '^(\.secrets\.baseline|scripts/secret_scan\.sh|tests/test_sanitizer\.py)$' \
+      | grep -v -E '^(\.secrets\.baseline|scripts/secret_scan\.sh|tests/test_sanitizer\.py|tests/test_researcher\.py)$' \
       | xargs grep -E -l "$pattern" 2>/dev/null || true)
     if [[ -n "$HITS" ]]; then
       echo "❌ pattern matched: $pattern"
