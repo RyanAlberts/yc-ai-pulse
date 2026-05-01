@@ -4,9 +4,88 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import StrEnum
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, HttpUrl
+
+
+class Industry(StrEnum):
+    """Closed-set industry labels. Free text is rejected — the LLM must pick one."""
+
+    B2B_SAAS = "B2B SaaS"
+    DEVELOPER_TOOLS = "Developer Tools"
+    AI_INFRASTRUCTURE = "AI Infrastructure"
+    SECURITY = "Security"
+    FINTECH = "Fintech"
+    HEALTHCARE = "Healthcare"
+    BIOTECH = "Biotech"
+    INDUSTRIALS = "Industrials"
+    ROBOTICS = "Robotics"
+    HARDWARE = "Hardware"
+    CLIMATE_ENERGY = "Climate / Energy"
+    REAL_ESTATE_CONSTRUCTION = "Real Estate / Construction"
+    SUPPLY_CHAIN_LOGISTICS = "Supply Chain / Logistics"
+    LEGAL = "Legal"
+    EDUCATION = "Education"
+    CONSUMER = "Consumer"
+    MEDIA_CONTENT = "Media / Content"
+    GOVERNMENT_DEFENSE = "Government / Defense"
+    OTHER = "Other"
+    UNKNOWN = "Unknown"
+
+
+class AICapability(StrEnum):
+    """What the company actually does with AI."""
+
+    CODE_GEN = "code-generation"
+    AGENTS = "agents"
+    RAG = "rag"
+    VOICE = "voice"
+    VISION = "vision"
+    MULTIMODAL = "multimodal"
+    NLP_CLASSIC = "nlp-classic"
+    SPEECH = "speech"
+    ROBOTICS = "robotics"
+    BIO_AI = "bio-ai"
+    TRAINING_INFRA = "training-infra"
+    INFERENCE_INFRA = "inference-infra"
+    DATA_PIPELINE = "data-pipeline"
+    EVALS_OBSERVABILITY = "evals-observability"
+    SAFETY_GUARDRAILS = "safety-guardrails"
+    NO_AI = "no-ai"  # explicit signal that this company isn't actually doing AI
+    UNCLEAR = "unclear"
+
+
+class TechStack(StrEnum):
+    """Model providers, frameworks, and infra signals visible from public surfaces."""
+
+    OPENAI = "openai"
+    ANTHROPIC = "anthropic"
+    GOOGLE_GEMINI = "google-gemini"
+    META_LLAMA = "meta-llama"
+    MISTRAL = "mistral"
+    DEEPSEEK = "deepseek"
+    QWEN = "qwen"
+    CUSTOM_MODEL = "custom-model"
+    LANGCHAIN = "langchain"
+    LLAMAINDEX = "llamaindex"
+    VERCEL_AI_SDK = "vercel-ai-sdk"
+    HUGGINGFACE = "huggingface"
+    ONNX = "onnx"
+    PYTORCH = "pytorch"
+    JAX = "jax"
+    UNKNOWN = "unknown"
+
+
+class OSSPosture(StrEnum):
+    """How open the product or its weights are."""
+
+    FULLY_OPEN = "fully-open"  # source + weights on a permissive license
+    WEIGHTS_ONLY = "weights-only"  # weights public, source closed
+    SOURCE_AVAILABLE = "source-available"  # source visible, restrictive license
+    API_ONLY = "api-only"  # closed product, accessible only via API
+    CLOSED = "closed"
+    UNKNOWN = "unknown"
 
 
 class CoverageTier(StrEnum):
@@ -108,11 +187,52 @@ class BatchCoverage(BaseModel):
 
 
 HttpUrlStr = Annotated[str, Field(min_length=1)]
+
+
+class CompanyAnalysis(BaseModel):
+    """LLM-emitted classification for one company.
+
+    Schema is enforced by pydantic. The model gets one shot to fill this in;
+    any failure (missing source, schema violation, JSON parse error) drops the
+    row to ``confidence=low`` so it's excluded from charts but listed in the
+    audit trail.
+    """
+
+    slug: str
+    industry_primary: Industry
+    industry_secondary: list[Industry] = Field(default_factory=list, max_length=3)
+    ai_capability: list[AICapability] = Field(min_length=1, max_length=5)
+    tech_stack: list[TechStack] = Field(default_factory=list, max_length=8)
+    oss_posture: OSSPosture
+    oss_evidence_url: HttpUrl | None = None
+    tagline_rewrite: str = Field(min_length=4, max_length=140)
+    confidence: Literal["high", "medium", "low"]
+    sources: list[HttpUrl] = Field(min_length=1, max_length=10)
+    rationale: str = Field(default="", max_length=400)
+
+
+class CrossCheckResult(BaseModel):
+    """Output of the two-pass cross-check on a medium-confidence row."""
+
+    slug: str
+    pass_1: CompanyAnalysis
+    pass_2: CompanyAnalysis
+    agreed_on_industry: bool
+    agreed_on_oss: bool
+    final_confidence: Literal["high", "medium", "low"]
+
+
 __all__ = [
+    "AICapability",
     "BatchCoverage",
+    "CompanyAnalysis",
     "CoverageRecord",
     "CoverageTier",
+    "CrossCheckResult",
     "DropReason",
     "HttpUrl",
+    "Industry",
+    "OSSPosture",
     "RawCompany",
+    "TechStack",
 ]

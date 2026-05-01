@@ -1,0 +1,115 @@
+[
+  {
+    "slug": "bidflow",
+    "industry_primary": "Real Estate / Construction",
+    "industry_secondary": [
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "rag",
+      "nlp-classic",
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI copilot that automates electrical contractor RFP estimation, cutting bid prep time dramatically.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/bidflow",
+      "https://usebidflow.com/"
+    ],
+    "rationale": "The description explicitly states the product helps 'electrical contractors do electrical estimates way faster using AI' and targets 'redundant paperwork' in RFP submission, confirming Real Estate/Construction primary with B2B SaaS delivery; YC tags 'AI Assistant' and 'SaaS' corroborate the classification."
+  },
+  {
+    "slug": "travo",
+    "industry_primary": "Real Estate / Construction",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "rag",
+      "data-pipeline",
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered real estate data platform for RV parks and niche asset classes \u2014 comps, ownership, zoning, and financials in one place.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/travo",
+      "https://www.travoai.com/"
+    ],
+    "rationale": "The description explicitly states they 'use AI to collect and analyze real estate data' and 'build the best informed AI applications for real estate private equity firms, developers, and brokers,' confirming a Real Estate / Construction primary with AI-driven data pipeline and RAG-style retrieval capabilities. No specific model or framework is mentioned, so tech_stack is unknown."
+  },
+  {
+    "slug": "galactic-resource-utilization-space-inc-gru-space",
+    "industry_primary": "Industrials",
+    "industry_secondary": [
+      "Real Estate / Construction",
+      "Consumer",
+      "Government / Defense"
+    ],
+    "ai_capability": [
+      "no-ai"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "In-situ resource utilization to build pressurized lunar habitats, starting with a Moon hotel opening 2032.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/galactic-resource-utilization-space-inc-gru-space",
+      "https://gru.space/"
+    ],
+    "rationale": "The description explicitly focuses on off-planet habitat construction using 'in-situ resource utilization technology, turning local material into building material,' with a roadmap through lunar and Martian infrastructure \u2014 squarely Industrials/Aviation and Space. No AI capabilities or tech stack are mentioned anywhere in the provided text."
+  },
+  {
+    "slug": "autumn-ai",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "AI Infrastructure",
+      "Developer Tools"
+    ],
+    "ai_capability": [
+      "rag",
+      "data-pipeline",
+      "nlp-classic",
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Real-time buying signal intelligence platform that monitors web activity to surface high-intent prospects for GTM teams.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/autumn-ai"
+    ],
+    "rationale": "The description explicitly states Autumn is 'building the first real-time signal intelligence platform for GTM teams' that 'monitors posts, commits, blogs, and announcements, surfacing buying signals,' indicating a B2B SaaS product with AI-driven data pipeline and NLP capabilities; no specific model providers or OSS artifacts are mentioned."
+  },
+  {
+    "slug": "velum-labs",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  }
+]
