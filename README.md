@@ -31,7 +31,7 @@ A Chrome extension wraps two flows: *(a)* analyze the whole batch, *(b)* deep-di
 |---|---|---|
 | 0 | Repo bootstrap, secrets hygiene, CI | ✅ shipped |
 | 1 | CLI + dashboard with anti-hallucination Layer 1 | ✅ **v0.1.0** |
-| 2 | `.pptx` + `.docx` reports | ⬜ planned |
+| 2 | Depth=1 crawler + ECharts dashboard + `.pptx` / `.docx` reports | 🟡 in progress |
 | 3 | Chrome extension | ⬜ planned |
 
 See [CHANGELOG.md](CHANGELOG.md) for what 0.1.0 includes, [BACKLOG.md](BACKLOG.md) for the working backlog, and `docs/decisions/` for architecture decisions.
