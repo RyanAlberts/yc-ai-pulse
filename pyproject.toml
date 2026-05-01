@@ -1,6 +1,6 @@
 [project]
 name = "yc-ai-pulse"
-version = "0.0.1"
+version = "0.1.0"
 description = "Open-source YC batch analyzer — VC-style report and dashboard for the most recent Y Combinator batch."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -8,7 +8,7 @@ license = { file = "LICENSE" }
 authors = [{ name = "Ryan Alberts", email = "25306145+RyanAlberts@users.noreply.github.com" }]
 keywords = ["ycombinator", "yc", "ai", "analysis", "vc", "research", "dashboard"]
 classifiers = [
-  "Development Status :: 2 - Pre-Alpha",
+  "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3.11",
