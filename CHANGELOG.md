@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_(no changes since 0.1.0)_
+### Added
+- **PR #11 — depth=1 website crawl (B007 resolved)**: new `src/ycai/crawler.py` module. Polite, robots-aware, max 5 pages per company, 30 KB per page, 4-second timeout. Pages ranked by signal-path priority (`/pricing`, `/security`, `/about`, `/docs`, `/open-source`, …). HTML stripped and PII-sanitized before any LLM call. Crawled URLs are also accepted by the source-URL guard so the LLM can cite specific pages as evidence. New `--no-crawl` flag opts out.
+- W26 with crawler enabled: **OSS posture `unknown` rate dropped 55% → 21%** (target was <30%). Tech-stack identified mentions: 14 → 41. Vision capability: 17 → 26. Multimodal: 17 → 22.
+- 13 new crawler tests (116 total), all network-free via `httpx.MockTransport`. Robots-disallow path-level enforcement, content-type filtering (PDF/JSON skipped), max-pages cap, dedup, fragment stripping, host-restriction (no off-site fetches), PII redaction round-trip.
 
 ## [0.1.0] — 2026-05-01
 

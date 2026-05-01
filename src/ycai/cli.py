@@ -18,6 +18,7 @@ from rich.table import Table
 
 from ycai import __version__
 from ycai.coverage import compute_coverage, coverage_summary_lines
+from ycai.crawler import CrawlResult, crawl_companies
 from ycai.dashboard import (
     collect_cited_urls,
     write_broken_links_report,
@@ -218,6 +219,12 @@ def run_coverage(
         "Writes BROKEN_LINKS.md alongside; banner appears on the dashboard. "
         "Default: refuse to write the dashboard so reports never ship dead citations.",
     ),
+    no_crawl: bool = typer.Option(
+        False,
+        "--no-crawl",
+        help="Skip the depth=1 website crawl that recovers tech_stack and oss_posture "
+        "signal. Faster but classifications fall back to YC-only context.",
+    ),
     verbose: bool = typer.Option(False, "-v", help="Verbose logging."),
 ) -> None:
     """Phase 1 quality probe: fetch the batch, classify by tier, write a coverage dashboard.
@@ -311,6 +318,36 @@ def run_coverage(
             console.print(f"[red]✗ no LLM backend available:[/red] {exc}")
             raise typer.Exit(3) from exc
         backend_name = backend.__class__.__name__
+
+        crawl_results: dict[str, CrawlResult] = {}
+        if not no_crawl:
+            crawl_targets = [c.website for c in keepers if c.website]
+            console.print(f"[cyan]→[/cyan] crawling {len(crawl_targets)} websites at depth=1 (polite, robots-aware)…")
+            crawl_results = asyncio.run(crawl_companies(crawl_targets))
+            crawled_pages = sum(len(r.pages) for r in crawl_results.values())
+            blocked = sum(1 for r in crawl_results.values() if r.robots_blocked)
+            errored = sum(1 for r in crawl_results.values() if r.error)
+            console.print(
+                f"[green]✓[/green] crawl summary: {crawled_pages} page(s) across {len(crawl_targets)} sites "
+                f"({blocked} blocked by robots, {errored} unreachable)"
+            )
+            crawl_jsonl = run_dir / "crawl_results.jsonl"
+            with crawl_jsonl.open("w") as f:
+                for url, result in crawl_results.items():
+                    record = {
+                        "homepage": url,
+                        "robots_blocked": result.robots_blocked,
+                        "error": result.error,
+                        "pages": [
+                            {"url": p.url, "status": p.status, "bytes": p.bytes_fetched, "chars": len(p.text)}
+                            for p in result.pages
+                        ],
+                    }
+                    f.write(json.dumps(record) + "\n")
+            console.print(f"[green]✓[/green] wrote crawl_results.jsonl → {crawl_jsonl}")
+        else:
+            console.print("[yellow]⚠ skipping website crawl (--no-crawl)[/yellow]")
+
         console.print(f"[cyan]→[/cyan] enriching {len(keepers)} companies with {backend_name} (model={model})…")
         jsonl_path = run_dir / "analyses.jsonl"
         raw_failure_path = run_dir / "raw_failures.jsonl"
@@ -321,6 +358,7 @@ def run_coverage(
                 model=model,
                 jsonl_path=jsonl_path,
                 raw_failure_path=raw_failure_path,
+                crawl_results=crawl_results,
             )
         )
         analyses_path = run_dir / "analyses.json"
@@ -418,6 +456,7 @@ async def _run_enrichment(
     model: str,
     jsonl_path: Path,
     raw_failure_path: Path | None = None,
+    crawl_results: dict[str, CrawlResult] | None = None,
 ) -> list[CompanyAnalysis]:
     """Drive the enrichment pipeline with a Rich progress bar.
 
@@ -429,10 +468,21 @@ async def _run_enrichment(
     results: list[CompanyAnalysis] = []
     counters: Counter[str] = Counter()
     write_lock = asyncio.Lock()
+    crawl_results = crawl_results or {}
 
     async def one(company: RawCompany) -> CompanyAnalysis:
         async with semaphore:
-            analysis, _cross = await analyze(company, backend, model=model, raw_failure_log=raw_failure_path)
+            crawl = crawl_results.get(company.website) if company.website else None
+            crawled_pages: list[tuple[str, str]] | None = None
+            if crawl and crawl.pages:
+                crawled_pages = [(p.url, p.text) for p in crawl.pages]
+            analysis, _cross = await analyze(
+                company,
+                backend,
+                model=model,
+                raw_failure_log=raw_failure_path,
+                crawled_pages=crawled_pages,
+            )
             async with write_lock:
                 with jsonl_path.open("a") as f:
                     f.write(json.dumps(analysis.model_dump(mode="json")) + "\n")
