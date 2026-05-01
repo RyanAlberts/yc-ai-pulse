@@ -101,7 +101,7 @@ def test_coverage_only_dashboard_renders_yc_industry_chart(tmp_path: Path) -> No
     html = out.read_text()
     assert "Industry distribution (YC-supplied" in html
     # No LLM-derived charts in coverage-only mode.
-    assert "AI capability x industry heatmap" not in html
+    assert "chart-capability" not in html
     # Headline shows official-count denominator.
     assert "of Winter 2026" in html
     # Dropped register named individually.
@@ -219,3 +219,79 @@ def test_all_oss_posture_values_render_without_error(tmp_path: Path, oss: OSSPos
     analyses = [_make_analysis("a0", oss_posture=oss)]
     out = render(coverage, companies, tmp_path / "dashboard.html", analyses=analyses)
     assert out.exists()
+
+
+# ----- ECharts integration (PR #12) ----------------------------------------------------------
+
+
+def test_dashboard_loads_echarts_with_sri(tmp_path: Path) -> None:
+    coverage = _make_coverage(tier_a=2, tier_c=1)
+    companies = _make_companies(coverage)
+    out = render(coverage, companies, tmp_path / "dashboard.html")
+    html = out.read_text()
+    assert "cdn.jsdelivr.net/npm/echarts" in html
+    assert 'integrity="sha384-' in html
+    assert 'crossorigin="anonymous"' in html
+
+
+def test_dashboard_options_are_pure_json(tmp_path: Path) -> None:
+    """Security: chart options must be parseable as JSON. No JS function strings
+    are smuggled into the dashboard — that would force the browser to interpret
+    server-generated text as code."""
+    import re
+
+    coverage = _make_coverage(tier_a=2, tier_c=1)
+    companies = _make_companies(coverage)
+    analyses = [_make_analysis("a0"), _make_analysis("a1")]
+    out = render(coverage, companies, tmp_path / "dashboard.html", analyses=analyses)
+    html = out.read_text()
+    match = re.search(
+        r'<script type="application/json" id="chart-options">(.+?)</script>',
+        html,
+        re.DOTALL,
+    )
+    assert match is not None
+    payload = match.group(1)
+    payload = payload.replace("&quot;", '"').replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
+    import json as _json
+
+    parsed = _json.loads(payload)
+    assert isinstance(parsed, dict)
+    # No JavaScript callbacks should appear in the JSON payload.
+    assert "function" not in payload
+
+
+def test_dashboard_chart_canvases_have_aria_labels(tmp_path: Path) -> None:
+    coverage = _make_coverage(tier_a=2, tier_c=1)
+    companies = _make_companies(coverage)
+    analyses = [_make_analysis("a0")]
+    out = render(coverage, companies, tmp_path / "dashboard.html", analyses=analyses)
+    html = out.read_text()
+    canvases = html.count('class="chart-canvas"')
+    assert canvases >= 5  # confidence, industry, capability, stack, oss
+    canvases_with_aria = html.count('role="img" aria-label="')
+    assert canvases_with_aria == canvases
+
+
+def test_dashboard_has_noscript_fallback(tmp_path: Path) -> None:
+    """If JS is disabled, the drill-down table should still appear."""
+    coverage = _make_coverage(tier_a=2, tier_c=1)
+    companies = _make_companies(coverage)
+    analyses = [_make_analysis("a0")]
+    out = render(coverage, companies, tmp_path / "dashboard.html", analyses=analyses)
+    html = out.read_text()
+    assert "<noscript>" in html
+    assert "noscript-fallback" in html
+
+
+def test_dashboard_chart_ids_are_unique(tmp_path: Path) -> None:
+    """Each ECharts canvas needs a unique container id."""
+    import re
+
+    coverage = _make_coverage(tier_a=2, tier_c=1)
+    companies = _make_companies(coverage)
+    analyses = [_make_analysis("a0"), _make_analysis("a1")]
+    out = render(coverage, companies, tmp_path / "dashboard.html", analyses=analyses)
+    html = out.read_text()
+    ids = re.findall(r'<div id="(chart-[a-z-]+)" class="chart-canvas"', html)
+    assert len(ids) == len(set(ids))

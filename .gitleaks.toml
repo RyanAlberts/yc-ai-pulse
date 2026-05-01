@@ -1,0 +1,13 @@
+# Gitleaks config. The repo also runs detect-secrets which writes
+# fingerprint hashes of audited findings into .secrets.baseline.
+# Gitleaks's generic-api-key rule alarms on those high-entropy fingerprints,
+# even though they are themselves secret-detection artifacts. Exclude the
+# baseline file from gitleaks; detect-secrets owns it.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "files maintained by other secret-scanners"
+paths = [
+  '''\.secrets\.baseline$''',
+]
