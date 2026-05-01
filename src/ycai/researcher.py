@@ -203,6 +203,31 @@ class AgentSDKBackend(Backend):
 _JSON_BLOCK_RE = re.compile(r"\{.*\}", re.DOTALL)
 
 
+_VALID_INDUSTRY_VALUES = {i.value for i in Industry}
+
+
+def _drop_unknown_industries(payload: dict[str, Any], slug: str) -> None:
+    """Filter ``industry_secondary`` to enum members the model is allowed to emit.
+
+    Models trained on broad data sometimes emit reasonable categories that
+    aren't in our closed set (e.g. 'Productivity', 'Marketing'). Rather than
+    fail the entire row, drop the unrecognized secondaries and keep going.
+    Primary industry stays strict — that's the load-bearing field.
+    """
+    raw_secondaries = payload.get("industry_secondary", [])
+    if not isinstance(raw_secondaries, list):
+        payload["industry_secondary"] = []
+        return
+    cleaned = [s for s in raw_secondaries if isinstance(s, str) and s in _VALID_INDUSTRY_VALUES]
+    if len(cleaned) != len(raw_secondaries):
+        log.debug(
+            "dropped %d unknown industry_secondary entries for %s",
+            len(raw_secondaries) - len(cleaned),
+            slug,
+        )
+    payload["industry_secondary"] = cleaned
+
+
 def _parse_response(raw: str, *, slug: str) -> CompanyAnalysis | None:
     """Strict-parse the model output. Returns ``None`` on any failure."""
     if not raw:
@@ -216,6 +241,7 @@ def _parse_response(raw: str, *, slug: str) -> CompanyAnalysis | None:
     except json.JSONDecodeError:
         return None
     payload.setdefault("slug", slug)  # the model sometimes drops the slug
+    _drop_unknown_industries(payload, slug)
     try:
         return CompanyAnalysis.model_validate(payload)
     except ValidationError as exc:

@@ -105,3 +105,80 @@ Output: `runs/2026-05-01-185520/{dashboard.html, coverage.json, companies.csv}`.
 
 - [B004] Tune `MIN_DESCRIPTION_CHARS`. 80 is a guess; a small calibration study against the 8 borderline companies would let us pick a defensible value.
 - [B005] Add a "what's missing" section to the dashboard that compares yc-oss slugs to a slug list discovered from the YC `/companies/<slug>` profile pages, so we can name the 64 missing W26 companies, not just count them.
+
+---
+
+## PR #3 — full-batch enrichment results (2026-05-01)
+
+After PR #3 (enriched dashboard), the full 124-company enrichment ran end-to-end via Claude Max subscription. Took ~6 minutes.
+
+### Confidence
+
+- **83 high (67%)** + **0 medium** + **41 low (33%)**.
+- Of the 41 low-confidence rows: **29** were schema-validation failures (model emitted output that didn't validate after lenient pass), **12** were genuinely-uncertain outputs the model itself flagged as low.
+- **0 hallucinated source URLs** detected — the source-URL guard caught zero cases on this run; every cited URL traced back to either the company website or its YC profile page.
+
+### Industry distribution (Tier A high+medium, n=83)
+
+| Industry | n |
+|---|---:|
+| B2B SaaS | 16 |
+| Fintech | 10 |
+| Developer Tools | 7 |
+| AI Infrastructure | 7 |
+| Legal | 5 |
+| Healthcare | 5 |
+| Biotech | 4 |
+| Security | 4 |
+
+The B2B-heavy mix lines up with the [VCCorner W26 demo-day breakdown](https://www.thevccorner.com/p/yc-w26-demo-day-2026-complete-breakdown). The visible Legal cluster (5) is a smaller but real cohort the article didn't separately call out.
+
+### AI capability distribution (n=83)
+
+| Capability | n |
+|---|---:|
+| **agents** | 54 |
+| nlp-classic | 30 |
+| rag | 26 |
+| data-pipeline | 19 |
+| vision | 14 |
+| multimodal | 10 |
+| evals-observability | 9 |
+| **no-ai** | 8 |
+
+**Top finding**: 65% (54 of 83) of high-confidence W26 companies build agents. This is the dominant story of the batch.
+
+**Honesty check**: 8 companies were correctly classified as `no-ai` despite being in the YC batch — the LLM is willing to say "the YC profile suggests AI but the description doesn't actually substantiate it." This is exactly the behavior the anti-hallucination contract is meant to produce.
+
+### OSS posture (n=83)
+
+| Posture | n |
+|---|---:|
+| unknown | 45 |
+| closed | 36 |
+| api-only | 1 |
+| source-available | 1 |
+| fully-open | 0 |
+
+**The "unknown" plurality is the main signal**, and it's structural. The model has access only to the YC `long_description`; OSS posture is rarely stated there. **B007** in the backlog (depth=1 website crawl) would shift these `unknown` rows to `closed` / `api-only` / `weights-only` based on actual evidence (license files, GitHub presence, pricing pages).
+
+Until then, do not over-interpret the `unknown` count: it's a measurement gap, not a finding.
+
+### Tech stack
+
+Dominated by `unknown` (52) and `custom-model` (13). Same structural reason — descriptions don't usually name the model provider. `custom-model` is signal-bearing: 13 companies advertise their own models / fine-tunes, which is a meaningful slice of W26.
+
+### Cited-URL link verification (the publish gate)
+
+Of all source URLs cited across 83 high-confidence rows, **3** returned 4xx/5xx at publish time:
+- `https://www.arzule.com/` — 429 (rate limit)
+- `https://maywoodai.com/` — 404
+- `https://www.caretta.so/` — SSL handshake failure
+
+Each is named in [`examples/output/BROKEN_LINKS-w26-2026-05-01.md`](../examples/output/BROKEN_LINKS-w26-2026-05-01.md) with the company that cited it. Dashboard rendered with `--allow-dead-links` for this example, with a warning banner at the top. In production runs (no `--allow-dead-links`), the pipeline would have refused to write the dashboard and exited non-zero — that's the publish gate.
+
+### Implications
+
+1. **Schema-validation failure rate (23%) is too high for a v0.1 release.** Tracked as B006. Most likely cause is the model emitting enum values outside our closed sets for `ai_capability` or `tech_stack` (we patched `industry_secondary` for this in PR #3 but the other two stayed strict). Fix in a follow-up PR.
+2. **W26 is an agents batch.** This is now defensible — 54 of 83 high-confidence rows, with row-level drill-down showing exactly which companies and what their YC descriptions said.
+3. **The 67% high-confidence rate against 63.3% upstream coverage means the actual analyzable share of W26 is ~42% (83/196).** The headline metric on the dashboard now shows this honestly.
