@@ -9,7 +9,7 @@ from ycai.cli import app
 
 
 def test_package_imports() -> None:
-    assert ycai.__version__ == "0.0.1"
+    assert ycai.__version__ == "0.1.0"
 
 
 def test_cli_version_subcommand() -> None:
