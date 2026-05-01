@@ -1,0 +1,50 @@
+# Secrets — never check these in
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+~/.ycai/
+
+# Run artifacts (timestamped output directories)
+runs/
+cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.venv/
+venv/
+env/
+
+# Node / extension build
+node_modules/
+extension/dist/
+extension/.env.local
+*.tsbuildinfo
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# DBs / large files we don't want shipped
+*.sqlite
+*.sqlite3
+*.db
