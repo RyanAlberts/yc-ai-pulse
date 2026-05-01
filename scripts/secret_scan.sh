@@ -30,9 +30,13 @@ if [[ -z "$FILES" ]]; then
   echo "[secret-scan] no tracked files yet — skipping regex sweep."
 else
   for pattern in "${PATTERNS[@]}"; do
-    # Exclude .secrets.baseline (it intentionally contains test fingerprints)
-    # and this script itself (it lists patterns by definition).
-    HITS=$(echo "$FILES" | grep -v -E '^(\.secrets\.baseline|scripts/secret_scan\.sh)$' \
+    # Exclude:
+    # - .secrets.baseline (it intentionally contains test fingerprints)
+    # - scripts/secret_scan.sh (this file lists the patterns by definition)
+    # - tests/test_sanitizer.py (test fixtures must contain the patterns
+    #   they're testing redaction of). Reviewed manually — these are fake values.
+    HITS=$(echo "$FILES" \
+      | grep -v -E '^(\.secrets\.baseline|scripts/secret_scan\.sh|tests/test_sanitizer\.py)$' \
       | xargs grep -E -l "$pattern" 2>/dev/null || true)
     if [[ -n "$HITS" ]]; then
       echo "❌ pattern matched: $pattern"
