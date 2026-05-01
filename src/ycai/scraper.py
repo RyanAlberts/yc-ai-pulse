@@ -51,7 +51,10 @@ def _parse_iso(value: str | None) -> datetime | None:
         return None
 
 
-def fetch_meta(client: httpx.Client | None = None) -> dict:
+JsonDict = dict[str, object]
+
+
+def fetch_meta(client: httpx.Client | None = None) -> JsonDict:
     """Pull the yc-oss meta JSON. Raises ``UpstreamError`` on failure."""
     owns_client = client is None
     client = client or httpx.Client(timeout=DEFAULT_TIMEOUT, follow_redirects=True)
@@ -61,22 +64,24 @@ def fetch_meta(client: httpx.Client | None = None) -> dict:
             resp.raise_for_status()
         except httpx.HTTPError as exc:
             raise UpstreamError(f"yc-oss meta unreachable: {exc!r}") from exc
-        return resp.json()
+        data: JsonDict = resp.json()
+        return data
     finally:
         if owns_client:
             client.close()
 
 
-def detect_latest_batch(meta: dict | None = None) -> BatchMeta:
+def detect_latest_batch(meta: JsonDict | None = None) -> BatchMeta:
     """Pick the most-recent batch from the yc-oss meta JSON.
 
     yc-oss naming: ``winter-YYYY`` / ``summer-YYYY`` / ``fall-YYYY`` / ``spring-YYYY``.
     We sort by (year, season-rank) where rank is winter=0, spring=1, summer=2, fall=3.
     """
     meta = meta or fetch_meta()
-    batches: dict[str, dict] = meta.get("batches", {})
-    if not batches:
+    batches_raw = meta.get("batches", {})
+    if not isinstance(batches_raw, dict) or not batches_raw:
         raise UpstreamError("yc-oss meta has no batches")
+    batches: dict[str, JsonDict] = batches_raw
 
     season_rank = {"winter": 0, "spring": 1, "summer": 2, "fall": 3}
 
@@ -90,12 +95,15 @@ def detect_latest_batch(meta: dict | None = None) -> BatchMeta:
     latest_slug = max(batches.keys(), key=sort_key)
     entry = batches[latest_slug]
     label = " ".join(p.capitalize() for p in latest_slug.split("-"))
+    last_updated = meta.get("last_updated")
+    count_raw = entry.get("count", 0)
+    api_raw = entry.get("api")
     return BatchMeta(
         slug=latest_slug,
         label=label,
-        upstream_count=int(entry.get("count", 0)),
-        api_url=entry.get("api", YC_OSS_BATCH_TEMPLATE.format(slug=latest_slug)),
-        source_last_updated=_parse_iso(meta.get("last_updated")),
+        upstream_count=int(count_raw) if isinstance(count_raw, int | str) else 0,
+        api_url=api_raw if isinstance(api_raw, str) else YC_OSS_BATCH_TEMPLATE.format(slug=latest_slug),
+        source_last_updated=_parse_iso(last_updated if isinstance(last_updated, str) else None),
     )
 
 
@@ -126,16 +134,22 @@ def fetch_batch(
         if slug is None:
             batch_meta = detect_latest_batch(meta=meta)
         else:
-            entry = meta.get("batches", {}).get(slug)
-            if not entry:
+            batches_raw = meta.get("batches", {})
+            if not isinstance(batches_raw, dict):
+                raise UpstreamError("yc-oss meta has malformed batches field")
+            entry = batches_raw.get(slug)
+            if not entry or not isinstance(entry, dict):
                 raise UpstreamError(f"yc-oss meta does not list batch slug {slug!r}")
             label = " ".join(p.capitalize() for p in slug.split("-"))
+            last_updated = meta.get("last_updated")
+            count_raw = entry.get("count", 0)
+            api_raw = entry.get("api")
             batch_meta = BatchMeta(
                 slug=slug,
                 label=label,
-                upstream_count=int(entry.get("count", 0)),
-                api_url=entry.get("api", YC_OSS_BATCH_TEMPLATE.format(slug=slug)),
-                source_last_updated=_parse_iso(meta.get("last_updated")),
+                upstream_count=int(count_raw) if isinstance(count_raw, int | str) else 0,
+                api_url=api_raw if isinstance(api_raw, str) else YC_OSS_BATCH_TEMPLATE.format(slug=slug),
+                source_last_updated=_parse_iso(last_updated if isinstance(last_updated, str) else None),
             )
 
         log.info(

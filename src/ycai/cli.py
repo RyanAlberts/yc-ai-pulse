@@ -16,6 +16,7 @@ from rich.table import Table
 from ycai import __version__
 from ycai.coverage import compute_coverage, coverage_summary_lines
 from ycai.dashboard import render as render_dashboard
+from ycai.schemas import RawCompany
 from ycai.scraper import UpstreamError, fetch_batch, upstream_age_hours
 from ycai.verifier import check_urls, split_by_status
 
@@ -143,7 +144,7 @@ def run_coverage(
     )
 
 
-def _write_csv(companies: list, path: Path) -> None:
+def _write_csv(companies: list[RawCompany], path: Path) -> None:
     """Tiny CSV writer that doesn't pull in pandas just for serialization."""
     import csv
 

@@ -60,7 +60,7 @@ def _sanitize_value(value: object) -> object:
     if isinstance(value, str):
         return strip_pii(value)
     if isinstance(value, dict):
-        return sanitize_dict(value)  # type: ignore[arg-type]
+        return sanitize_dict(value)
     if isinstance(value, list):
         return [_sanitize_value(v) for v in value]
     return value

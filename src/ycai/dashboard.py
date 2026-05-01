@@ -200,9 +200,9 @@ def render(
     analyzable = {record.slug for record in coverage.records if record.tier in (CoverageTier.A, CoverageTier.B)}
     keepers = [c for c in companies if c.slug in analyzable]
 
-    industries = Counter()
-    tags = Counter()
-    regions = Counter()
+    industries: Counter[str] = Counter()
+    tags: Counter[str] = Counter()
+    regions: Counter[str] = Counter()
     for c in keepers:
         if c.industry:
             industries[c.industry] += 1
