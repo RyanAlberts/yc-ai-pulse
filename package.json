@@ -1,0 +1,17 @@
+{
+  "name": "yc-ai-pulse-extension",
+  "version": "0.0.1",
+  "description": "Chrome MV3 extension for yc-ai-pulse. Lands in Phase 3.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "echo 'Phase 3 — extension build not yet implemented' && exit 0",
+    "lint": "echo 'Phase 3 — lint not yet implemented' && exit 0",
+    "test": "echo 'Phase 3 — tests not yet implemented' && exit 0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RyanAlberts/yc-ai-pulse.git"
+  }
+}
