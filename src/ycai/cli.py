@@ -17,7 +17,13 @@ from rich.table import Table
 
 from ycai import __version__
 from ycai.coverage import compute_coverage, coverage_summary_lines
-from ycai.dashboard import render as render_dashboard
+from ycai.dashboard import (
+    collect_cited_urls,
+    write_broken_links_report,
+)
+from ycai.dashboard import (
+    render as render_dashboard,
+)
 from ycai.researcher import (
     DEFAULT_MODEL,
     Backend,
@@ -75,6 +81,13 @@ def run_coverage(
         "Never logged, never written to disk.",
     ),
     model: str = typer.Option(DEFAULT_MODEL, "--model", help="Sonnet model to use during --enrich."),
+    allow_dead_links: bool = typer.Option(
+        False,
+        "--allow-dead-links",
+        help="Render the dashboard even if cited URLs returned 4xx/5xx. "
+        "Writes BROKEN_LINKS.md alongside; banner appears on the dashboard. "
+        "Default: refuse to write the dashboard so reports never ship dead citations.",
+    ),
     verbose: bool = typer.Option(False, "-v", help="Verbose logging."),
 ) -> None:
     """Phase 1 quality probe: fetch the batch, classify by tier, write a coverage dashboard.
@@ -154,6 +167,8 @@ def run_coverage(
     coverage_path.write_text(coverage.model_dump_json(indent=2))
     console.print(f"[green]✓[/green] wrote coverage.json → {coverage_path}")
 
+    analyses: list[CompanyAnalysis] | None = None
+    broken_link_count = 0
     if enrich:
         analyzable_slugs = {r.slug for r in coverage.records if r.tier in (CoverageTier.A, CoverageTier.B)}
         keepers = [c for c in companies if c.slug in analyzable_slugs]
@@ -166,17 +181,43 @@ def run_coverage(
             console.print(f"[red]✗ no LLM backend available:[/red] {exc}")
             raise typer.Exit(3) from exc
         backend_name = backend.__class__.__name__
-        console.print(f"[cyan]→[/cyan] enriching {len(keepers)} companies with {backend_name} " f"(model={model})…")
+        console.print(f"[cyan]→[/cyan] enriching {len(keepers)} companies with {backend_name} (model={model})…")
         analyses = asyncio.run(_run_enrichment(keepers, backend, model=model))
         analyses_path = run_dir / "analyses.json"
         analyses_path.write_text(json.dumps([a.model_dump(mode="json") for a in analyses], indent=2))
         console.print(f"[green]✓[/green] wrote analyses.json → {analyses_path}")
         _print_enrichment_summary(analyses)
 
+        # Publish gate: re-verify every cited URL.
+        cited = collect_cited_urls(analyses)
+        if cited:
+            console.print(f"[cyan]→[/cyan] verifying {len(cited)} cited URL(s) before publish…")
+            cite_statuses = check_urls(cited)
+            broken: dict[str, tuple[str, str]] = {
+                url: (status, reason) for url, (status, reason) in cite_statuses.items() if status == "dead"
+            }
+            broken_link_count = len(broken)
+            if broken:
+                console.print(f"[red]✗ {broken_link_count} cited URL(s) returned 4xx/5xx[/red]")
+                report_path = write_broken_links_report(run_dir, broken, analyses)
+                console.print(f"[red]  details: {report_path}[/red]")
+                if not allow_dead_links:
+                    console.print(
+                        "[red]  refusing to write dashboard. Re-run with --allow-dead-links "
+                        "to override (the dashboard will carry a loud banner).[/red]"
+                    )
+                    raise typer.Exit(4)
+                console.print("[yellow]  --allow-dead-links set: writing dashboard with warning banner[/yellow]")
+            else:
+                console.print("[green]✓[/green] every cited URL resolved cleanly")
+
     dashboard_path = render_dashboard(
         coverage=coverage,
         companies=companies,
         output_path=run_dir / "dashboard.html",
+        analyses=analyses,
+        broken_link_count=broken_link_count,
+        allowed_dead_links=allow_dead_links,
     )
     console.print(f"[green]✓[/green] wrote dashboard.html → {dashboard_path}")
 

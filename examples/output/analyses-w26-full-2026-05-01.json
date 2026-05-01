@@ -1,0 +1,2745 @@
+[
+  {
+    "slug": "daivin",
+    "industry_primary": "Hardware",
+    "industry_secondary": [
+      "Government / Defense",
+      "Industrials",
+      "Climate / Energy"
+    ],
+    "ai_capability": [
+      "no-ai"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Tankless breathing systems replacing oxygen tanks for underwater, aerospace, and extreme-environment use",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/daivin",
+      "https://www.daivin.tech/"
+    ],
+    "rationale": "The description explicitly centers on physical 'tankless dive gear' hardware using water as an oxygen source, with YC tags of 'Hard Tech, Hardware, Fuel Cells, Aerospace, Maritime' and subindustry 'Defense' \u2014 no AI capability is mentioned anywhere in the provided text."
+  },
+  {
+    "slug": "mendral",
+    "industry_primary": "Developer Tools",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "evals-observability",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Autonomous AI agent that fixes CI failures, flaky tests, and broken releases \u2014 learns and improves with every build.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/mendral",
+      "https://mendral.com/"
+    ],
+    "rationale": "The description explicitly positions Mendral as an 'AI DevOps Engineer' using autonomous agents that 'observes, diagnoses, acts, and learns continuously' across CI failures, flaky tests, slow builds, and code reviews \u2014 mapping clearly to Developer Tools as primary and agent-based AI capabilities. No OSS repo or specific model stack information is provided in the inputs."
+  },
+  {
+    "slug": "orthogonal",
+    "industry_primary": "Developer Tools",
+    "industry_secondary": [
+      "Fintech",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "inference-infra"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Pay-as-you-go API gateway for AI agents \u2014 no key management, instant access to hundreds of APIs via MCP or SDK.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/orthogonal",
+      "https://orthogonal.com/"
+    ],
+    "rationale": "The description explicitly targets 'agents' with 'Agentic Payments for APIs' and offers 'instant access to hundreds of APIs through our MCP or SDK' with 'pay as you go' billing, placing it squarely in developer tools and AI infrastructure; YC tags confirm 'Artificial Intelligence' and 'Payments' as core themes."
+  },
+  {
+    "slug": "grazemate",
+    "industry_primary": "Robotics",
+    "industry_secondary": [
+      "Industrials",
+      "Hardware",
+      "Climate / Energy"
+    ],
+    "ai_capability": [
+      "agents",
+      "vision",
+      "robotics"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Autonomous AI drones that herd cattle, estimate weights, monitor health, and measure pasture at scale",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/grazemate"
+    ],
+    "rationale": "The description explicitly states 'autonomous drones that herd cattle' using 'AI drones' with reinforcement learning (per YC tags), vision-based capabilities ('estimate animal weights, measure grass biomass, monitoring water levels, and detect sick animals'), and agentic autonomous operation ('At the push of a button'), confirming Robotics as primary with vision and agent AI capabilities."
+  },
+  {
+    "slug": "q2q",
+    "industry_primary": "Fintech",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "nlp-classic",
+      "rag"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-native deal sourcing engine that finds acquisition targets, writes outreach, and books meetings for PE teams.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/q2q",
+      "https://www.tryq2q.com/"
+    ],
+    "rationale": "The description explicitly positions Q2Q as an 'AI-native outbound engine for deal sourcing' serving private equity teams, using AI agents to find companies, write personalized emails, and book meetings \u2014 confirming Fintech/B2B SaaS classification and agentic AI capability. No open-source signals are present."
+  },
+  {
+    "slug": "constellation-space",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "10x-science",
+    "industry_primary": "Biotech",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Healthcare"
+    ],
+    "ai_capability": [
+      "bio-ai"
+    ],
+    "tech_stack": [
+      "custom-model"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI platform accelerating biopharma development via automated protein characterization and quality assessment",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/10x-science",
+      "https://10xscience.com/"
+    ],
+    "rationale": "The description explicitly states the platform applies 'modern AI to the development stage, specifically to protein characterization and quality assessment' for biopharmaceutical development, with YC tags confirming Biotech and B2B SaaS positioning; no open-source indicators are present."
+  },
+  {
+    "slug": "bidflow",
+    "industry_primary": "Real Estate / Construction",
+    "industry_secondary": [
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "rag",
+      "nlp-classic",
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI copilot that automates electrical contractor RFP estimation, cutting bid prep time dramatically.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/bidflow",
+      "https://usebidflow.com/"
+    ],
+    "rationale": "The description explicitly targets electrical contractors with AI-assisted RFP estimation ('optimize the redundant paperwork'), matching the YC tags 'SaaS, Construction, AI Assistant' and confirming a B2B SaaS product in the construction vertical. No model or OSS details are surfaced in the provided text."
+  },
+  {
+    "slug": "sentrial",
+    "industry_primary": "Developer Tools",
+    "industry_secondary": [
+      "AI Infrastructure",
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "evals-observability",
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Real-time monitoring, diagnostics, and debugging for AI agents running in production",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/sentrial",
+      "https://sentrial.com/"
+    ],
+    "rationale": "The description explicitly positions Sentrial as 'the observability platform for AI agents in production' providing 'monitoring, evaluation, and debugging infrastructure,' directly mapping to Developer Tools / AI Infrastructure with evals-observability and agents as core AI capabilities. No tech stack or OSS signals are present in the provided text."
+  },
+  {
+    "slug": "opalite-health",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "lexius",
+    "industry_primary": "Security",
+    "industry_secondary": [
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "vision"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Computer vision SaaS that converts existing retail cameras into real-time shoplifting detection and staff alerts",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/lexius",
+      "https://www.lexius.ai/"
+    ],
+    "rationale": "The description explicitly states they 'turn existing store security cameras into an AI system that catches shoplifting in real time,' and YC tags confirm Computer Vision as the core capability; the SaaS tag and B2B subindustry place it as a closed, subscription-based retail security product."
+  },
+  {
+    "slug": "galactic-resource-utilization-space-inc-gru-space",
+    "industry_primary": "Industrials",
+    "industry_secondary": [
+      "Real Estate / Construction",
+      "Consumer",
+      "Government / Defense"
+    ],
+    "ai_capability": [
+      "no-ai"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "In-situ resource utilization to build pressurized off-world habitats, starting with a lunar hotel by 2032.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/galactic-resource-utilization-space-inc-gru-space",
+      "https://gru.space/"
+    ],
+    "rationale": "The description centers on aerospace/space construction using 'in-situ resource utilization technology, turning local material into building material' with no mention of AI capabilities, placing it squarely in Industrials (Aviation and Space) with secondary overlap in Real Estate/Construction (habitats, hotels, infrastructure) and Consumer (space tourism)."
+  },
+  {
+    "slug": "pocket",
+    "industry_primary": "Consumer",
+    "industry_secondary": [
+      "Hardware"
+    ],
+    "ai_capability": [
+      "speech",
+      "nlp-classic",
+      "rag"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered hardware device + app that converts speech into structured notes, action items, and searchable content.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/pocket",
+      "https://heypocket.com/"
+    ],
+    "rationale": "The description explicitly states 'custom hardware, AI, and software' targeting consumer note-taking, with AI turning 'everything you say and hear into clear notes, action items, and search' \u2014 indicating speech-to-text, NLP summarization, and search/retrieval capabilities; no tech stack or OSS details are provided."
+  },
+  {
+    "slug": "aurorin-cad",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Hardware",
+      "Developer Tools",
+      "Industrials"
+    ],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [
+      "custom-model"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-native CAD software with a custom kernel built on modern CPUs/GPUs \u2014 helps hardware teams design and ship faster.",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/aurorin-cad",
+      "https://aurorincad.com/"
+    ],
+    "rationale": "Description explicitly states 'AI at its heart' and a 'custom parametric and B-Rep driven CAD Kernel built to take full advantage of modern CPUs and GPUs and be AI native,' but no specific AI capability (e.g., generative design, NLP, vision) is described, so ai_capability is 'unclear'; the product is a B2B SaaS CAD tool targeting hardware companies."
+  },
+  {
+    "slug": "shofo",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "compresr",
+    "industry_primary": "AI Infrastructure",
+    "industry_secondary": [
+      "Developer Tools",
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "inference-infra",
+      "rag",
+      "agents",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "api-only",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Drop-in API that compresses LLM context to cut token costs and boost accuracy for agents and RAG pipelines.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/compresr",
+      "https://compresr.ai/"
+    ],
+    "rationale": "The description explicitly states 'an API that compresses LLM context' as a 'drop-in for agents and RAG,' positioning Compresr squarely as AI infrastructure; the API-only delivery model and lack of any OSS signals point to a closed/api-only posture."
+  },
+  {
+    "slug": "legalos",
+    "industry_primary": "Legal",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Other"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-native immigration law firm automating O-1/H-1B/EB-1 visa petitions with licensed attorney oversight",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/legalos",
+      "https://www.legalos.ai/"
+    ],
+    "rationale": "The description explicitly states 'specialized AI agents draft petition narratives, compile evidence, and anticipate USCIS objections' and references training on '12,000 successful petitions,' indicating agent-based and RAG/NLP capabilities; the primary industry is Legal per YC taxonomy and the company's own focus on immigration law."
+  },
+  {
+    "slug": "polymath",
+    "industry_primary": "AI Infrastructure",
+    "industry_secondary": [
+      "Developer Tools"
+    ],
+    "ai_capability": [
+      "training-infra",
+      "evals-observability",
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Building RL environment factories to train more reliable, autonomous AI agents at scale for frontier labs.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/polymath",
+      "https://polymathlabs.ai/"
+    ],
+    "rationale": "The description explicitly states Polymath builds 'environment factories to produce high-fidelity training and evaluation environments at scale' for frontier labs, placing it squarely in AI infrastructure (RL training/eval); the focus on 'long-horizon RL' and agent reliability maps to training-infra, evals-observability, and agents capabilities."
+  },
+  {
+    "slug": "unisson",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "AI Infrastructure",
+      "Developer Tools"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents that act as 24/7 subject-matter experts for customer-facing teams in CS, implementation, and sales engineering.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/unisson",
+      "https://www.unisson.ai/"
+    ],
+    "rationale": "The description explicitly describes 'AI subject-matter experts' deployed as 'agents' that 'learn to use any product,' gather requirements from existing tools, and handle complex tasks like health audits and onboarding \u2014 clearly agentic AI with RAG-style context ingestion. The product is a closed SaaS targeting enterprise B2B customer-facing teams with no OSS signals present."
+  },
+  {
+    "slug": "voxel-energy",
+    "industry_primary": "Climate / Energy",
+    "industry_secondary": [
+      "Industrials",
+      "Hardware"
+    ],
+    "ai_capability": [
+      "no-ai"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Off-grid data centers powered by solar + second-life EV batteries, bypassing utility delays entirely.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/voxel-energy",
+      "https://voxelenergy.com/"
+    ],
+    "rationale": "The description explicitly focuses on solar energy capture, second-life EV battery storage, and a novel DC microgrid architecture for off-grid data centers \u2014 no AI/ML capabilities are described or implied. The YC 'AI' tag likely reflects their data center customer base, not internal AI capability."
+  },
+  {
+    "slug": "baseframe",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "bubble-lab",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Developer Tools"
+    ],
+    "ai_capability": [
+      "agents",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered workflow automation for ops teams \u2014 build production automations by prompting, no code needed.",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/bubble-lab",
+      "https://bubblelab.ai/"
+    ],
+    "rationale": "Described as letting 'operations teams build production workflows in minutes, just by prompting' with YC tags of 'Workflow Automation, Operations, AI', indicating a B2B SaaS product with AI-driven agent/NLP capabilities; no tech stack or OSS details are revealed in the provided inputs."
+  },
+  {
+    "slug": "rev1",
+    "industry_primary": "Industrials",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Hardware"
+    ],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered automation that converts 3D CAD files into manufacturing-ready 2D drawings in minutes, not hours.",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/rev1",
+      "https://rev1.so/"
+    ],
+    "rationale": "The description explicitly targets mechanical engineering workflows \u2014 'automating post-CAD work' and 'generating drawings with proper annotations and tolerancing' \u2014 placing this squarely in Industrials/manufacturing software. No AI models, frameworks, or techniques are named, so ai_capability is 'unclear' despite the automation framing."
+  },
+  {
+    "slug": "stilta",
+    "industry_primary": "Legal",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-native platform for patent practitioners using agentic workflows to cut IP drafting and research time by ~50%.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/stilta"
+    ],
+    "rationale": "The description explicitly states 'agentic workflows' and 'every output must be source-backed, referenced, and auditable' (indicative of RAG), targeting patent practitioners with 'AI-native software' \u2014 firmly Legal/LegalTech B2B SaaS. No open-source signals are present; the product is a closed commercial offering with paying customers."
+  },
+  {
+    "slug": "strand-ai",
+    "industry_primary": "Biotech",
+    "industry_secondary": [
+      "Healthcare",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "multimodal",
+      "bio-ai",
+      "training-infra",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "custom-model"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Foundation models that predict missing biological data from multimodal measured readouts for drug discovery.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/strand-ai",
+      "https://strandai.com/"
+    ],
+    "rationale": "The description explicitly states Strand AI 'builds foundation models that predict missing biological data from measured readouts' and the one-liner references 'curated multimodal datasets for biology AI,' directly supporting bio-ai, multimodal, and custom-model classifications under the Biotech/Drug Discovery primary industry."
+  },
+  {
+    "slug": "resonate",
+    "industry_primary": "Consumer",
+    "industry_secondary": [
+      "Media / Content",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "voice",
+      "speech",
+      "multimodal"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-native voice messaging and agentic video platform for generative social content creation",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/resonate",
+      "https://resonate.audio/"
+    ],
+    "rationale": "Description explicitly references 'AI-native messaging,' 'generative social content,' 'generative UI,' and an 'Advanced Agentic Video platform,' confirming AI-driven voice, agent, and multimodal capabilities; YC industry is listed as Consumer, with Media/Content as a strong secondary given the content creation and social messaging focus."
+  },
+  {
+    "slug": "arzule",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents that surface B2B SaaS partnership opportunities by continuously monitoring the ecosystem for product and integration changes.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/arzule",
+      "https://www.arzule.com/"
+    ],
+    "rationale": "The description explicitly states 'AI agents to identify strategic partnership opportunities' and 'builds deep, living profiles of companies,' indicating agentic AI with continuous data ingestion (data-pipeline) and context-aware retrieval (rag). YC tags confirm 'B2B SaaS' as primary industry; no open-source signals or specific model/stack references are present."
+  },
+  {
+    "slug": "travo",
+    "industry_primary": "Real Estate / Construction",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "rag",
+      "data-pipeline",
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered real estate data platform for RV parks and niche asset classes \u2014 comps, ownership, zoning, and financials in one place.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/travo",
+      "https://www.travoai.com/"
+    ],
+    "rationale": "Description explicitly states they build 'the most accurate and comprehensive real estate data set' and 'build the best informed AI applications for real estate private equity firms, developers, and brokers,' confirming a Real Estate / Construction primary classification with AI-driven data pipeline and retrieval capabilities; no tech stack details are provided in the inputs."
+  },
+  {
+    "slug": "laurence",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "AI Infrastructure",
+      "Media / Content"
+    ],
+    "ai_capability": [
+      "agents",
+      "training-infra",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "custom-model",
+      "pytorch"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Reinforcement learning platform that automates Amazon ad bidding and keyword optimization to cut ad cost by 40%.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/laurence",
+      "https://trylaurence.com/"
+    ],
+    "rationale": "The description explicitly states they 'use reinforcement learning and train our own LLMs to run ads on autopilot' with 'continuous decision-making under stochastic outcomes,' confirming custom-model training and autonomous agent behavior; the B2B SaaS classification follows from a software platform sold to brands managing ad spend on Amazon."
+  },
+  {
+    "slug": "martini",
+    "industry_primary": "Media / Content",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Developer Tools"
+    ],
+    "ai_capability": [
+      "multimodal",
+      "vision"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-native collaborative platform that integrates generative models into professional filmmaking workflows",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/martini",
+      "https://martini.film/"
+    ],
+    "rationale": "The description explicitly states Martini is an 'AI-native platform for professional filmmaking' that integrates 'the best generative models into professional workflows,' with YC tags confirming Generative AI, Video, and Entertainment focus \u2014 pointing to multimodal/vision AI capabilities. No specific model vendors or OSS posture are mentioned, so those remain unknown."
+  },
+  {
+    "slug": "servo7",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "beacon-health",
+    "industry_primary": "Healthcare",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents that automate primary care workflows\u2014prior auth, referrals, risk adjustment\u2014directly inside physician EHRs",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/beacon-health",
+      "https://www.beaconhealth.ai/"
+    ],
+    "rationale": "The description explicitly states 'AI agents handle workflows\u2026directly in their EHR' covering preventative screenings, prior authorizations, referrals, and risk adjustment for primary care, confirming Healthcare as the primary industry and 'agents' as the core AI capability. No open-source signals or specific model/framework mentions appear in the provided text."
+  },
+  {
+    "slug": "hex-security",
+    "industry_primary": "Security",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents running continuous, automated penetration tests 24/7 to find and verify critical vulnerabilities before attackers do.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/hex-security",
+      "https://hex.co/"
+    ],
+    "rationale": "The description explicitly states 'Hex Security builds AI agents that run continuous penetration tests' and YC tags include 'Reinforcement Learning' and 'Cybersecurity', firmly placing this in Security with an agentic AI capability. No open-source repo or specific LLM stack is mentioned, so oss_posture and tech_stack remain unknown."
+  },
+  {
+    "slug": "velum-labs",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "oxus",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Fintech",
+      "Security"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI platform that automates internal audit scoping, documentation, and control testing for pre-IPO and public companies.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/oxus",
+      "https://oxus-ai.com/"
+    ],
+    "rationale": "The description explicitly states Oxus 'automates internal audits\u2026 using AI' and 'turn[s] hours of manual scoping, documentation, and control testing into review-ready outputs,' confirming a B2B SaaS workflow automation play with AI-driven document generation and compliance capabilities; no OSS signals or specific model stack are disclosed."
+  },
+  {
+    "slug": "ditto-biosciences",
+    "industry_primary": "Biotech",
+    "industry_secondary": [
+      "Healthcare"
+    ],
+    "ai_capability": [
+      "bio-ai"
+    ],
+    "tech_stack": [
+      "custom-model"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered drug discovery for autoimmune disease using parasite-derived immune-modulating proteins",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/ditto-biosciences",
+      "https://www.dittobio.com/"
+    ],
+    "rationale": "The description explicitly states 'We use AI to identify these proteins and engineer them into next-generation autoimmune therapies,' confirming bio-AI capability applied to drug discovery. YC tags (Biotech, Therapeutics, Drug discovery) and industry classification (Healthcare -> Drug Discovery and Delivery) firmly place this in Biotech/Healthcare."
+  },
+  {
+    "slug": "burt",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "kyten-technologies",
+    "industry_primary": "Industrials",
+    "industry_secondary": [
+      "Hardware",
+      "Government / Defense",
+      "Climate / Energy"
+    ],
+    "ai_capability": [
+      "no-ai"
+    ],
+    "tech_stack": [],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "US factory manufacturing custom aerospace-grade battery packs for drones, submarines, and satellites at volume",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/kyten-technologies",
+      "https://kytentech.com/"
+    ],
+    "rationale": "The description explicitly states Kyten is 'building a factory to manufacture custom aerospace-grade battery packs' for drones, submarines, and satellites \u2014 a physical manufacturing play with no mention of AI, software, or open-source components; YC tags 'Manufacturing, Aerospace' and subindustry 'Manufacturing and Robotics' confirm the Industrials primary classification."
+  },
+  {
+    "slug": "rhizome-ai",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "inviscid-ai",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "avoice",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "voltair",
+    "industry_primary": "Industrials",
+    "industry_secondary": [
+      "Climate / Energy",
+      "Hardware",
+      "Robotics"
+    ],
+    "ai_capability": [
+      "vision",
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Drones that recharge on power lines, enabling autonomous infinite-range infrastructure inspection at 20x lower cost.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/voltair",
+      "https://voltairlabs.com/"
+    ],
+    "rationale": "The description centers on hardware drones charging on transmission lines for autonomous inspection of power infrastructure \u2014 squarely Industrials/Drones per YC's own tagging. Vision AI is inferred from autonomous pole inspection ('inspected ~2000 poles'), but no explicit AI stack is mentioned, so tech_stack is empty and ai_capability is partially 'unclear'."
+  },
+  {
+    "slug": "o11",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "pax-historia",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "prana-health",
+    "industry_primary": "Healthcare",
+    "industry_secondary": [
+      "Consumer",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "nlp-classic",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered primary care platform with continuous monitoring of medical records and wearables to catch health decline early.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/prana-health",
+      "https://pranadoc.com/"
+    ],
+    "rationale": "The description explicitly positions Prana as a 'full-stack medical provider' with an AI that acts as an 'always-on physician' watching patient data, explaining labs, and managing prescriptions\u2014indicating an agentic AI system with RAG over medical records and wearable data pipelines; YC classifies it under Healthcare / Consumer Health and Wellness."
+  },
+  {
+    "slug": "autumn-ai",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [],
+    "ai_capability": [
+      "rag",
+      "nlp-classic",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Real-time buying-signal intelligence for GTM teams \u2014 monitors posts, commits, and blogs to surface high-intent prospects at scale.",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/autumn-ai",
+      "https://autumnai.com/"
+    ],
+    "rationale": "The description explicitly targets GTM teams with a SaaS signal-monitoring feed ('monitor posts, commits, blogs\u2026 surfacing buying signals'), and YC tags 'Artificial Intelligence' and 'AI Assistant' point to NLP-based intent classification and retrieval over ingested content; no open-source or specific model stack evidence is present."
+  },
+  {
+    "slug": "1code-21stdev",
+    "industry_primary": "Developer Tools",
+    "industry_secondary": [
+      "AI Infrastructure",
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "agents",
+      "code-generation",
+      "evals-observability"
+    ],
+    "tech_stack": [
+      "anthropic"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Orchestration layer to run, manage, and automate AI coding agents in parallel across local and remote environments.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/1code-21stdev",
+      "https://1code.dev/"
+    ],
+    "rationale": "The description explicitly calls it 'a control panel for your AI coding agents' that runs 'Claude Codes in parallel locally or in remote sandboxes' and automates 'Linear tasks, PR reviews,' confirming Developer Tools / AI agent orchestration with direct Anthropic (Claude Code) integration."
+  },
+  {
+    "slug": "haladir",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "chasi",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Industrials",
+      "Supply Chain / Logistics"
+    ],
+    "ai_capability": [
+      "agents",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents automate sales follow-ups, admin, and aftermarket outreach for heavy equipment dealers",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/chasi",
+      "https://chasi.co/"
+    ],
+    "rationale": "The description explicitly states 'AI agents act as executive assistants for sales and support reps, automating follow-ups, data collection, status updates, and outreach' targeting equipment dealers \u2014 confirming B2B SaaS with Industrials vertical and an agent-based AI capability. No open-source signals or tech stack details are mentioned."
+  },
+  {
+    "slug": "sequence-markets",
+    "industry_primary": "Fintech",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Non-custodial trade execution infrastructure for digital assets\u2014better routing, lower slippage, institutional-grade pricing.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/sequence-markets",
+      "https://sequencemkts.com/"
+    ],
+    "rationale": "The description centers on 'execution technology for digital-asset markets' with 'trade routing across venues' for institutions\u2014clearly Fintech/crypto infrastructure. The YC tag includes 'Artificial Intelligence' but the description contains no concrete AI capability details, so ai_capability is set to 'unclear'; oss_posture is unknown as no repo or license is referenced."
+  },
+  {
+    "slug": "getbalance",
+    "industry_primary": "Fintech",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agent that handles SMB bookkeeping \u2014 closes monthly books, chases invoices, and flags financial issues autonomously.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/getbalance",
+      "https://getbalance.ai/"
+    ],
+    "rationale": "The description explicitly positions Balance as 'an AI accountancy' with an 'agent' that performs autonomous finance tasks (chasing invoices, preparing reports, flagging issues), confirming Fintech primary and agent-based AI capability. YC tags 'Artificial Intelligence, Fintech, Automation' corroborate this classification."
+  },
+  {
+    "slug": "cardboard",
+    "industry_primary": "Media / Content",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "multimodal",
+      "vision"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-native video editor for marketing teams \u2014 turns raw footage into polished cuts in minutes via agentic multimodal LLMs.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/cardboard",
+      "https://usecardboard.com/"
+    ],
+    "rationale": "The description explicitly states 'Multimodal LLMs can finally reason over footage' and describes an 'AI director' agentic workflow, directly supporting multimodal, vision, and agents classifications; the B2B SaaS framing targets growth/marketing teams with a collaborative workspace, positioning it firmly in Media/Content with a SaaS delivery model."
+  },
+  {
+    "slug": "cumulus-labs",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "jinba",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Developer Tools",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Natural-language workflow automation for enterprise teams \u2014 no engineers, no drag-and-drop, 40K users at major FIs.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/jinba",
+      "https://jinba.io/"
+    ],
+    "rationale": "The description explicitly positions Jinba as enterprise workflow automation via plain-language chat ('vibe-code AI workflows,' 'describe what you need in plain language'), indicating NLP-driven agentic automation; the primary classification is B2B SaaS given the enterprise SaaS delivery model with on-prem option, audit logging, and 40,000 enterprise users at financial institutions."
+  },
+  {
+    "slug": "catchback-cards",
+    "industry_primary": "Consumer",
+    "industry_secondary": [
+      "Media / Content",
+      "Fintech"
+    ],
+    "ai_capability": [
+      "no-ai"
+    ],
+    "tech_stack": [],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Mobile marketplace for trading card collectors with custom mystery packs, digital rips, and instant buyback via Venmo/PayPal.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/catchback-cards",
+      "https://catchbackcards.com/"
+    ],
+    "rationale": "The description explicitly covers a consumer collectibles platform (Pok\u00e9mon and sports cards) with a $1 marketplace and Venmo/PayPal buyback \u2014 mapping clearly to Consumer with Fintech adjacency. No AI capabilities are mentioned; the 'cryptographically trusted tooling' aligns with the Crypto/Web3 tag but no AI signals appear."
+  },
+  {
+    "slug": "verdex",
+    "industry_primary": "Industrials",
+    "industry_secondary": [
+      "Climate / Energy",
+      "Fintech"
+    ],
+    "ai_capability": [
+      "vision",
+      "multimodal",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Satellite + weather data platform turning every farmland acre into an auditable, measurable asset for insurers and risk managers.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/verdex",
+      "https://www.verdexai.com/"
+    ],
+    "rationale": "The description explicitly states Verdex uses 'satellite imagery and weather data' (vision/multimodal/data-pipeline) to create a 'persistent, time-anchored record' replacing 'manual field inspections in insurance verification and risk management,' firmly placing it in Industrials/Agriculture with secondary touches on Fintech (insurance/risk) and Climate/Energy (land/weather data)."
+  },
+  {
+    "slug": "mantis-biotechnology",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "fullseam",
+    "industry_primary": "Fintech",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agent that autonomously handles AR, AP, billing, and financial record-keeping inside existing finance tools.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/fullseam",
+      "https://www.fullseam.com/"
+    ],
+    "rationale": "The description explicitly states FullSeam 'logs into a company's accounting, billing, banking, and CRM tools and completes routine tasks' \u2014 a clear agentic AI pattern \u2014 targeting finance and accounting teams, fitting Fintech/B2B SaaS; no open-source signals or specific model stack are mentioned."
+  },
+  {
+    "slug": "seeing-systems",
+    "industry_primary": "Government / Defense",
+    "industry_secondary": [
+      "Robotics",
+      "Hardware",
+      "Industrials"
+    ],
+    "ai_capability": [
+      "agents",
+      "vision",
+      "robotics"
+    ],
+    "tech_stack": [
+      "custom-model"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Modular autonomous strike drones with agentic control systems for NATO defense forces at 2x lower lifecycle cost",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/seeing-systems"
+    ],
+    "rationale": "The description explicitly states 'autonomous strike drones' with 'an agentic control system' and 'Swarm AI' tag, confirming agents and robotics AI capabilities; customers include UK Royal Marine Commandos and NATO forces, firmly placing the company in Government / Defense as primary industry."
+  },
+  {
+    "slug": "autositu",
+    "industry_primary": "Government / Defense",
+    "industry_secondary": [
+      "Legal",
+      "Real Estate / Construction",
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents that automate municipal development review, cutting permit cycles from months to minutes",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/autositu",
+      "https://autositu.com/"
+    ],
+    "rationale": "The description explicitly states 'coordinated AI agents that live inside cities' cross-department development review workflows' serving public agencies, placing it squarely in GovTech/Government with secondary Legal and Real Estate classification; the agent-based architecture and regulatory document parsing imply agents and RAG capabilities."
+  },
+  {
+    "slug": "fort",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "corvera",
+    "industry_primary": "Supply Chain / Logistics",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "data-pipeline",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-native OS that automates end-to-end supply chain ops for CPG brands\u2014orders, demand forecasting, and PO processing.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/corvera",
+      "https://www.corvera.ai/"
+    ],
+    "rationale": "The description explicitly targets CPG/retail brand supply chain operations with an 'AI workforce' handling 'orders end-to-end,' 'demand forecasting,' and 'purchase orders,' and YC tags confirm 'Supply Chain, AIOps, SaaS, B2B.' The platform is a closed SaaS product with no OSS signals in the provided text."
+  },
+  {
+    "slug": "synthetic-sciences",
+    "industry_primary": "AI Infrastructure",
+    "industry_secondary": [
+      "Developer Tools",
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "agents",
+      "training-infra",
+      "rag",
+      "data-pipeline",
+      "code-generation"
+    ],
+    "tech_stack": [
+      "custom-model",
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Autonomous AI co-scientists that execute the full research loop\u2014from hypothesis to draft\u2014while you sleep.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/synthetic-sciences",
+      "https://syntheticsciences.ai/"
+    ],
+    "rationale": "The description explicitly covers 'research infrastructure to turn that data into increasingly autonomous systems,' 'RL environments and process-based training data for LLMs,' and 'swarms of AI co-scientists' executing the full scientific loop, placing the company squarely in AI Infrastructure with Developer Tools as a secondary lens; no open-source repo is mentioned so oss_posture is unknown."
+  },
+  {
+    "slug": "corelayer",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "visibl-semiconductors",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "general-legal",
+    "industry_primary": "Legal",
+    "industry_secondary": [
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-native law firm delivering flat-fee contract drafting, review, and negotiation for growth-stage startups.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/general-legal",
+      "https://general.legal/"
+    ],
+    "rationale": "The description explicitly calls this an 'AI native law firm' offering contract drafting, review, and negotiation with 'practical, real-time guidance,' indicating NLP/AI-driven document processing and likely retrieval-augmented generation; no specific model or stack is disclosed, so tech_stack is unknown and oss_posture cannot be determined."
+  },
+  {
+    "slug": "valgo",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "mousecat",
+    "industry_primary": "Fintech",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Security"
+    ],
+    "ai_capability": [
+      "agents",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered fraud detection and mitigation platform for risk teams",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/mousecat",
+      "https://www.mousecat.ai/"
+    ],
+    "rationale": "YC tags 'Fraud Detection' and 'Fintech' combined with the description 'automatically detect, investigate, and mitigate emerging fraud trends' place this squarely in Fintech/Security B2B SaaS; the 'AI Toolkit' framing and 'Artificial Intelligence' tag indicate AI-driven automation but no specific model stack or OSS posture is disclosed."
+  },
+  {
+    "slug": "scout-out",
+    "industry_primary": "Real Estate / Construction",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "vision",
+      "multimodal"
+    ],
+    "tech_stack": [
+      "custom-model"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered takeoffs and proposals for residential contractors \u2014 bid faster, price consistently, win more jobs.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/scout-out",
+      "https://scoutout.ai/"
+    ],
+    "rationale": "The description explicitly states 'computer vision trained on residential building plans to generate structured material and labor takeoffs,' confirming vision AI capability; the product is a B2B workflow tool for residential contractors, squarely in Real Estate / Construction."
+  },
+  {
+    "slug": "chamber",
+    "industry_primary": "AI Infrastructure",
+    "industry_secondary": [
+      "Developer Tools",
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "agents",
+      "inference-infra",
+      "training-infra",
+      "evals-observability"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Agentic platform that auto-optimizes GPU clusters so ML teams run 50% more workloads without manual infra management.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/chamber",
+      "https://www.usechamber.io/"
+    ],
+    "rationale": "The description explicitly states the platform 'orchestrates, governs, and optimizes your AI infrastructure' using an 'agentic AI enabled platform' that monitors GPU clusters, forecasts demand, detects unhealthy nodes, and reallocates resources in real time \u2014 directly mapping to AI Infrastructure as primary, with agents and inference/training-infra as core capabilities."
+  },
+  {
+    "slug": "patientdeskai",
+    "industry_primary": "Healthcare",
+    "industry_secondary": [
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "voice",
+      "agents",
+      "speech"
+    ],
+    "tech_stack": [],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI voice agent automating patient scheduling, reminders, insurance checks, and follow-ups for any healthcare practice",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/patientdeskai",
+      "https://patientdesk.ai/"
+    ],
+    "rationale": "The one-liner explicitly names an 'AI voice agent' and YC tags include 'Conversational AI' and 'Call Center,' confirming voice/speech/agent capabilities; the description targets healthcare practices exclusively with workflow automation, placing it firmly in Healthcare with B2B SaaS as secondary. No tech stack or OSS signals appear in the provided inputs."
+  },
+  {
+    "slug": "hlabs",
+    "industry_primary": "Robotics",
+    "industry_secondary": [
+      "Hardware",
+      "Supply Chain / Logistics",
+      "Industrials"
+    ],
+    "ai_capability": [
+      "robotics",
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "US-based industrial supply chain providing plug-and-play electronic and actuator components to accelerate robot development",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/hlabs",
+      "https://www.hlaboratories.com/"
+    ],
+    "rationale": "The description explicitly states HLabs is 'making an industrial supply chain for building robots in the USA including electronics and actuators' with 'plug and play set of robotic primitives,' confirming Robotics and Hardware as primary classifications; AI is tagged but no specific AI capability is described, so 'unclear' is used alongside 'robotics.'"
+  },
+  {
+    "slug": "arc-prize-foundation",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "crow",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Developer Tools",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "nlp-classic",
+      "safety-guardrails"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Embed a chat-driven AI agent into any product so users control it via natural language instead of UI navigation.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/crow",
+      "https://www.usecrow.ai/"
+    ],
+    "rationale": "The description explicitly positions Crow as a B2B SaaS layer ('deploy in under a week\u2014no rebuilding required') that connects an 'AI agent' to existing products and APIs, enabling natural-language control with 'guardrails' and workflow tracking \u2014 mapping clearly to agents and safety-guardrails capabilities."
+  },
+  {
+    "slug": "skillsync",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Developer Tools",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "rag",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered talent platform that maps developers' open-source contributions into searchable skill profiles for technical recruiting.",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/skillsync",
+      "https://skillsync.wiki/"
+    ],
+    "rationale": "The description explicitly states Skillsync 'creates structured skill profiles of developers based on their open source contributions on GitHub' and uses a 'Cursor-like interface' for semantic search (e.g. 'deployed custom neural nets on edge'), indicating RAG/NLP-based AI capabilities applied to a B2B SaaS recruiting workflow. No specific model vendors or OSS licensing information are mentioned."
+  },
+  {
+    "slug": "origin-bio",
+    "industry_primary": "Biotech",
+    "industry_secondary": [
+      "Healthcare",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "bio-ai",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "custom-model"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-designed synthetic regulatory DNA to enable precise gene expression for cancer, CNS, and cell & gene therapies",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/origin-bio",
+      "https://origin.bio/"
+    ],
+    "rationale": "The description explicitly states designing 'novel regulatory DNA (e.g., enhancers and promoters)' using AI and 'building the largest proprietary dataset of synthetic regulatory sequences,' confirming a biotech/bio-ai classification with a closed, proprietary dataset approach."
+  },
+  {
+    "slug": "fenrock-ai-yc-w26",
+    "industry_primary": "Fintech",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Security"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents that let compliance analysts handle 10x the workload with audit-ready logs for financial crime prevention.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/fenrock-ai-yc-w26",
+      "https://fenrock.ai/"
+    ],
+    "rationale": "The description explicitly states 'AI agents' for 'financial crime compliance' targeting 'highly regulated financial institutions and fintechs,' with '10X compliance workload per analyst' and 'bullet-proof audit logs for regulators,' confirming a Fintech/Security B2B SaaS play powered by AI agents. No tech stack or OSS details are provided in the inputs."
+  },
+  {
+    "slug": "codewisp",
+    "industry_primary": "Consumer",
+    "industry_secondary": [
+      "Developer Tools",
+      "Media / Content"
+    ],
+    "ai_capability": [
+      "code-generation",
+      "multimodal"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered platform that turns plain-English prompts into playable web games \u2014 no coding or engine experience required.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/codewisp",
+      "https://codewisp.net/"
+    ],
+    "rationale": "The description explicitly states CodeWisp 'generates the game's code, structure, and assets' from 'plain-English prompts,' confirming code-generation and multimodal AI capabilities; YC tags ('Artificial Intelligence, Consumer, Gaming') and subindustry ('Consumer -> Gaming') anchor the primary classification as Consumer."
+  },
+  {
+    "slug": "panta",
+    "industry_primary": "Fintech",
+    "industry_secondary": [
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-agent-powered commercial insurance brokerage delivering 10x faster coverage with software-level margins.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/panta",
+      "https://pantainsure.com/"
+    ],
+    "rationale": "The description explicitly states 'autonomous commercial insurance brokerage run by AI agents' and 'our AI agents automate the entire back-office,' confirming an agent-based AI capability; the YC industry tags of Fintech and Insurance drive the primary classification."
+  },
+  {
+    "slug": "maywood",
+    "industry_primary": "Fintech",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "nlp-classic",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI platform automating M&A deal execution\u2014CIMs, models, and diligence responses\u2014for investment banks",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/maywood",
+      "https://maywoodai.com/"
+    ],
+    "rationale": "The description explicitly targets investment banks with AI-automated deal workflows ('automatically generates finished, on-brand CIMs / presentations, models, and diligence responses'), and YC tags confirm Fintech/Finance/B2B/AI positioning. The 'single, living workspace' and document generation capabilities indicate agents and RAG-style AI, though no specific model stack is disclosed."
+  },
+  {
+    "slug": "robodock",
+    "industry_primary": "Robotics",
+    "industry_secondary": [
+      "Climate / Energy",
+      "Industrials"
+    ],
+    "ai_capability": [
+      "robotics",
+      "agents"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Autonomous robotics platform that orchestrates and physically executes EV/AV fleet charging to cut depot opex and maximize uptime.",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/robodock",
+      "https://www.robodock.tech/"
+    ],
+    "rationale": "The description explicitly states RoboDock 'orchestrating when and how vehicles charge, then physically executing charging with robotics' and 'autonomous, self-optimizing systems,' indicating robotics and agent-style autonomy as core capabilities; no AI framework or model stack is mentioned, and no OSS evidence is available."
+  },
+  {
+    "slug": "fed10",
+    "industry_primary": "Legal",
+    "industry_secondary": [
+      "Government / Defense",
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents that monitor U.S. legislation and deliver policy insights at a fraction of the cost of traditional consultants.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/fed10"
+    ],
+    "rationale": "The description explicitly states 'AI agents' staffing a legislative consulting firm that monitors bills and delivers actionable policy insights, confirming agent-based AI and NLP capabilities; YC tags 'GovTech', 'Legal', 'B2B', and 'SaaS' drive the primary/secondary industry classifications."
+  },
+  {
+    "slug": "tensol",
+    "industry_primary": "AI Infrastructure",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Developer Tools"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Deploy autonomous AI employees with full tool integrations\u2014no infra setup required.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/tensol",
+      "https://www.tensol.ai/"
+    ],
+    "rationale": "The description explicitly describes 'AI employees' that run '24/7,' monitor Slack, track Sentry errors, and update CRMs\u2014indicating agent-based AI with persistent context (RAG) and data-pipeline integrations. YC tags it under 'Infrastructure' with 'Artificial Intelligence,' supporting AI Infrastructure as the primary classification."
+  },
+  {
+    "slug": "luel",
+    "industry_primary": "AI Infrastructure",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Media / Content"
+    ],
+    "ai_capability": [
+      "training-infra",
+      "data-pipeline",
+      "multimodal"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Rights-cleared multimodal training data sourcing & licensing platform for frontier AI teams",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/luel",
+      "https://luel.ai/"
+    ],
+    "rationale": "Description explicitly identifies Luel as a 'sourcing and licensing platform for rights-cleared multimodal training data' serving 'frontier AI teams,' confirming AI Infrastructure as primary; the 'multimodal' and 'Big Data' signals drive training-infra and data-pipeline capability tags. No tech stack or OSS signals are present in the provided inputs."
+  },
+  {
+    "slug": "sidekit",
+    "industry_primary": "Developer Tools",
+    "industry_secondary": [
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "no-ai"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Single SDK for mobile app releases: version gating, feature flags, and privacy-first analytics.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/sidekit",
+      "https://appsidekit.com/"
+    ],
+    "rationale": "The description explicitly positions SideKit as an SDK for mobile developers covering 'app versions, feature flags, and privacy-first analytics,' with version gating as a core free feature \u2014 squarely Developer Tools. No AI capabilities are mentioned anywhere in the description or tags."
+  },
+  {
+    "slug": "squid",
+    "industry_primary": "Climate / Energy",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Industrials"
+    ],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Browser-based AI platform for electricity grid planning and network modeling, targeting utilities and energy operators.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/squid",
+      "https://squid.energy/"
+    ],
+    "rationale": "The description explicitly positions Squid as 'AI powered grid planning in your browser' targeting electricity network planning teams with a 'unified, trusted network model,' aligning with Climate/Energy and B2B SaaS; however, no specific AI techniques or model providers are mentioned, so ai_capability is set to 'unclear'."
+  },
+  {
+    "slug": "booko",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [],
+    "ai_capability": [
+      "nlp-classic",
+      "data-pipeline"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Dynamic pricing engine for bookable time slots \u2014 integrates with existing systems to recover lost revenue from unsold inventory.",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/booko",
+      "https://bookoapp.com/"
+    ],
+    "rationale": "The description explicitly states B2B SaaS with dynamic pricing driven by 'historical utilization, availability, and demand' and tags include 'Machine Learning', supporting ML-based demand forecasting; no specific AI framework or model provider is mentioned, and the product is closed/API-only based on integration-focused SaaS model."
+  },
+  {
+    "slug": "beyond-reach-labs",
+    "industry_primary": "Hardware",
+    "industry_secondary": [
+      "Industrials",
+      "Climate / Energy",
+      "Government / Defense"
+    ],
+    "ai_capability": [
+      "no-ai"
+    ],
+    "tech_stack": [],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Patented deployable space solar arrays that expand 10x in orbit, delivering 10x more power without added launch mass.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/beyond-reach-labs",
+      "https://www.beyondreachlabs.com/"
+    ],
+    "rationale": "The description centers on a 'patented deployable design' for physical solar panels that 'changes geometry in space,' with no mention of AI, ML, or software capabilities; the YC tags ('Hard Tech, Hardware, Space Exploration, Satellites, Aerospace') and primary YC industry ('Industrials \u2192 Aviation and Space') confirm a hardware/deep-tech classification."
+  },
+  {
+    "slug": "octapulse",
+    "industry_primary": "Robotics",
+    "industry_secondary": [
+      "Industrials",
+      "Climate / Energy"
+    ],
+    "ai_capability": [
+      "vision",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "custom-model"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI vision platform automating fish farm QA\u2014cuts inspection time 10x at >90% accuracy across the $300B aquaculture industry.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/octapulse",
+      "https://www.tryoctapulse.com/"
+    ],
+    "rationale": "Description explicitly calls this an 'AI vision platform' using 'off the shelf cameras' and custom-trained models for broodstock phenotyping and deformity inspection; YC tags confirm 'Robotics' and 'Computer Vision' as core capabilities, with a proprietary multi-species dataset built through each deployment. No open-source artifacts or third-party LLM dependencies are mentioned."
+  },
+  {
+    "slug": "maven",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "kita",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "robby",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Consumer"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered revenue growth engine for home services: surfaces leads, arms technicians with close-rate talking points.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/robby",
+      "https://tryrobby.com/"
+    ],
+    "rationale": "The description explicitly calls Robby an 'AI growth engine' that 'combines customer and third party data to generate dozens of new leads every day' and 'arms technicians with talking points,' indicating agentic AI (lead generation automation) and RAG-style data synthesis. The business is clearly B2B SaaS targeting home services operators (GMs, technicians), with no open-source signals present."
+  },
+  {
+    "slug": "didit",
+    "industry_primary": "Security",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "vision",
+      "multimodal"
+    ],
+    "tech_stack": [
+      "custom-model"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Identity verification platform using face scan to unify KYC, fraud prevention, and all identity checks via pay-per-use API.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/didit",
+      "https://didit.me/"
+    ],
+    "rationale": "The description states 'humans prove who they are starting with a face scan' and 'fights fraud by default,' indicating computer vision-based identity verification (Security primary). YC tags include 'Artificial Intelligence' and the face-scan mechanism implies vision/multimodal AI, but no specific model or framework is mentioned, so tech_stack defaults to custom-model with medium confidence."
+  },
+  {
+    "slug": "beesafe-ai",
+    "industry_primary": "Security",
+    "industry_secondary": [
+      "Fintech",
+      "Government / Defense",
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "agents",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Enterprise AI platform that neutralizes scams at the source by intercepting fraudsters and mapping attacker infrastructure in real time",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/beesafe-ai",
+      "https://beesafe.ai/"
+    ],
+    "rationale": "Description explicitly calls this a fraud-prevention platform using an 'AI system' that 'engag[es] fraudsters at the source in real-time' and extracts 'deterministic data on mule accounts and attacker infrastructure,' indicating agentic AI behavior; customers include 'financial services and government agencies,' driving the Fintech and Government/Defense secondary tags."
+  },
+  {
+    "slug": "ramain",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "dronetector",
+    "industry_primary": "Hardware",
+    "industry_secondary": [
+      "Government / Defense",
+      "Security"
+    ],
+    "ai_capability": [
+      "no-ai"
+    ],
+    "tech_stack": [],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "High-frequency radar systems that detect and track nano and low-signature drones for defense, airports, and critical infrastructure.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/dronetector",
+      "https://www.dronetector.com/"
+    ],
+    "rationale": "The description explicitly states they 'build high-frequency radar systems' (Hardware), targeting 'airports, critical infrastructure, and front-line defense' (Government/Defense, Security). No AI/ML capabilities are mentioned anywhere in the description or tags."
+  },
+  {
+    "slug": "bits-2",
+    "industry_primary": "AI Infrastructure",
+    "industry_secondary": [
+      "Developer Tools",
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "agents",
+      "inference-infra"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Managed OpenClaw instances on the cloud with Slack integration, pre-built security, and skills \u2014 live in 3 minutes.",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/bits-2",
+      "https://usebits.com/"
+    ],
+    "rationale": "YC tags 'AIOps' and 'Deep Learning' plus the description of a managed 'OpenClaw' (likely an open-source AI agent framework) instance with 'pre-installed security features and common skills' point to AI infrastructure/agent hosting; however the thin description leaves tech stack, OSS posture, and specific AI capabilities largely unclear."
+  },
+  {
+    "slug": "ressl-ai",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [],
+    "ai_capability": [
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Custom AI agents for enterprises that fit existing workflows and systems of record \u2014 no migration required.",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/ressl-ai",
+      "https://ressl.ai/"
+    ],
+    "rationale": "The description explicitly states 'we build custom AI agents for enterprises' and 'integrates deeply with their existing system-of-record,' confirming B2B SaaS as primary industry and 'agents' as the sole evidenced AI capability. No tech stack, OSS posture, or secondary industry signals are present in the provided text."
+  },
+  {
+    "slug": "arcline",
+    "industry_primary": "Legal",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "rag",
+      "agents",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered legal services for startups \u2014 elite lawyers, 80% AI-drafted work, same-day turnaround",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/arcline",
+      "https://www.arcline-ai.com/"
+    ],
+    "rationale": "The description explicitly states 'AI does 80% of the work' with lawyers handling 'final revisions,' and YC tags confirm 'Artificial Intelligence' and 'LegalTech.' No open-source signals or specific model/stack references are provided, so tech_stack is unknown and oss_posture is closed."
+  },
+  {
+    "slug": "veriad",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "vela",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [],
+    "ai_capability": [
+      "agents",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI scheduling agent that handles complex, multi-party calendar negotiation with context-aware prioritization at scale.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/vela",
+      "https://tryvela.ai/ps"
+    ],
+    "rationale": "Description explicitly positions Vela as a B2B AI scheduling assistant ('handles the white-glove negotiation as a member of your team') used by enterprise recruiters and sales teams, mapping clearly to B2B SaaS; AI capability is agentic NLP ('handles ambiguity', 'understands Let's do early next week') with no OSS or model stack signals provided."
+  },
+  {
+    "slug": "ruma-care",
+    "industry_primary": "Healthcare",
+    "industry_secondary": [
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "rag",
+      "agents",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered prior authorization automation for specialty drug infusion clinics \u2014 cuts denials, speeds patient access.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/ruma-care",
+      "https://rumacare.com/"
+    ],
+    "rationale": "The description explicitly states 'our models learn from denial patterns' and describes extraction of submission criteria and automated form-filling across 70+ portals, indicating ML/AI-driven RAG and agent workflows. The product is a closed SaaS platform sold to infusion clinics, with no open-source indicators."
+  },
+  {
+    "slug": "salus",
+    "industry_primary": "AI Infrastructure",
+    "industry_secondary": [
+      "Developer Tools",
+      "B2B SaaS",
+      "Security"
+    ],
+    "ai_capability": [
+      "safety-guardrails",
+      "evals-observability",
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Runtime guardrail API that intercepts and blocks incorrect agent actions before they execute, with feedback for retries.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/salus",
+      "https://www.usesalus.ai/"
+    ],
+    "rationale": "Description explicitly states 'an API that wraps around your agent and checks its actions at run time, blocking incorrect ones' \u2014 mapping to safety-guardrails and agent infrastructure. YC tags confirm 'Artificial Intelligence, Infrastructure, API, Developer Tools' with B2B positioning."
+  },
+  {
+    "slug": "lucent",
+    "industry_primary": "Developer Tools",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "evals-observability",
+      "vision"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered session replay analysis that automatically surfaces bugs and UX issues before users report them.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/lucent",
+      "https://lucenthq.com/"
+    ],
+    "rationale": "The description explicitly states 'Lucent automatically watches your user sessions and alerts you when users hit bugs or UX issues' and is tagged 'Developer Tools, B2B, AI', making the primary classification Developer Tools with AI-driven observability/monitoring as the core capability."
+  },
+  {
+    "slug": "voygr",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "eigenpal",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "AI Infrastructure",
+      "Fintech"
+    ],
+    "ai_capability": [
+      "vision",
+      "multimodal",
+      "nlp-classic",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI-powered document processing platform automating KYC, invoices, contracts & more \u2014 on-prem or cloud",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/eigenpal",
+      "https://www.eigenpal.com/"
+    ],
+    "rationale": "The description explicitly states EigenPal 'automates your document processing workflows with AI' across KYC docs, invoices, claims, contracts, and loan docs, 'works on messy scans, handwritten forms' (indicating vision/multimodal AI), with a workflow builder and team functionality \u2014 clearly B2B SaaS; secondary fintech signal comes from KYC, loan docs, and claims use cases."
+  },
+  {
+    "slug": "forum",
+    "industry_primary": "Fintech",
+    "industry_secondary": [
+      "Media / Content",
+      "Consumer"
+    ],
+    "ai_capability": [
+      "data-pipeline",
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Regulated exchange letting investors go long/short on cultural attention as a new tradable asset class.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/forum",
+      "https://www.forum.market/"
+    ],
+    "rationale": "Description explicitly calls Forum 'the first regulated exchange to trade on cultural attention' and mentions creating 'indices from search, social, and streaming data,' placing it firmly in Fintech/trading. No AI-specific tooling or models are mentioned, but the data-aggregation and index-construction pipeline implies data processing capability; tech stack is unknown from the provided text."
+  },
+  {
+    "slug": "sitefire",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Media / Content"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "B2B SaaS that optimizes content for AI search engines like ChatGPT and Gemini to generate ready-to-publish pages that win leads",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/sitefire",
+      "https://sitefire.ai/"
+    ],
+    "rationale": "The description explicitly targets the 'agentic web' \u2014 helping companies win customers on 'ChatGPT, Gemini, and other AI agents' \u2014 and synthesizes 'top-cited web pages into AI-optimized, ready-to-publish web pages,' indicating RAG-style content generation and data-pipeline capabilities for AI visibility analysis, all delivered as a B2B SaaS marketing product."
+  },
+  {
+    "slug": "human-archive",
+    "industry_primary": "Robotics",
+    "industry_secondary": [
+      "AI Infrastructure",
+      "Industrials"
+    ],
+    "ai_capability": [
+      "multimodal",
+      "robotics",
+      "data-pipeline",
+      "vision"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Collects & labels large-scale multimodal real-world data to train dexterous robotics foundation models",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/human-archive",
+      "https://www.humanarchive.ai/"
+    ],
+    "rationale": "The description explicitly states they collect and label 'aligned multimodal data' for 'embodied intelligence' and deliver 'diverse, high-fidelity datasets at scale to frontier labs developing robotics foundation models,' confirming a robotics + AI data-pipeline focus. No open-source repository or model weights are mentioned, and no specific LLM/framework dependencies are disclosed."
+  },
+  {
+    "slug": "pollinate",
+    "industry_primary": "Supply Chain / Logistics",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Fintech"
+    ],
+    "ai_capability": [
+      "agents",
+      "nlp-classic",
+      "data-pipeline"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents that automate procurement workflows\u2014extracting invoices and matching POs across ERPs so supply chains ditch spreadsheets.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/pollinate",
+      "https://www.pollinate.tech/"
+    ],
+    "rationale": "The description explicitly states 'AI Agents for the supply chain' and details automating three-way match by 'extracting supplier invoices from email and matching them to the correct PO and receipt across ERPs,' confirming agent-based NLP and data-pipeline capabilities targeting supply chain/logistics buyers."
+  },
+  {
+    "slug": "lance",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Consumer"
+    ],
+    "ai_capability": [
+      "agents",
+      "nlp-classic",
+      "voice"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents that handle end-to-end guest communication and workflow automation for hotel groups on Marriott, Hyatt, and Hilton.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/lance",
+      "https://www.lance.live/"
+    ],
+    "rationale": "The description explicitly states 'AI Agents for Hotel Operations that owns guest communication end-to-end and orchestrates complex actions across the hospitality tech stack,' confirming an agent-based conversational AI SaaS product sold B2B to hotel groups; YC tags include 'Conversational AI' and 'Customer Service,' supporting nlp-classic and voice capability inferences."
+  },
+  {
+    "slug": "spotpay",
+    "industry_primary": "Fintech",
+    "industry_secondary": [
+      "Consumer"
+    ],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Stablecoin-powered neobank offering a single global account for cross-border payments, local spending, and yield on balances.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/spotpay",
+      "https://www.spotpay.ai/"
+    ],
+    "rationale": "The description explicitly identifies SpotPay as a 'global borderless neobank' using stablecoins for cross-border personal finance, matching YC's own Fintech > Consumer Finance classification. The '.ai' domain and 'SpotPay.ai' branding hint at possible AI use, but no AI capabilities are described in the provided text, so ai_capability is set to 'unclear'."
+  },
+  {
+    "slug": "ritivel",
+    "industry_primary": "Healthcare",
+    "industry_secondary": [
+      "B2B SaaS",
+      "Biotech",
+      "Other"
+    ],
+    "ai_capability": [
+      "agents",
+      "rag",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agents that draft FDA regulatory submissions (CTDs, INDs, BLAs) in minutes, cutting weeks from drug approval timelines.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/ritivel",
+      "https://www.ritivel.com/"
+    ],
+    "rationale": "The description explicitly states 'AI agents draft CTDs, CSRs, INDs, and BLAs' and 'agents automatically source the right documents' connected to SharePoint/Veeva with citation-linked outputs, indicating agent-based RAG over enterprise document stores for life sciences regulatory workflows. No open-source repo or model weights are mentioned, indicating a closed enterprise SaaS posture."
+  },
+  {
+    "slug": "samora-ai",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "voice",
+      "speech",
+      "safety-guardrails",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI voice agents for multilingual high-volume calling with strict safety controls and human escalation\u2014no engineering needed",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/samora-ai",
+      "https://samora.ai/"
+    ],
+    "rationale": "Description explicitly positions Samora as a no-code B2B SaaS offering 'multilingual voice operations' with 'strict safety controls so agents don't make unauthorized offers' and human handoff, integrating into CRMs/ATS/ticketing\u2014confirming B2B SaaS primary, with voice, agents, speech, and safety-guardrails as core AI capabilities."
+  },
+  {
+    "slug": "oximy",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "sonarly",
+    "industry_primary": "Developer Tools",
+    "industry_secondary": [
+      "B2B SaaS",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "agents",
+      "evals-observability",
+      "nlp-classic"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI agent that triages production alerts, dedupes noise, and auto-updates investigations as you ship code.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/sonarly"
+    ],
+    "rationale": "The description explicitly positions Sonarly as an AI agent for production monitoring \u2014 'triages production alerts, deduping, prioritizing, and attaching the missing context' and 'keeps alerts and investigations up to date automatically' \u2014 mapping clearly to Developer Tools with agentic AI and observability capabilities. YC tags 'Developer Tools' and 'Generative AI' confirm the classification."
+  },
+  {
+    "slug": "caretta",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [],
+    "ai_capability": [
+      "speech",
+      "rag",
+      "agents"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "Real-time AI copilot for sales reps \u2014 handles objections and questions live on calls with a self-building knowledge base",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/caretta",
+      "https://www.caretta.so/"
+    ],
+    "rationale": "YC tags ('SaaS', 'Sales Enablement', 'AI Assistant') and the description's 'joins reps in live calls' + 'every call expands its knowledge base' clearly indicate a closed B2B SaaS product using speech processing, retrieval-augmented generation, and real-time agent assistance; no OSS or specific model/framework signals are present."
+  },
+  {
+    "slug": "runanywhere",
+    "industry_primary": "AI Infrastructure",
+    "industry_secondary": [
+      "Developer Tools",
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "inference-infra",
+      "evals-observability"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "source-available",
+    "oss_evidence_url": "https://www.ycombinator.com/companies/runanywhere",
+    "tagline_rewrite": "One SDK + control plane to deploy, manage, and monitor on-device AI models across enterprise device fleets",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/runanywhere",
+      "https://www.runanywhere.ai/"
+    ],
+    "rationale": "The description explicitly positions RunAnywhere as an 'enterprise-ready workflow' with 'one SDK to run models on-device, plus a control plane to manage models, enforce policies, and measure outcomes' \u2014 squarely AI inference infrastructure with observability; the YC 'Open Source' tag drives source-available posture classification."
+  },
+  {
+    "slug": "perfectly",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [],
+    "ai_capability": [
+      "agents",
+      "nlp-classic",
+      "rag"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "closed",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "End-to-end AI recruiting OS: autonomous sourcing, outreach, and candidate screening delivered to hiring managers",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/perfectly",
+      "https://www.perfectly.so/"
+    ],
+    "rationale": "The description explicitly positions Perfectly as an 'end-to-end AI recruiting agency' that autonomously sources, outreaches, and screens candidates via an 'AI screen,' indicating agentic AI workflows with likely NLP/matching; the YC tags 'Artificial Intelligence, Recruiting' and B2B classification confirm a closed B2B SaaS product with no OSS signals."
+  },
+  {
+    "slug": "axis-2",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "axionorbital-space",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "ishiki-labs",
+    "industry_primary": "Unknown",
+    "industry_secondary": [],
+    "ai_capability": [
+      "unclear"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "(no analysis: schema-validation-failure)",
+    "confidence": "low",
+    "sources": [
+      "https://github.com/RyanAlberts/yc-ai-pulse#unverifiable"
+    ],
+    "rationale": "Auto-generated low-confidence sentinel because: schema-validation-failure"
+  },
+  {
+    "slug": "librar-labs",
+    "industry_primary": "B2B SaaS",
+    "industry_secondary": [
+      "Education",
+      "AI Infrastructure"
+    ],
+    "ai_capability": [
+      "nlp-classic",
+      "vision",
+      "rag"
+    ],
+    "tech_stack": [
+      "unknown"
+    ],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "AI platform for librarians that automates manual tasks so staff can focus on community and reading culture.",
+    "confidence": "high",
+    "sources": [
+      "https://www.ycombinator.com/companies/librar-labs",
+      "https://www.librarlabs.com/"
+    ],
+    "rationale": "Described as 'AI for librarians' that 'speeds up manual & boring work' in a B2B context; YC tags include 'Artificial Intelligence, Machine Learning, Computer Vision' suggesting NLP, RAG-style knowledge retrieval, and vision capabilities for physical library materials, though no specific tech stack is disclosed."
+  },
+  {
+    "slug": "sparkles",
+    "industry_primary": "Developer Tools",
+    "industry_secondary": [
+      "B2B SaaS"
+    ],
+    "ai_capability": [
+      "code-generation",
+      "agents"
+    ],
+    "tech_stack": [],
+    "oss_posture": "unknown",
+    "oss_evidence_url": null,
+    "tagline_rewrite": "No-code GitHub PR layer for existing codebases \u2014 lets non-engineers ship UI changes without touching Git or the dev team.",
+    "confidence": "low",
+    "sources": [
+      "https://www.ycombinator.com/companies/sparkles",
+      "https://sparkles.dev/"
+    ],
+    "rationale": "The description explicitly frames Sparkles as 'like Lovable for existing projects,' positioning it squarely in Developer Tools / B2B SaaS; AI code generation is strongly implied by the Lovable analogy and the product mechanic (non-engineers creating PRs without knowing Git), though the word 'AI' never appears in the provided text, warranting medium confidence on ai_capability."
+  }
+]
