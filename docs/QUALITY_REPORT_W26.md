@@ -241,3 +241,70 @@ OSS posture is meaningfully different now: closed (48), unknown (65), api-only (
 - Tier A+B with high-confidence LLM analysis: **118 of 196 (60.2%)** — the most honest "what we actually know about W26" number.
 
 The headline coverage % on the dashboard is unchanged at 63.3% (because that's the data-quality denominator). But for the deck/memo, the 60.2% number is what should be cited as "the share of W26 we can substantively classify."
+
+---
+
+## PR #11 — depth=1 website crawl (B007 resolved)
+
+The v0.1 limitation: the LLM only saw the YC `long_description`, so OSS posture and tech stack came back as `unknown` for most companies. PR #11 adds a polite, robots-aware depth=1 website crawl (max 5 pages per company, 30 KB per page, 4-second timeout, ranked by signal-path priority: `/pricing`, `/security`, `/about`, `/docs`, etc.). Each crawled page is HTML-stripped and PII-sanitized before it ever reaches the LLM.
+
+### Coverage didn't change — quality of classification did
+
+The 124-company cohort and 95% high-confidence rate carry over (113 high vs. 118 in PR #9, both well above the v0.1 target). What changed is the model's ability to ground its answers in actual evidence.
+
+### OSS posture, before and after
+
+| Posture | PR #9 (no crawl) | PR #11 (with crawl) | Δ |
+|---|---:|---:|---:|
+| **unknown** | **65 (55%)** | **24 (21%)** | **−41** |
+| closed | 50 (42%) | 75 (66%) | +25 |
+| api-only | 3 | 8 | +5 |
+| source-available | 1 | 5 | +4 |
+| fully-open | 1 | 1 | – |
+
+**OSS-posture `unknown` rate dropped 55% → 21%** — a 62% relative reduction. PR target was <30%. Hit.
+
+The 41 companies that moved out of `unknown` distributed roughly: most went to `closed` (model now has evidence — pricing pages, "Request a demo" CTAs, no GitHub link in footer), some to `api-only` (model spotted "Get an API key" in /docs), and a handful to `source-available` (the model saw a GitHub footer link with explicit license language).
+
+### Tech-stack mentions went from 1 → 14
+
+The headline number is harder to summarize because most YC startups still don't advertise the model provider on marketing pages. But the *absolute count* of identified tech-stack signals is what matters:
+
+| Stack | PR #9 | PR #11 |
+|---|---:|---:|
+| custom-model | 13 | 24 |
+| anthropic | 1 | 6 |
+| openai | 0 | 3 |
+| huggingface | 0 | 2 |
+| pytorch | 0 | 2 |
+| google-gemini | 0 | 2 |
+| qwen | 0 | 1 |
+| langchain | 0 | 1 |
+| **identified (non-unknown)** | **14** | **41** |
+
+Tech-stack `unknown` rate barely moved (64% → 57%) because the homepage of an "AI for legal teams" startup just doesn't mention which model it uses. To push this further would require fetching docs/security pages with depth=2, which we deferred for politeness reasons.
+
+### Capability shifts (mostly small, two interesting movers)
+
+| Capability | PR #9 | PR #11 |
+|---|---:|---:|
+| agents | 68 | 69 |
+| nlp-classic | 38 | 38 |
+| rag | 34 | 32 |
+| data-pipeline | 33 | 37 |
+| **vision** | **17** | **26** |
+| **multimodal** | **17** | **22** |
+
+Vision and multimodal both saw real lifts — those are the capabilities the model can spot from product pages with screenshots, GIFs, and demo videos. Marketing surfaces help here.
+
+### Schema failures: 1 (was 0)
+
+Slightly higher prompt size from the crawled context pushed exactly 1 row's rationale over the cap (`synthetic-sciences`). Captured in `raw_failures.jsonl`. Not worth tightening.
+
+### Headline numbers, updated
+
+- **Coverage of YC official: 63.3%** — unchanged (data-quality denominator)
+- **High-confidence enrichment: 113 / 124 (91%)** — was 118/124 (95%) without crawl, slightly down because longer prompts are slightly harder to keep within the rationale cap
+- **Substantively-classified share of YC W26: 113 / 196 = 57.7%** — was 60.2%
+
+Slightly fewer companies make it into the headline cohort, but each of those cohort entries now carries materially more signal — `oss_posture` and (to a lesser extent) `tech_stack` are now real values for the majority of rows, instead of `unknown` masquerading as data.

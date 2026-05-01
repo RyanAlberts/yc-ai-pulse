@@ -59,6 +59,7 @@ YC subindustry: {subindustry}
 YC tags: {tags}
 Pre-filled industry guess: {prefill_industry}
 
+{crawl_section}
 Return ONLY a JSON object matching this schema (no prose, no markdown fences):
 
 {{
@@ -285,7 +286,35 @@ def _parse_response(raw: str, *, slug: str) -> CompanyAnalysis | None:
         return None
 
 
-def _build_prompt(company: RawCompany, prefill_industry: Industry) -> str:
+def _build_crawl_section(crawled_pages: list[tuple[str, str]] | None, char_budget: int = 6000) -> str:
+    """Assemble the crawled-context section. Empty string when nothing crawled.
+
+    ``crawled_pages`` is a list of ``(url, sanitized_text)`` pairs. We cap the
+    total characters fed to the model to keep prompts predictable.
+    """
+    if not crawled_pages:
+        return ""
+    out: list[str] = ["Additional evidence from a polite depth=1 crawl of the company website:"]
+    remaining = char_budget
+    for url, text in crawled_pages:
+        if remaining <= 100:
+            break
+        snippet = text[: min(remaining, 1500)]
+        out.append(f"\n--- Crawled page: {url} ---\n{snippet}")
+        remaining -= len(snippet)
+    out.append(
+        "\nWhen citing tech_stack, oss_posture, or pricing in your sources, prefer the"
+        " specific crawled URL above that contains the evidence (e.g., the /pricing or"
+        " /security page) over the bare homepage."
+    )
+    return "\n".join(out) + "\n"
+
+
+def _build_prompt(
+    company: RawCompany,
+    prefill_industry: Industry,
+    crawled_pages: list[tuple[str, str]] | None = None,
+) -> str:
     """Assemble the strict-output prompt. PII is stripped defensively."""
     return PROMPT_TEMPLATE.format(
         slug=company.slug,
@@ -298,6 +327,7 @@ def _build_prompt(company: RawCompany, prefill_industry: Industry) -> str:
         subindustry=company.subindustry,
         tags=", ".join(company.tags) or "(none)",
         prefill_industry=prefill_industry.value,
+        crawl_section=_build_crawl_section(crawled_pages),
         industry_values=[i.value for i in Industry],
         capability_values=[c.value for c in AICapability],
         tech_stack_values=[t.value for t in TechStack],
@@ -324,16 +354,20 @@ def _force_low(slug: str, reason: str) -> CompanyAnalysis:
     )
 
 
-def _looks_like_input_url(url: str, company: RawCompany) -> bool:
-    """Defense against hallucinated source URLs — a source must come from the inputs."""
-    allowed = [company.website, company.url]
+def _looks_like_input_url(url: str, company: RawCompany, extra_allowed: list[str] | None = None) -> bool:
+    """Defense against hallucinated source URLs — a source must come from the inputs.
+
+    ``extra_allowed`` is the list of URLs reached via the depth=1 crawl. The
+    model is allowed to cite any of them.
+    """
+    allowed = [company.website, company.url, *(extra_allowed or [])]
     return any(url.startswith(allowed_url.rstrip("/")) for allowed_url in allowed if allowed_url)
 
 
-def _validate_sources(analysis: CompanyAnalysis, company: RawCompany) -> bool:
-    """Return False if any cited source isn't actually in the inputs."""
+def _validate_sources(analysis: CompanyAnalysis, company: RawCompany, extra_allowed: list[str] | None = None) -> bool:
+    """Return False if any cited source isn't actually in the inputs or crawl."""
     for src in analysis.sources:
-        if not _looks_like_input_url(str(src), company):
+        if not _looks_like_input_url(str(src), company, extra_allowed=extra_allowed):
             log.info("rejecting hallucinated source %s for %s", src, company.slug)
             return False
     return True
@@ -346,6 +380,7 @@ async def analyze(
     model: str = DEFAULT_MODEL,
     cross_check_uncertain: bool = True,
     raw_failure_log: Path | None = None,
+    crawled_pages: list[tuple[str, str]] | None = None,
 ) -> tuple[CompanyAnalysis, CrossCheckResult | None]:
     """Run a single classification with all Layer 1 guards.
 
@@ -364,14 +399,15 @@ async def analyze(
     appended (one JSON line per record) so they can be audited / replayed.
     """
     prefill = map_industry(company.industry, company.subindustry, company.tags)
-    prompt = _build_prompt(company, prefill)
+    prompt = _build_prompt(company, prefill, crawled_pages=crawled_pages)
+    crawled_urls = [url for url, _ in crawled_pages] if crawled_pages else None
 
     raw1 = await backend.complete(prompt, model=model)
     pass_1 = _parse_response(raw1, slug=company.slug)
     if pass_1 is None:
         _log_raw_failure(raw_failure_log, slug=company.slug, reason="schema-validation-failure", raw=raw1)
         return _force_low(company.slug, "schema-validation-failure"), None
-    if not _validate_sources(pass_1, company):
+    if not _validate_sources(pass_1, company, extra_allowed=crawled_urls):
         _log_raw_failure(raw_failure_log, slug=company.slug, reason="hallucinated-source-url", raw=raw1)
         return _force_low(company.slug, "hallucinated-source-url"), None
 
@@ -381,7 +417,7 @@ async def analyze(
     # confidence=medium → cross-check pass.
     raw2 = await backend.complete(prompt, model=model)
     pass_2 = _parse_response(raw2, slug=company.slug)
-    if pass_2 is None or not _validate_sources(pass_2, company):
+    if pass_2 is None or not _validate_sources(pass_2, company, extra_allowed=crawled_urls):
         # The cross-check itself failed → keep pass 1 but downgrade to low.
         _log_raw_failure(raw_failure_log, slug=company.slug, reason="cross-check-failed", raw=raw2)
         downgraded = pass_1.model_copy(update={"confidence": "low"})
