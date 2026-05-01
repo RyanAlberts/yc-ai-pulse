@@ -4,7 +4,9 @@ Sanitized sample artifacts. Every commit goes through `make publish-check` so PI
 
 | File | What |
 |---|---|
-| [`output/dashboard-w26-pr4-2026-05-01.html`](output/dashboard-w26-pr4-2026-05-01.html) | **PR #4 dashboard — current best.** 118 of 124 high-confidence (95%). Schema-failure rate now 0%. Top finding: 58% of n=118 build agents. |
+| [`output/dashboard-w26-pr11-2026-05-01.html`](output/dashboard-w26-pr11-2026-05-01.html) | **PR #11 dashboard — current best.** Depth=1 crawl enabled. OSS posture `unknown` rate dropped 55%→21% on the same W26 cohort. Tech-stack identified mentions 14→41. |
+| [`output/analyses-w26-pr11-2026-05-01.json`](output/analyses-w26-pr11-2026-05-01.json) | PR #11 enrichment with crawled context. 113/124 high-confidence. |
+| [`output/dashboard-w26-pr4-2026-05-01.html`](output/dashboard-w26-pr4-2026-05-01.html) | PR #4 / v0.1.0 dashboard. Useful baseline to compare against PR #11 (no crawl, 65 OSS-unknown rows). |
 | [`output/analyses-w26-pr4-2026-05-01.json`](output/analyses-w26-pr4-2026-05-01.json) | **PR #4 enrichment.** 124 companies, 0 schema failures, 6 genuine model lows, 0 hallucinated source URLs. |
 | [`output/dashboard-w26-enriched-2026-05-01.html`](output/dashboard-w26-enriched-2026-05-01.html) | PR #3 dashboard, kept as before/after comparison (67% high-confidence, 23% schema failures). |
 | [`output/dashboard-w26-2026-05-01.html`](output/dashboard-w26-2026-05-01.html) | PR #1 baseline (coverage-only mode, no LLM). |
