@@ -161,7 +161,7 @@ def headline_numbers(
         for pct_attr in ("coverage_pct_of_official", "coverage_pct_of_upstream"):
             value = getattr(coverage, pct_attr, None)
             if value is not None:
-                out[pct_attr] = int(round(value))
+                out[pct_attr] = round(value)
     return out
 
 

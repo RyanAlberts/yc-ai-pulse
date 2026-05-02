@@ -164,7 +164,7 @@ def _png_pie(counter: Counter[str], *, color_map: dict[str, str]) -> bytes:
     values = [v for _, v in items]
     colors = [color_map.get(name, "#9CA3AF") for name in labels]
     fig, ax = plt.subplots(figsize=(7, 5.5))
-    wedges, _texts, _autotexts = ax.pie(
+    _wedges, _texts, _autotexts = ax.pie(
         values,
         labels=[f"{n} ({v})" for n, v in items],
         colors=colors,
