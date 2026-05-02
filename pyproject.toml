@@ -1,6 +1,6 @@
 [project]
 name = "yc-ai-pulse"
-version = "0.1.0"
+version = "0.2.0"
 description = "Open-source YC batch analyzer — VC-style report and dashboard for the most recent Y Combinator batch."
 readme = "README.md"
 requires-python = ">=3.11"
