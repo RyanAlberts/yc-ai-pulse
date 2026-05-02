@@ -4,7 +4,8 @@ Sanitized sample artifacts. Every commit goes through `make publish-check` so PI
 
 | File | What |
 |---|---|
-| [`output/dashboard-w26-pr12-2026-05-01.html`](output/dashboard-w26-pr12-2026-05-01.html) | **PR #12 dashboard — current best.** Same W26 data as PR #11 (depth=1 crawl, 113/124 high-confidence) but charts upgraded to Apache ECharts: real heatmap, pies with click-to-isolate, bars with axis tooltips. Loads via CDN with SRI; `<noscript>` fallback if JS disabled. |
+| [`output/deck-w26-pr14-2026-05-01.pptx`](output/deck-w26-pr14-2026-05-01.pptx) | **PR #14 VC-style deck — current best.** 16 slides, a16z-feel palette, matplotlib chart PNGs anchored to the same data the dashboard uses. Anti-hallucination Layer 2 ran before write (no forbidden phrases, no numerical drift). |
+| [`output/dashboard-w26-pr12-2026-05-01.html`](output/dashboard-w26-pr12-2026-05-01.html) | **PR #12 dashboard — current best HTML.** Same W26 data, ECharts canvases (real heatmap, pies, bars). |
 | [`output/dashboard-w26-pr11-2026-05-01.html`](output/dashboard-w26-pr11-2026-05-01.html) | PR #11 dashboard with the depth=1 crawl but static CSS bars. Useful for comparing visual fidelity vs. PR #12. |
 | [`output/analyses-w26-pr11-2026-05-01.json`](output/analyses-w26-pr11-2026-05-01.json) | Source data for both PR #11 and PR #12 dashboards. 113/124 high-confidence. |
 | [`output/dashboard-w26-pr4-2026-05-01.html`](output/dashboard-w26-pr4-2026-05-01.html) | PR #4 / v0.1.0 dashboard. Useful baseline (no crawl, 65 OSS-unknown rows; static CSS bars). |
