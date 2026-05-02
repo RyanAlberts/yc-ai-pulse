@@ -118,7 +118,8 @@ def dashboard_cmd(
 @app.command("report")
 def report_cmd(
     run_dir: Path = typer.Argument(..., help="Run directory with coverage.json + analyses.json(l)."),
-    deck_only: bool = typer.Option(False, "--deck-only", help="Skip the .docx memo (Phase 2 PR #15)."),
+    deck_only: bool = typer.Option(False, "--deck-only", help="Skip the .docx memo."),
+    memo_only: bool = typer.Option(False, "--memo-only", help="Skip the .pptx deck."),
 ) -> None:
     """Generate the .pptx deck (and .docx memo when shipped) from existing artifacts.
 
@@ -149,23 +150,36 @@ def report_cmd(
         console.print(f"[red]✗ no analyses found in {run_dir}. Run with --enrich first.[/red]")
         raise typer.Exit(2)
 
+    from ycai.reports.docx import build_memo
     from ycai.reports.ppt import Layer2Failure, build_deck
 
-    deck_path = run_dir / "deck.pptx"
-    console.print("[cyan]→[/cyan] building deck.pptx (Layer 2 audit before write)…")
-    try:
-        build_deck(coverage, companies, analyses, output_path=deck_path)
-    except Layer2Failure as exc:
-        console.print(f"[red]✗ Layer 2 audit failed:[/red] {exc}")
-        for hit in exc.forbidden[:5]:
-            console.print(f"  [red]forbidden phrase '{hit.phrase}':[/red] {hit.excerpt}")
-        for drift in exc.drifts[:5]:
-            console.print(f"  [red]numerical drift '{drift.number}':[/red] {drift.excerpt}")
-        raise typer.Exit(5) from exc
-    console.print(f"[green]✓[/green] wrote {deck_path}")
+    if not memo_only:
+        deck_path = run_dir / "deck.pptx"
+        console.print("[cyan]→[/cyan] building deck.pptx (Layer 2 audit before write)…")
+        try:
+            build_deck(coverage, companies, analyses, output_path=deck_path)
+        except Layer2Failure as exc:
+            console.print(f"[red]✗ deck Layer 2 audit failed:[/red] {exc}")
+            for hit in exc.forbidden[:5]:
+                console.print(f"  [red]forbidden phrase '{hit.phrase}':[/red] {hit.excerpt}")
+            for drift in exc.drifts[:5]:
+                console.print(f"  [red]numerical drift '{drift.number}':[/red] {drift.excerpt}")
+            raise typer.Exit(5) from exc
+        console.print(f"[green]✓[/green] wrote {deck_path}")
 
     if not deck_only:
-        console.print("[yellow]⚠ .docx memo lands in PR #15.[/yellow]")
+        memo_path = run_dir / "report.docx"
+        console.print("[cyan]→[/cyan] building report.docx (Layer 2 audit before write)…")
+        try:
+            build_memo(coverage, companies, analyses, output_path=memo_path)
+        except Layer2Failure as exc:
+            console.print(f"[red]✗ memo Layer 2 audit failed:[/red] {exc}")
+            for hit in exc.forbidden[:5]:
+                console.print(f"  [red]forbidden phrase '{hit.phrase}':[/red] {hit.excerpt}")
+            for drift in exc.drifts[:5]:
+                console.print(f"  [red]numerical drift '{drift.number}':[/red] {drift.excerpt}")
+            raise typer.Exit(5) from exc
+        console.print(f"[green]✓[/green] wrote {memo_path}")
 
 
 @app.command("resume")
