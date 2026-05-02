@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_(no changes since 0.2.0)_
+
+## [0.2.0] — 2026-05-01
+
+Phase 2 release. Adds the depth=1 website crawler that lifts OSS-posture
+classification from 55% unknown to 21%, replaces the dashboard's static CSS
+bars with Apache ECharts, and ships the VC-style `.pptx` deck and narrative
+`.docx` memo with a second anti-hallucination layer that scans aggregate
+prose for forbidden hedge phrases and audits every number against the same
+dataframe the dashboard cites.
+
 ### Added
 - **PR #11 — depth=1 website crawl (B007 resolved)**: new `src/ycai/crawler.py` module. Polite, robots-aware, max 5 pages per company, 30 KB per page, 4-second timeout. Pages ranked by signal-path priority (`/pricing`, `/security`, `/about`, `/docs`, `/open-source`, …). HTML stripped and PII-sanitized before any LLM call. Crawled URLs are also accepted by the source-URL guard so the LLM can cite specific pages as evidence. New `--no-crawl` flag opts out.
 - W26 with crawler enabled: **OSS posture `unknown` rate dropped 55% → 21%** (target was <30%). Tech-stack identified mentions: 14 → 41. Vision capability: 17 → 26. Multimodal: 17 → 22.
@@ -56,5 +67,6 @@ First publishable release. End-to-end pipeline that pulls the latest YC batch, c
 
 103 tests passing. Mypy `--strict` clean. CI runs ruff, mypy, pytest, detect-secrets, gitleaks, and a custom credential-pattern sweep on every PR.
 
-[Unreleased]: https://github.com/RyanAlberts/yc-ai-pulse/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/RyanAlberts/yc-ai-pulse/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/RyanAlberts/yc-ai-pulse/releases/tag/v0.2.0
 [0.1.0]: https://github.com/RyanAlberts/yc-ai-pulse/releases/tag/v0.1.0
