@@ -24,6 +24,7 @@ dependencies = [
   "anthropic>=0.40",
   "claude-agent-sdk>=0.1",
   "python-pptx>=1.0",
+  "python-docx>=1.1",
   "matplotlib>=3.7",
 ]
 
@@ -86,14 +87,14 @@ files = ["src/ycai"]
 # Third-party libraries without published type stubs. We pin to the public
 # constructor surface and otherwise treat their return types as Any.
 [[tool.mypy.overrides]]
-module = ["pptx.*", "matplotlib.*"]
+module = ["pptx.*", "matplotlib.*", "docx.*"]
 ignore_missing_imports = true
 
 # The deck builder is a thin wrapper over python-pptx whose API surface is
 # untyped (Presentation is a factory function, not a class). Keep strict
 # mode for everything else; relax just this module.
 [[tool.mypy.overrides]]
-module = "ycai.reports.ppt"
+module = ["ycai.reports.ppt", "ycai.reports.docx"]
 disallow_untyped_calls = false
 disallow_untyped_defs = false
 warn_return_any = false

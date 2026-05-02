@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Phase 2 — reports
 - **PR #14 — VC-style `.pptx` deck with anti-hallucination Layer 2.** New `src/ycai/analytics.py` is the single source of chart math, consumed by both the dashboard (ECharts JSON) and the deck (matplotlib PNG). New `src/ycai/reports/ppt.py` builds a 16-slide deck (cream/orange palette, sans/serif typography). Each chart is a matplotlib PNG anchored to the same Counter the dashboard used. `ycai report <run-dir>` produces `deck.pptx` from existing artifacts at zero LLM cost. New `src/ycai/reports/anti_hallucination.py`: forbidden-phrase scan + numerical-drift check + date-pattern stripping. Two prose streams audited separately — aggregate commentary gets full drift check, per-company taglines/rationales get forbidden-phrase only (Layer 1 already gated their source URLs). 24 new tests (145 total).
+- **PR #15 — narrative `.docx` memo.** New `src/ycai/reports/docx.py` builds a 9-section narrative memo per USER.md document-format discipline: title, headline, coverage methodology, the agentic batch (capability heatmap), industry distribution, tech stack + OSS posture, six company spotlights, unanswered questions, reproducibility. Same `analytics.py` math as the deck, same Layer 2 audit pre-write. Date-pattern stripping extended to YC-batch labels ("Winter 2026") and bare 4-digit years. `ycai report <run-dir>` now produces both `deck.pptx` and `report.docx`; `--deck-only` / `--memo-only` to constrain. 4 new tests (149 total).
 
 ## [0.1.0] — 2026-05-01
 

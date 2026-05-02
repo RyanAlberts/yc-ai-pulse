@@ -50,6 +50,10 @@ _DATE_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"\b\d{4}-\d{2}\b"),  # YYYY-MM
     re.compile(r"\b(?:in|since|as of) (?:19|20)\d{2}\b", re.IGNORECASE),
     re.compile(r"\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},?\s+(?:19|20)\d{2}\b"),
+    # YC-batch labels like "Winter 2026" or "Summer 2025"
+    re.compile(r"\b(?:Winter|Spring|Summer|Fall)\s+(?:19|20)\d{2}\b"),
+    # Bare 4-digit year that looks like a year, with at least one non-digit on each side
+    re.compile(r"(?<![\d.-])(?:19|20)\d{2}(?![\d.-])"),
 )
 
 
