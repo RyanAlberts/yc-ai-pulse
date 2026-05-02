@@ -30,6 +30,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from ycai import analytics
 from ycai.schemas import (
     BatchCoverage,
     CompanyAnalysis,
@@ -265,7 +266,7 @@ def _dropped_table(coverage: BatchCoverage) -> str:
 
 
 def _confidence_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any] | None]:
-    by_conf: Counter[str] = Counter(a.confidence for a in analyses)
+    by_conf = analytics.confidence_breakdown(analyses)
     option = _pie_option(by_conf, _CONFIDENCE_COLORS)
     summary = f"high {by_conf['high']} · medium {by_conf['medium']} · low {by_conf['low']}"
     aria = f"Pie chart of LLM classification confidence: {summary}."
@@ -280,8 +281,8 @@ def _confidence_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[st
 
 
 def _industry_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any] | None]:
-    high = [a for a in analyses if a.confidence in ("high", "medium")]
-    by_ind: Counter[str] = Counter(a.industry_primary.value for a in high)
+    high = analytics.keep_for_charts(analyses)
+    by_ind = analytics.industry_distribution(analyses)
     option = _bar_option(by_ind, top=12)
     rows = [(a.slug, a.tagline_rewrite[:60], a.industry_primary.value) for a in high]
     drill = _slug_table(rows)
@@ -299,31 +300,18 @@ def _industry_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str,
 
 
 def _capability_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any] | None]:
-    keep = [a for a in analyses if a.confidence in ("high", "medium")]
-    matrix: dict[tuple[str, str], int] = defaultdict(int)
-    for a in keep:
-        for cap in a.ai_capability:
-            matrix[(cap.value, a.industry_primary.value)] += 1
-    cap_totals: Counter[str] = Counter()
-    ind_totals: Counter[str] = Counter()
-    for (cap_label, ind_label), v in matrix.items():
-        cap_totals[cap_label] += v
-        ind_totals[ind_label] += v
-    top_caps = [name for name, _ in cap_totals.most_common(8)]
-    top_inds = [name for name, _ in ind_totals.most_common(6)]
-    top_caps_set = set(top_caps)
-    top_inds_set = set(top_inds)
-    restricted = {(c, i): v for (c, i), v in matrix.items() if c in top_caps_set and i in top_inds_set}
-    option = _heatmap_option(dict(restricted), top_caps, top_inds)
+    keep = analytics.keep_for_charts(analyses)
+    heatmap = analytics.capability_heatmap(analyses)
+    option = _heatmap_option(dict(heatmap.matrix), heatmap.capabilities, heatmap.industries)
     rows = []
     for a in keep:
         caps = ", ".join(cap.value for cap in a.ai_capability)
         rows.append((a.slug, a.tagline_rewrite[:60], f"{a.industry_primary.value} | {caps}"))
     drill = _slug_table(rows)
     aria = (
-        f"Heatmap of {len(top_caps)} AI capabilities across {len(top_inds)} top industries. "
-        f"Most common pairing: {cap_totals.most_common(1)[0][0] if cap_totals else 'none'} x "
-        f"{ind_totals.most_common(1)[0][0] if ind_totals else 'none'}."
+        f"Heatmap of {len(heatmap.capabilities)} AI capabilities across "
+        f"{len(heatmap.industries)} top industries. "
+        f"{heatmap.total_keep} companies in cohort."
     )
     body, _ = _chart_card(
         "chart-capability",
@@ -338,14 +326,8 @@ def _capability_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[st
 
 
 def _stack_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any] | None]:
-    keep = [a for a in analyses if a.confidence in ("high", "medium")]
-    by_stack: Counter[str] = Counter()
-    for a in keep:
-        if not a.tech_stack:
-            by_stack["unknown"] += 1
-        else:
-            for stack in a.tech_stack:
-                by_stack[stack.value] += 1
+    keep = analytics.keep_for_charts(analyses)
+    by_stack = analytics.tech_stack_distribution(analyses)
     option = _bar_option(by_stack, top=10)
     rows: list[tuple[str, str, str]] = []
     for a in keep:
@@ -365,8 +347,8 @@ def _stack_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, An
 
 
 def _oss_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any] | None]:
-    keep = [a for a in analyses if a.confidence in ("high", "medium")]
-    by_oss: Counter[str] = Counter(a.oss_posture.value for a in keep)
+    keep = analytics.keep_for_charts(analyses)
+    by_oss = analytics.oss_posture_distribution(analyses)
     option = _pie_option(by_oss, _OSS_COLORS)
     rows: list[tuple[str, str, str]] = []
     for a in keep:

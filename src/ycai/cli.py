@@ -115,6 +115,59 @@ def dashboard_cmd(
     console.print(f"[green]✓[/green] wrote dashboard.html → {out}")
 
 
+@app.command("report")
+def report_cmd(
+    run_dir: Path = typer.Argument(..., help="Run directory with coverage.json + analyses.json(l)."),
+    deck_only: bool = typer.Option(False, "--deck-only", help="Skip the .docx memo (Phase 2 PR #15)."),
+) -> None:
+    """Generate the .pptx deck (and .docx memo when shipped) from existing artifacts.
+
+    Anti-hallucination Layer 2 runs before any file is written:
+    forbidden-phrase scan + numerical-drift check. Any violation aborts the
+    build with the offending span so you can fix the prose.
+    """
+    coverage_path = run_dir / "coverage.json"
+    raw_path = run_dir / "raw" / "yc_companies.json"
+    if not coverage_path.exists() or not raw_path.exists():
+        console.print(f"[red]✗ {run_dir} doesn't look like a valid run directory[/red]")
+        raise typer.Exit(2)
+
+    coverage = BatchCoverage.model_validate_json(coverage_path.read_text())
+    companies = [RawCompany.model_validate(c) for c in json.loads(raw_path.read_text())]
+
+    analyses_jsonl = run_dir / "analyses.jsonl"
+    analyses_json = run_dir / "analyses.json"
+    if analyses_jsonl.exists():
+        analyses = [
+            CompanyAnalysis.model_validate_json(line)
+            for line in analyses_jsonl.read_text().splitlines()
+            if line.strip()
+        ]
+    elif analyses_json.exists():
+        analyses = [CompanyAnalysis.model_validate(a) for a in json.loads(analyses_json.read_text())]
+    else:
+        console.print(f"[red]✗ no analyses found in {run_dir}. Run with --enrich first.[/red]")
+        raise typer.Exit(2)
+
+    from ycai.reports.ppt import Layer2Failure, build_deck
+
+    deck_path = run_dir / "deck.pptx"
+    console.print("[cyan]→[/cyan] building deck.pptx (Layer 2 audit before write)…")
+    try:
+        build_deck(coverage, companies, analyses, output_path=deck_path)
+    except Layer2Failure as exc:
+        console.print(f"[red]✗ Layer 2 audit failed:[/red] {exc}")
+        for hit in exc.forbidden[:5]:
+            console.print(f"  [red]forbidden phrase '{hit.phrase}':[/red] {hit.excerpt}")
+        for drift in exc.drifts[:5]:
+            console.print(f"  [red]numerical drift '{drift.number}':[/red] {drift.excerpt}")
+        raise typer.Exit(5) from exc
+    console.print(f"[green]✓[/green] wrote {deck_path}")
+
+    if not deck_only:
+        console.print("[yellow]⚠ .docx memo lands in PR #15.[/yellow]")
+
+
 @app.command("resume")
 def resume_cmd(
     run_dir: Path = typer.Argument(..., help="Run directory from a previous (partial) enrichment."),

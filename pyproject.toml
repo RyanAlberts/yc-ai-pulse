@@ -23,6 +23,8 @@ dependencies = [
   "rich>=13",
   "anthropic>=0.40",
   "claude-agent-sdk>=0.1",
+  "python-pptx>=1.0",
+  "matplotlib>=3.7",
 ]
 
 [project.optional-dependencies]
