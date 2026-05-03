@@ -4,8 +4,12 @@ Sanitized sample artifacts. Every commit goes through `make publish-check` so PI
 
 | File | What |
 |---|---|
-| [`output/deck-w26-pr14-2026-05-01.pptx`](output/deck-w26-pr14-2026-05-01.pptx) | **PR #14 VC-style deck.** 16 slides, a16z-feel palette, matplotlib chart PNGs anchored to the same data the dashboard uses. Anti-hallucination Layer 2 ran before write. |
-| [`output/report-w26-pr15-2026-05-01.docx`](output/report-w26-pr15-2026-05-01.docx) | **PR #15 narrative memo.** 9 sections, ~47 paragraphs, 4 embedded chart PNGs. Headline finding, coverage methodology, capability heatmap with analysis, industry distribution, tech-stack/OSS-posture caveat, six company spotlights, unanswered questions. Layer 2 audit clean. |
+| [`output/dashboard-w26-pr17-2026-05-03.html`](output/dashboard-w26-pr17-2026-05-03.html) | **PR #17 dashboard — current best.** ECharts canvases now render correctly (the v0.2.0 release had a JSON-escape bug that left them blank in browsers). |
+| [`output/deck-w26-pr17-2026-05-03.pptx`](output/deck-w26-pr17-2026-05-03.pptx) | **PR #17 deck.** 17 slides; adds the three-POV slide (Andreessen / Dalio / Acemoglu) right after the TL;DR. |
+| [`output/report-w26-pr17-2026-05-03.docx`](output/report-w26-pr17-2026-05-03.docx) | **PR #17 narrative memo — current best.** Adds executive summary with Acemoglu's framing, three-POV introduction, "Inside B2B SaaS" sub-industry table, tech-stack-known-only chart with unknown footnote, full traction-signals section (73 of 105 companies surface verifiable traction). |
+| [`output/analyses-w26-pr17-2026-05-03.json`](output/analyses-w26-pr17-2026-05-03.json) | **PR #17 enrichment.** 105 high-confidence rows out of 124. 212 traction signals total across 8 kinds. |
+| [`output/deck-w26-pr14-2026-05-01.pptx`](output/deck-w26-pr14-2026-05-01.pptx) | PR #14 deck (16 slides). Kept as before-3-POV reference. |
+| [`output/report-w26-pr15-2026-05-01.docx`](output/report-w26-pr15-2026-05-01.docx) | PR #15 narrative memo. Kept as before-PR-#17 reference. |
 | [`output/dashboard-w26-pr12-2026-05-01.html`](output/dashboard-w26-pr12-2026-05-01.html) | **PR #12 dashboard — current best HTML.** Same W26 data, ECharts canvases (real heatmap, pies, bars). |
 | [`output/dashboard-w26-pr11-2026-05-01.html`](output/dashboard-w26-pr11-2026-05-01.html) | PR #11 dashboard with the depth=1 crawl but static CSS bars. Useful for comparing visual fidelity vs. PR #12. |
 | [`output/analyses-w26-pr11-2026-05-01.json`](output/analyses-w26-pr11-2026-05-01.json) | Source data for both PR #11 and PR #12 dashboards. 113/124 high-confidence. |

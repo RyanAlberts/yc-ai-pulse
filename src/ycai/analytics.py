@@ -91,7 +91,12 @@ def capability_totals(analyses: Iterable[CompanyAnalysis]) -> Counter[str]:
 
 
 def tech_stack_distribution(analyses: Iterable[CompanyAnalysis]) -> Counter[str]:
-    """Tech stack counter. Empty stack list → counted under 'unknown' for clarity."""
+    """Tech stack counter. Empty stack list → counted under 'unknown' for clarity.
+
+    Used by the dashboard which renders the unknown bar inline. The deck/memo
+    use :func:`tech_stack_known_only` instead and surface the unknown count as
+    a footnote — they are tighter editorial surfaces.
+    """
     keep = keep_for_charts(analyses)
     counter: Counter[str] = Counter()
     for a in keep:
@@ -101,6 +106,82 @@ def tech_stack_distribution(analyses: Iterable[CompanyAnalysis]) -> Counter[str]
             for stack in a.tech_stack:
                 counter[stack.value] += 1
     return counter
+
+
+def tech_stack_known_only(analyses: Iterable[CompanyAnalysis]) -> tuple[Counter[str], int, int]:
+    """For deck / memo prose: a tighter view that excludes the 'unknown' bucket.
+
+    Returns ``(known_counter, unknown_count, cohort_size)``. The renderers
+    print the chart from ``known_counter`` and surface ``unknown_count`` as a
+    footnote: 'X of Y companies (Z%) had no determinable tech stack on
+    publicly visible surfaces.'
+
+    Note: a company that explicitly emitted ``tech_stack=[]`` AND a company
+    whose model returned a vector containing 'unknown' both count as unknown.
+    """
+    keep = keep_for_charts(analyses)
+    known: Counter[str] = Counter()
+    unknown_count = 0
+    for a in keep:
+        if not a.tech_stack or all(s.value == "unknown" for s in a.tech_stack):
+            unknown_count += 1
+            continue
+        for stack in a.tech_stack:
+            if stack.value != "unknown":
+                known[stack.value] += 1
+    return known, unknown_count, len(keep)
+
+
+def b2b_subindustry_distribution(analyses: Iterable[CompanyAnalysis]) -> Counter[str]:
+    """One-layer-deeper breakdown for B2B SaaS companies.
+
+    Uses YC's ``yc_subindustry`` passthrough field, which carries strings like
+    "B2B -> Engineering, Product and Design" or "B2B -> Sales". The breakdown
+    is stable, machine-readable, and not LLM-derived (so it can't drift from
+    the dataframe). Falls back to "(unspecified)" when YC didn't supply one.
+    """
+    keep = [a for a in keep_for_charts(analyses) if a.industry_primary == Industry.B2B_SAAS]
+    counter: Counter[str] = Counter()
+    for a in keep:
+        sub = (a.yc_subindustry or "").strip()
+        if " -> " in sub:
+            sub = sub.split(" -> ", 1)[1]  # drop the "B2B -> " prefix
+        # When YC didn't supply a sub-category (just "B2B" with no arrow,
+        # or empty), bucket as "(unspecified)" rather than treating the
+        # parent label as its own subcategory.
+        if not sub or sub.lower() in {"b2b", "industrials", "consumer", "fintech"}:
+            sub = "(unspecified)"
+        counter[sub] += 1
+    return counter
+
+
+def traction_index(analyses: Iterable[CompanyAnalysis]) -> dict[str, list[CompanyAnalysis]]:
+    """Bucket companies by which kinds of traction signals they advertise.
+
+    Useful for the memo's Traction section: 'companies advertising customer
+    logos', 'companies citing GitHub stars', etc. Returns a dict of
+    ``{signal_kind: [companies]}`` for the kinds present.
+    """
+    out: dict[str, list[CompanyAnalysis]] = {}
+    for a in keep_for_charts(analyses):
+        for signal in a.traction:
+            out.setdefault(signal.kind.value, []).append(a)
+    # Dedup within bucket — a company that surfaces two github_stars signals
+    # should still appear once in the github-stars list.
+    for kind, companies in out.items():
+        seen: set[str] = set()
+        deduped = []
+        for c in companies:
+            if c.slug not in seen:
+                seen.add(c.slug)
+                deduped.append(c)
+        out[kind] = deduped
+    return out
+
+
+def traction_count(analyses: Iterable[CompanyAnalysis]) -> int:
+    """How many cohort companies advertise at least one traction signal."""
+    return sum(1 for a in keep_for_charts(analyses) if a.traction)
 
 
 def oss_posture_distribution(analyses: Iterable[CompanyAnalysis]) -> Counter[str]:
@@ -147,6 +228,7 @@ def headline_numbers(
         "agents_count": cap_counts.get("agents", 0),
         "no_ai_count": cap_counts.get("no-ai", 0),
         "rag_count": cap_counts.get("rag", 0),
+        "traction_count": traction_count(analyses),
     }
     if coverage is not None:
         out["upstream_count"] = getattr(coverage, "upstream_company_count", 0)
@@ -199,6 +281,7 @@ def quote_candidates(analyses: Iterable[CompanyAnalysis]) -> list[CompanyAnalysi
 
 __all__ = [
     "CapabilityHeatmap",
+    "b2b_subindustry_distribution",
     "capability_heatmap",
     "capability_totals",
     "confidence_breakdown",
@@ -210,5 +293,8 @@ __all__ = [
     "region_distribution",
     "spotlight_companies",
     "tech_stack_distribution",
+    "tech_stack_known_only",
+    "traction_count",
+    "traction_index",
     "yc_tag_distribution",
 ]

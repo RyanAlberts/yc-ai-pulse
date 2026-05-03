@@ -189,6 +189,33 @@ class BatchCoverage(BaseModel):
 HttpUrlStr = Annotated[str, Field(min_length=1)]
 
 
+class TractionSignalKind(StrEnum):
+    """The kind of traction evidence a company surface advertises."""
+
+    GITHUB_STARS = "github-stars"  # number-bearing
+    CUSTOMER_LOGO = "customer-logo"  # qualitative
+    FUNDING_ROUND = "funding-round"  # qualitative + maybe amount
+    REVENUE_DISCLOSED = "revenue-disclosed"  # rare, only when explicit
+    USERS_DISCLOSED = "users-disclosed"  # "10,000+ developers"
+    PRESS_COVERAGE = "press-coverage"  # named publication mention
+    PARTNERSHIP = "partnership"  # named partner
+    OTHER = "other"
+
+
+class TractionSignal(BaseModel):
+    """One concrete piece of traction evidence the model spotted.
+
+    The schema is conservative: ``detail`` is short verbatim text, ``source_url``
+    must come from the same allowed set as the analysis's ``sources`` (website,
+    YC profile, or a crawled subpage). The dashboard / deck / memo only render
+    signals that can be linked back to a citable surface.
+    """
+
+    kind: TractionSignalKind
+    detail: str = Field(min_length=2, max_length=200)
+    source_url: HttpUrl
+
+
 class CompanyAnalysis(BaseModel):
     """LLM-emitted classification for one company.
 
@@ -201,6 +228,7 @@ class CompanyAnalysis(BaseModel):
     slug: str
     industry_primary: Industry
     industry_secondary: list[Industry] = Field(default_factory=list, max_length=3)
+    yc_subindustry: str = Field(default="", max_length=200)  # passthrough from yc-oss
     ai_capability: list[AICapability] = Field(min_length=1, max_length=5)
     tech_stack: list[TechStack] = Field(default_factory=list, max_length=8)
     oss_posture: OSSPosture
@@ -209,6 +237,7 @@ class CompanyAnalysis(BaseModel):
     confidence: Literal["high", "medium", "low"]
     sources: list[HttpUrl] = Field(min_length=1, max_length=10)
     rationale: str = Field(default="", max_length=400)
+    traction: list[TractionSignal] = Field(default_factory=list, max_length=8)
 
 
 class CrossCheckResult(BaseModel):
@@ -235,4 +264,6 @@ __all__ = [
     "OSSPosture",
     "RawCompany",
     "TechStack",
+    "TractionSignal",
+    "TractionSignalKind",
 ]

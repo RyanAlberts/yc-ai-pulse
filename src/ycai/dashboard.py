@@ -674,7 +674,10 @@ def render(
         echarts_cdn=ECHARTS_CDN,
         echarts_sri=ECHARTS_SRI,
         echarts_version=ECHARTS_VERSION,
-        chart_options_json=_escape(json.dumps(all_options)),
+        # JSON inside <script type="application/json"> is raw text, not HTML.
+        # The only escape needed is to prevent a literal "</script" inside the
+        # JSON from closing the script tag prematurely.
+        chart_options_json=json.dumps(all_options).replace("</script", r"<\/script"),
     )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

@@ -12,3 +12,4 @@ The point: future-me reads three paragraphs and understands *why*, not just *wha
 
 - [0001 — Use yc-oss/api as the primary YC data source](0001-yc-data-source.md)
 - [0002 — Chrome extension talks to a local FastAPI, not Native Messaging](0002-localhost-vs-native-messaging.md)
+- [0003 — Three-POV introduction frame in the memo](0003-three-povs-memo-frame.md)

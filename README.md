@@ -6,6 +6,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
+![yc-ai-pulse W26 dashboard hero](docs/screenshots/dashboard-hero.png)
+
+_The dashboard auto-refuses to ship if any cited URL is dead. Full-page screenshot at [`docs/screenshots/dashboard-w26.jpg`](docs/screenshots/dashboard-w26.jpg)._
+
 ## What it does
 
 `yc-ai-pulse` answers: *what does the most recent YC batch tell us about the state of AI?*
