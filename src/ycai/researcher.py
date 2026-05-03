@@ -37,6 +37,7 @@ from ycai.schemas import (
     OSSPosture,
     RawCompany,
     TechStack,
+    TractionSignalKind,
 )
 
 log = logging.getLogger(__name__)
@@ -66,6 +67,7 @@ Return ONLY a JSON object matching this schema (no prose, no markdown fences):
   "slug": "{slug}",
   "industry_primary": one of {industry_values},
   "industry_secondary": [up to 3 of the same enum values, may be empty],
+  "yc_subindustry": "{subindustry}",
   "ai_capability": [1-5 of {capability_values}],
   "tech_stack": [up to 8 of {tech_stack_values}, [] if you cannot tell],
   "oss_posture": one of {oss_values},
@@ -73,7 +75,14 @@ Return ONLY a JSON object matching this schema (no prose, no markdown fences):
   "tagline_rewrite": "<=140 char rewrite of the one-liner in plain VC speak",
   "confidence": "high" | "medium" | "low",
   "sources": [at least one URL — must come from the inputs above (website or yc profile only)],
-  "rationale": "one or two sentences cite the words from the inputs that drove your classification"
+  "rationale": "one or two sentences cite the words from the inputs that drove your classification",
+  "traction": [
+    up to 8 verifiable traction signals; each signal:
+    {{"kind": one of {traction_values},
+       "detail": "short verbatim phrase from the source text",
+       "source_url": "URL where this evidence appears; must be one of the sources above"}}.
+    Empty list [] is correct when the page does not advertise any traction. DO NOT INVENT.
+  ]
 }}
 
 Hallucination rules (non-negotiable):
@@ -84,6 +93,9 @@ Hallucination rules (non-negotiable):
   oss_evidence_url is REQUIRED.
 - If the description is too thin to classify, return confidence="low" and
   use 'unknown' / 'unclear' enums.
+- Traction: never invent metrics. Only return signals whose ``detail`` is a
+  verbatim quote from the source text. If the page just says "we have
+  customers" without naming any, return an empty list.
 """
 
 
@@ -332,6 +344,7 @@ def _build_prompt(
         capability_values=[c.value for c in AICapability],
         tech_stack_values=[t.value for t in TechStack],
         oss_values=[o.value for o in OSSPosture],
+        traction_values=[k.value for k in TractionSignalKind],
     )
 
 
@@ -365,10 +378,23 @@ def _looks_like_input_url(url: str, company: RawCompany, extra_allowed: list[str
 
 
 def _validate_sources(analysis: CompanyAnalysis, company: RawCompany, extra_allowed: list[str] | None = None) -> bool:
-    """Return False if any cited source isn't actually in the inputs or crawl."""
+    """Return False if any cited source isn't actually in the inputs or crawl.
+
+    Also rejects traction signals whose ``source_url`` isn't from an allowed
+    surface — same contract as the top-level ``sources`` list. The model can
+    only cite traction it could see on a fetched page.
+    """
     for src in analysis.sources:
         if not _looks_like_input_url(str(src), company, extra_allowed=extra_allowed):
             log.info("rejecting hallucinated source %s for %s", src, company.slug)
+            return False
+    for signal in analysis.traction:
+        if not _looks_like_input_url(str(signal.source_url), company, extra_allowed=extra_allowed):
+            log.info(
+                "rejecting hallucinated traction source %s for %s",
+                signal.source_url,
+                company.slug,
+            )
             return False
     return True
 
@@ -407,6 +433,10 @@ async def analyze(
     if pass_1 is None:
         _log_raw_failure(raw_failure_log, slug=company.slug, reason="schema-validation-failure", raw=raw1)
         return _force_low(company.slug, "schema-validation-failure"), None
+    # Always pull yc_subindustry from the source data, never from the model.
+    # The model occasionally rephrases or invents this; pinning it from
+    # yc-oss/api keeps the sub-industry breakdown deterministic.
+    pass_1 = pass_1.model_copy(update={"yc_subindustry": company.subindustry})
     if not _validate_sources(pass_1, company, extra_allowed=crawled_urls):
         _log_raw_failure(raw_failure_log, slug=company.slug, reason="hallucinated-source-url", raw=raw1)
         return _force_low(company.slug, "hallucinated-source-url"), None

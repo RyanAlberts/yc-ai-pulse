@@ -28,6 +28,7 @@ def _ana(slug: str, **overrides: object) -> CompanyAnalysis:
         "slug": slug,
         "industry_primary": Industry.B2B_SAAS,
         "industry_secondary": [],
+        "yc_subindustry": "",
         "ai_capability": [AICapability.AGENTS],
         "tech_stack": [TechStack.ANTHROPIC],
         "oss_posture": OSSPosture.API_ONLY,
@@ -39,6 +40,7 @@ def _ana(slug: str, **overrides: object) -> CompanyAnalysis:
             f"https://www.ycombinator.com/companies/{slug}",
         ],
         "rationale": "test",
+        "traction": [],
     }
     base.update(overrides)
     return CompanyAnalysis.model_validate(base)
@@ -160,3 +162,104 @@ def test_quote_candidates_filters_short_taglines() -> None:
     ]
     quotes = quote_candidates(rows)
     assert [q.slug for q in quotes] == ["long"]
+
+
+# ----- PR #17: sub-industry, known-only tech stack, traction --------------------------------
+
+
+def test_b2b_subindustry_distribution_groups_by_yc_subcategory() -> None:
+    from ycai.analytics import b2b_subindustry_distribution
+
+    rows = [
+        _ana("a", yc_subindustry="B2B -> Sales"),
+        _ana("b", yc_subindustry="B2B -> Sales"),
+        _ana("c", yc_subindustry="B2B -> Operations"),
+        _ana("d", yc_subindustry="B2B -> Sales", confidence="low"),  # excluded
+        _ana("e", yc_subindustry="B2B"),  # plain B2B → unspecified
+        _ana("f", industry_primary=Industry.HEALTHCARE, yc_subindustry="Healthcare -> Devices"),  # not B2B
+    ]
+    counter = b2b_subindustry_distribution(rows)
+    assert counter["Sales"] == 2
+    assert counter["Operations"] == 1
+    assert counter["(unspecified)"] == 1
+    assert "Healthcare -> Devices" not in counter
+    assert counter.get("Sales", 0) + counter.get("Operations", 0) + counter.get("(unspecified)", 0) == 4
+
+
+def test_tech_stack_known_only_separates_unknown_from_named() -> None:
+    from ycai.analytics import tech_stack_known_only
+
+    rows = [
+        _ana("a", tech_stack=[TechStack.ANTHROPIC]),
+        _ana("b", tech_stack=[]),  # → unknown
+        _ana("c", tech_stack=[TechStack.UNKNOWN]),  # → unknown
+        _ana("d", tech_stack=[TechStack.OPENAI, TechStack.LANGCHAIN]),
+    ]
+    known, unknown_n, cohort = tech_stack_known_only(rows)
+    assert known["anthropic"] == 1
+    assert known["openai"] == 1
+    assert known["langchain"] == 1
+    assert "unknown" not in known
+    assert unknown_n == 2
+    assert cohort == 4
+
+
+def test_traction_index_buckets_by_signal_kind() -> None:
+    from ycai.analytics import traction_count, traction_index
+    from ycai.schemas import TractionSignal, TractionSignalKind
+
+    rows = [
+        _ana(
+            "with-stars",
+            traction=[
+                TractionSignal(
+                    kind=TractionSignalKind.GITHUB_STARS,
+                    detail="2,300 stars on GitHub",
+                    source_url="https://with-stars.example",
+                )
+            ],
+        ),
+        _ana("none"),
+        _ana(
+            "two-kinds",
+            traction=[
+                TractionSignal(
+                    kind=TractionSignalKind.CUSTOMER_LOGO,
+                    detail="Trusted by Acme Corp",
+                    source_url="https://two-kinds.example",
+                ),
+                TractionSignal(
+                    kind=TractionSignalKind.FUNDING_ROUND,
+                    detail="Seed round closed Q1",
+                    source_url="https://two-kinds.example/news",
+                ),
+            ],
+        ),
+    ]
+    idx = traction_index(rows)
+    assert "github-stars" in idx
+    assert "customer-logo" in idx
+    assert "funding-round" in idx
+    assert {a.slug for a in idx["github-stars"]} == {"with-stars"}
+    assert {a.slug for a in idx["customer-logo"]} == {"two-kinds"}
+    assert traction_count(rows) == 2  # 'none' has no signals
+
+
+def test_headline_numbers_includes_traction_count() -> None:
+    from ycai.schemas import TractionSignal, TractionSignalKind
+
+    rows = [
+        _ana(
+            "a",
+            traction=[
+                TractionSignal(
+                    kind=TractionSignalKind.CUSTOMER_LOGO,
+                    detail="Trusted by Acme",
+                    source_url="https://a.example",
+                )
+            ],
+        ),
+        _ana("b"),
+    ]
+    h = headline_numbers(rows)
+    assert h["traction_count"] == 1

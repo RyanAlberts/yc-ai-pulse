@@ -452,6 +452,89 @@ def _build_spotlight_slide(prs: Presentation, ctx: DeckBuildContext, company: Co
     _slide_footer(slide, source_url=str(company.sources[0]) if company.sources else "—")
 
 
+def _build_three_povs_slide(prs: Presentation, ctx: DeckBuildContext) -> None:
+    """A single slide that pits Andreessen / Dalio / Acemoglu against each other.
+
+    Per ADR 0003. The figures and their views are imported from
+    ``reports.docx.NAMED_FIGURES`` so the deck and memo can never disagree on
+    who said what.
+    """
+    from ycai.reports.docx import NAMED_FIGURES
+
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    _set_slide_background(slide, CREAM)
+    _add_accent_bar(slide, left=0.6, top=0.6, width=0.8, height=0.08)
+    _add_textbox(
+        slide,
+        text="Three views of this batch",
+        left=0.6,
+        top=0.8,
+        width=12.0,
+        height=1.0,
+        font_size=32,
+        bold=True,
+    )
+    _add_textbox(
+        slide,
+        text=(
+            "What this data implies for capital allocation depends on whose frame you adopt. "
+            "The memo does not pick a winner."
+        ),
+        left=0.6,
+        top=1.9,
+        width=12.0,
+        height=0.8,
+        font_size=14,
+        color=MUTED,
+    )
+    # Three columns, one per figure.
+    for i, key in enumerate(("andreessen", "dalio", "acemoglu")):
+        figure = NAMED_FIGURES[key]
+        col_left = 0.6 + i * 4.25
+        _add_textbox(
+            slide,
+            text=figure["name"],
+            left=col_left,
+            top=2.9,
+            width=4.0,
+            height=0.6,
+            font_size=20,
+            bold=True,
+            color=ACCENT,
+        )
+        _add_textbox(
+            slide,
+            text=figure["affiliation"],
+            left=col_left,
+            top=3.5,
+            width=4.0,
+            height=0.4,
+            font_size=12,
+            color=MUTED,
+        )
+        _add_textbox(
+            slide,
+            text=figure["view"],
+            left=col_left,
+            top=4.0,
+            width=4.0,
+            height=2.0,
+            font_size=13,
+        )
+        _add_textbox(
+            slide,
+            text=figure["source"],
+            left=col_left,
+            top=6.2,
+            width=4.0,
+            height=0.4,
+            font_size=10,
+            color=MUTED,
+        )
+        ctx.prose_buffer.append(figure["view"])
+    _slide_footer(slide, source_url="ADR 0003 in github.com/RyanAlberts/yc-ai-pulse")
+
+
 def _build_methodology_slide(prs: Presentation, ctx: DeckBuildContext) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     _set_slide_background(slide, CREAM)
@@ -545,6 +628,7 @@ def build_deck(
 
     _build_title_slide(prs, ctx)
     _build_tldr_slide(prs, ctx)
+    _build_three_povs_slide(prs, ctx)
     _build_chart_slide(
         prs,
         ctx,

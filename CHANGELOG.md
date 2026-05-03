@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_(no changes since 0.2.0)_
+### Added — PR #17 (memo polish)
+- **Executive summary** at the top of the memo, citing the Nobel laureate's framing of what the headline finding implies for capital allocation.
+- **Three-POV introduction** — single paragraph that pits Marc Andreessen, Ray Dalio, and Daron Acemoglu (2024 Nobel laureate in Economics) against each other on what the batch findings imply. The memo deliberately does not pick a winner. Codified in [`docs/MEMO_STRUCTURE.md`](docs/MEMO_STRUCTURE.md) and [ADR 0003](docs/decisions/0003-three-povs-memo-frame.md).
+- **Inside B2B SaaS** sub-industry table — one-layer-deeper breakdown using YC's `subindustry` passthrough (not LLM-derived, so it can't drift). Renders only when B2B SaaS rows exist.
+- **Tech stack chart now excludes the `unknown` bucket**; the unknown count is rendered as a footnote / asterisk under the chart instead of as the largest bar.
+- **Traction signals section** — companies that advertise verifiable traction (GitHub stars, named customers, funding rounds, revenue, user counts, press, partnerships). New `TractionSignal` schema, model populates them with verbatim spans, source-URL guard rejects fabricated citations. W26 dogfood: **73 of 105 high-confidence companies surfaced 212 traction signals across 8 kinds**.
+- **3-POV slide** in the deck for parity with the memo; named figures live in a single dict so memo and deck can never disagree.
+- **README hero screenshot** of the dashboard (auto-generated via Playwright at PR time).
+- **Bug fix**: dashboard chart-options JSON was being HTML-escaped before injection into a `<script type="application/json">` block, which broke `JSON.parse` on the client. Real charts in the v0.2.0 example HTML now render in browsers as well as in Playwright.
 
 ## [0.2.0] — 2026-05-01
 
