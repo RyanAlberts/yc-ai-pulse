@@ -51,6 +51,85 @@ def version() -> None:
     console.print(f"yc-ai-pulse {__version__}")
 
 
+daemon_app = typer.Typer(
+    name="daemon",
+    help="Start / stop / inspect the local FastAPI daemon (Phase 3 backend).",
+    no_args_is_help=True,
+)
+app.add_typer(daemon_app)
+
+
+@daemon_app.command("start")
+def daemon_start(
+    host: str = typer.Option("127.0.0.1", help="Bind address (always 127.0.0.1 unless overridden)."),
+    port: int = typer.Option(8787, help="Bind port."),
+) -> None:
+    """Start the local FastAPI daemon (detached). Prints the bearer token at the end."""
+    from ycai import daemon as daemon_mod
+
+    console.print(f"[cyan]→[/cyan] starting daemon on http://{host}:{port}…")
+    state = daemon_mod.start(host=host, port=port)
+    if not state.running:
+        console.print("[red]✗ daemon failed to come up; check ~/.ycai/daemon.log[/red]")
+        raise typer.Exit(2)
+    console.print(f"[green]✓[/green] daemon running (pid={state.pid})")
+    console.print()
+    console.print(f"[bold]token:[/bold] [yellow]{daemon_mod.token()}[/yellow]")
+    console.print(
+        "[dim]Paste this token into the Chrome extension's setup screen "
+        "(it's stored at ~/.ycai/token; `chmod 600`).[/dim]"
+    )
+
+
+@daemon_app.command("stop")
+def daemon_stop(
+    host: str = typer.Option("127.0.0.1", help="Bind address."),
+    port: int = typer.Option(8787, help="Bind port."),
+) -> None:
+    """Stop the running daemon. Best-effort SIGTERM then SIGKILL."""
+    from ycai import daemon as daemon_mod
+
+    console.print("[cyan]→[/cyan] stopping daemon…")
+    state = daemon_mod.stop(host=host, port=port)
+    if state.running:
+        console.print("[red]✗ daemon still running after stop attempt[/red]")
+        raise typer.Exit(2)
+    console.print("[green]✓[/green] daemon stopped")
+
+
+@daemon_app.command("status")
+def daemon_status(
+    host: str = typer.Option("127.0.0.1", help="Bind address."),
+    port: int = typer.Option(8787, help="Bind port."),
+) -> None:
+    """Print daemon health: process state, /healthz response, token presence."""
+    from ycai import daemon as daemon_mod
+
+    state = daemon_mod.status(host=host, port=port)
+    table = Table(title="ycai daemon status", show_header=False)
+    table.add_column("field")
+    table.add_column("value")
+    table.add_row("running", "yes" if state.running else "no")
+    table.add_row("pid", str(state.pid or "—"))
+    table.add_row("token present", "yes" if state.token_present else "no")
+    if state.health is not None:
+        table.add_row("healthz status", str(state.health.get("status", "—")))
+        table.add_row("daemon version", str(state.health.get("version", "—")))
+    else:
+        table.add_row("healthz", "[red]unreachable[/red]")
+    console.print(table)
+    if not state.running:
+        raise typer.Exit(1)
+
+
+@daemon_app.command("token")
+def daemon_token() -> None:
+    """Print the bearer token to stdout (suitable for piping into pbcopy)."""
+    from ycai import daemon as daemon_mod
+
+    print(daemon_mod.token())
+
+
 @app.command("dashboard")
 def dashboard_cmd(
     run_dir: Path = typer.Argument(..., help="Path to a previously-generated run directory."),

@@ -68,6 +68,27 @@ ycai resume runs/2026-05-01-XXXXXX
 ycai dashboard runs/2026-05-01-XXXXXX
 ```
 
+### Local daemon (Phase 3, in progress)
+
+`yc-ai-pulse` ships a small FastAPI daemon that the upcoming Chrome extension talks to. You can also call it directly with `curl` if that's your preference.
+
+```bash
+# Start (detached). Bind 127.0.0.1 only. Token issued on first start.
+ycai daemon start
+
+# The CLI prints a bearer token. Save it; it lives at ~/.ycai/token (chmod 0600).
+
+# Hit the surface:
+curl http://127.0.0.1:8787/healthz
+TOKEN=$(ycai daemon token)
+curl -H "Authorization: Bearer $TOKEN" http://127.0.0.1:8787/v1/info
+
+# Stop:
+ycai daemon stop
+```
+
+The daemon's CORS allowlist accepts `chrome-extension://*` only. Every `/v1/*` endpoint requires the bearer token. See [ADR 0002](docs/decisions/0002-localhost-vs-native-messaging.md) for why localhost FastAPI was chosen over Native Messaging.
+
 A real run on YC W26 is checked in as a working example: see [`examples/output/dashboard-w26-pr4-2026-05-01.html`](examples/output/dashboard-w26-pr4-2026-05-01.html). The full quality writeup is in [`docs/QUALITY_REPORT_W26.md`](docs/QUALITY_REPORT_W26.md).
 
 ## Anti-hallucination guarantees

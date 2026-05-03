@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — PR #18 (Phase 3 backend daemon)
+- New `src/ycai/server.py`: FastAPI daemon. Endpoints: `GET /healthz` (public), `GET /v1/info`, `GET /v1/companies` (autocomplete source for the extension), `POST /v1/runs`, `GET /v1/runs`, `GET /v1/runs/{id}/status`, `GET /v1/runs/{id}/events` (SSE), `POST /v1/companies/{slug}/deep-dive`. All `/v1/*` endpoints require `Authorization: Bearer <token>`.
+- New `src/ycai/daemon.py`: process lifecycle. PID file + token at `~/.ycai/`, mode 0600 on the token. `start()` blocks until `/healthz` answers; `stop()` SIGTERMs then SIGKILLs; `status()` combines PID-file existence with a synchronous health probe.
+- New CLI: `ycai daemon start | stop | status | token`. The token print on `start` is the only path that surfaces it on stdout — never logged.
+- CORS allowlist: `chrome-extension://*` only. Bind to 127.0.0.1 by default. Per ADR 0002.
+- 14 new tests (175 total). ASGI in-process via `httpx.ASGITransport`; no real port binding. Coverage: `/healthz` public, missing/wrong/correct token paths, `POST /v1/runs` lifecycle, deep-dive record kind, `/v1/companies` reads from the latest run dir, registry subscribe/unsubscribe behavior, CORS allows extension origins and ignores others.
+- Live smoke verified end-to-end: `ycai daemon start` → `/healthz` returns ok → `/v1/info` requires the token → `ycai daemon stop` cleans up the PID file.
+
 ### Added — PR #17 (memo polish)
 - **Executive summary** at the top of the memo, citing the Nobel laureate's framing of what the headline finding implies for capital allocation.
 - **Three-POV introduction** — single paragraph that pits Marc Andreessen, Ray Dalio, and Daron Acemoglu (2024 Nobel laureate in Economics) against each other on what the batch findings imply. The memo deliberately does not pick a winner. Codified in [`docs/MEMO_STRUCTURE.md`](docs/MEMO_STRUCTURE.md) and [ADR 0003](docs/decisions/0003-three-povs-memo-frame.md).
