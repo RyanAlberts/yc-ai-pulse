@@ -10,6 +10,7 @@ import logging
 from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import typer
 from rich.console import Console
@@ -40,6 +41,9 @@ from ycai.schemas import (
 )
 from ycai.scraper import UpstreamError, fetch_batch, upstream_age_hours
 from ycai.verifier import check_urls, split_by_status
+
+if TYPE_CHECKING:
+    from ycai.external_signals import CompanyExternalProfile
 
 app = typer.Typer(add_completion=False, help="yc-ai-pulse — open-source YC batch analyzer.")
 console = Console()
@@ -115,6 +119,147 @@ def dashboard_cmd(
     console.print(f"[green]✓[/green] wrote dashboard.html → {out}")
 
 
+@app.command("enrich-context")
+def enrich_context_cmd(
+    run_dir: Path = typer.Argument(..., help="Run directory with analyses.jsonl already populated."),
+    api_key: str | None = typer.Option(None, "--api-key"),
+    model: str = typer.Option(DEFAULT_MODEL, "--model"),
+    skip_external: bool = typer.Option(False, "--skip-external", help="Skip HN/Reddit/GitHub fetch."),
+    skip_topology: bool = typer.Option(False, "--skip-topology", help="Skip B2B SaaS clustering pass."),
+    skip_povs: bool = typer.Option(False, "--skip-povs", help="Skip three-POV essay generation."),
+) -> None:
+    """Add external signals + B2B topology + POV essays to a run.
+
+    Three artifacts produced (all opt-in via the flags above):
+
+    - ``external_signals.jsonl`` — HN + Reddit + GitHub stars per company
+      (HTTP only, no LLM cost; ~30s for 100 companies)
+    - ``b2b_topology.json`` — bottom-up clustering of B2B SaaS companies
+      (one Sonnet call; ~15s)
+    - ``pov_essays.json`` — three substantive POV paragraphs grounded in
+      named companies (three Sonnet calls; ~30s)
+
+    The memo build (`ycai report`) reads these files when present and
+    replaces the templated three-POV intro and the YC-taxonomy-based sub-
+    industry table with the substantive analysis.
+    """
+    coverage_path = run_dir / "coverage.json"
+    raw_path = run_dir / "raw" / "yc_companies.json"
+    analyses_jsonl = run_dir / "analyses.jsonl"
+    if not analyses_jsonl.exists():
+        console.print(f"[red]✗ {analyses_jsonl} not found[/red]")
+        raise typer.Exit(2)
+    coverage = BatchCoverage.model_validate_json(coverage_path.read_text())
+    raw_companies = json.loads(raw_path.read_text())
+    companies_by_slug = {c["slug"]: c for c in raw_companies}
+    analyses = [
+        CompanyAnalysis.model_validate_json(line) for line in analyses_jsonl.read_text().splitlines() if line.strip()
+    ]
+
+    # 1) external signals (HTTP only — no LLM cost)
+    if not skip_external:
+        from ycai.external_signals import fetch_for_cohort
+
+        keep = [a for a in analyses if a.confidence in ("high", "medium")]
+        targets: list[tuple[str, str, str, list[str]]] = []
+        for a in keep:
+            company = companies_by_slug.get(a.slug, {})
+            name = company.get("name") or a.slug
+            website = company.get("website") or ""
+            github_urls = [str(s) for s in a.sources if "github.com/" in str(s)]
+            if a.oss_evidence_url and "github.com/" in str(a.oss_evidence_url):
+                github_urls.append(str(a.oss_evidence_url))
+            targets.append((a.slug, name, website, github_urls))
+        console.print(f"[cyan]→[/cyan] fetching HN + Reddit + GitHub signals for {len(targets)} companies…")
+        profiles = asyncio.run(fetch_for_cohort(targets))
+        ext_path = run_dir / "external_signals.jsonl"
+        with ext_path.open("w") as f:
+            for slug, profile in profiles.items():
+                record = {
+                    "slug": slug,
+                    "hn": [s.__dict__ for s in profile.hn],
+                    "reddit": [s.__dict__ for s in profile.reddit],
+                    "github": profile.github.__dict__ if profile.github else None,
+                }
+                f.write(json.dumps(record) + "\n")
+        total_signals = sum(p.total_count for p in profiles.values())
+        with_signals = sum(1 for p in profiles.values() if p.total_count > 0)
+        console.print(f"[green]✓[/green] {total_signals} external signals across {with_signals} companies → {ext_path}")
+
+    # Reload external signals (whether we just wrote them or they were already there)
+    external_profiles = _load_external_profiles(run_dir)
+
+    if skip_topology and skip_povs:
+        return
+
+    try:
+        backend = make_default_backend(api_key=api_key)
+    except RuntimeError as exc:
+        console.print(f"[red]✗ no LLM backend available:[/red] {exc}")
+        raise typer.Exit(3) from exc
+
+    # 2) topology
+    if not skip_topology:
+        from ycai.topology import cluster_b2b
+
+        console.print("[cyan]→[/cyan] running B2B SaaS topology pass…")
+        topology = asyncio.run(cluster_b2b(analyses, external_profiles, backend, model=model))
+        if topology is None:
+            console.print("[yellow]⚠ topology pass failed validation; memo will fall back to YC taxonomy[/yellow]")
+        else:
+            top_path = run_dir / "b2b_topology.json"
+            top_path.write_text(topology.model_dump_json(indent=2))
+            console.print(f"[green]✓[/green] {len(topology.clusters)} clusters → {top_path}")
+
+    # 3) POV essays
+    if not skip_povs:
+        from ycai.analytics import headline_numbers
+        from ycai.reports.docx import NAMED_FIGURES
+        from ycai.topology import pov_essays
+
+        headline = headline_numbers(analyses, coverage=coverage)
+        console.print("[cyan]→[/cyan] running three-POV essay pass (Andreessen / Dalio / Acemoglu)…")
+        essays = asyncio.run(
+            pov_essays(
+                analyses,
+                external_profiles,
+                headline=headline,
+                figures=NAMED_FIGURES,
+                backend=backend,
+                model=model,
+            )
+        )
+        if essays:
+            essays_path = run_dir / "pov_essays.json"
+            essays_path.write_text(json.dumps({k: e.model_dump() for k, e in essays.items()}, indent=2))
+            console.print(f"[green]✓[/green] {len(essays)} essays → {essays_path}")
+        else:
+            console.print("[yellow]⚠ POV essay pass produced no validated essays; memo falls back to template[/yellow]")
+
+
+def _load_external_profiles(run_dir: Path) -> dict[str, CompanyExternalProfile]:
+    """Lazy loader used by enrich-context AND the memo build."""
+    from ycai.external_signals import CompanyExternalProfile, ExternalSignal
+
+    path = run_dir / "external_signals.jsonl"
+    if not path.exists():
+        return {}
+    out: dict[str, CompanyExternalProfile] = {}
+    for line in path.read_text().splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        slug = record["slug"]
+        profile = CompanyExternalProfile(
+            slug=slug,
+            hn=[ExternalSignal(**s) for s in record.get("hn") or []],
+            reddit=[ExternalSignal(**s) for s in record.get("reddit") or []],
+            github=ExternalSignal(**record["github"]) if record.get("github") else None,
+        )
+        out[slug] = profile
+    return out
+
+
 @app.command("report")
 def report_cmd(
     run_dir: Path = typer.Argument(..., help="Run directory with coverage.json + analyses.json(l)."),
@@ -169,9 +314,36 @@ def report_cmd(
 
     if not deck_only:
         memo_path = run_dir / "report.docx"
+        # Load enrich-context artifacts if present.
+        pov_essays_data: dict[str, dict[str, object]] | None = None
+        b2b_topology_data: dict[str, object] | None = None
+        external_profiles_data: dict[str, CompanyExternalProfile] | None = None
+        pov_path = run_dir / "pov_essays.json"
+        topology_path = run_dir / "b2b_topology.json"
+        if pov_path.exists():
+            pov_essays_data = json.loads(pov_path.read_text())
+            assert pov_essays_data is not None
+            console.print(f"[dim]using pov_essays.json ({len(pov_essays_data)} essays)[/dim]")
+        if topology_path.exists():
+            b2b_topology_data = json.loads(topology_path.read_text())
+            assert b2b_topology_data is not None
+            clusters = b2b_topology_data.get("clusters", []) or []
+            n_clusters = len(clusters) if isinstance(clusters, list) else 0
+            console.print(f"[dim]using b2b_topology.json ({n_clusters} clusters)[/dim]")
+        if (run_dir / "external_signals.jsonl").exists():
+            external_profiles_data = _load_external_profiles(run_dir)
+            console.print(f"[dim]using external_signals.jsonl ({len(external_profiles_data)} profiles)[/dim]")
         console.print("[cyan]→[/cyan] building report.docx (Layer 2 audit before write)…")
         try:
-            build_memo(coverage, companies, analyses, output_path=memo_path)
+            build_memo(
+                coverage,
+                companies,
+                analyses,
+                output_path=memo_path,
+                pov_essays=pov_essays_data,
+                b2b_topology=b2b_topology_data,
+                external_profiles=external_profiles_data,
+            )
         except Layer2Failure as exc:
             console.print(f"[red]✗ memo Layer 2 audit failed:[/red] {exc}")
             for hit in exc.forbidden[:5]:

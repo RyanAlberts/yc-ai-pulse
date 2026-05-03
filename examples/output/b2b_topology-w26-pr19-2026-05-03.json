@@ -1,0 +1,63 @@
+{
+  "clusters": [
+    {
+      "name": "AI-native compliance and audit document automation",
+      "thesis": "These companies automate the most labor-intensive document workflows in regulated industries—audit evidence, workpaper generation, and compliance sign-off—by learning from existing processes and producing governance-ready outputs that auditors and legal teams can act on directly.",
+      "member_slugs": [
+        "oxus",
+        "eigenpal",
+        "veriad"
+      ]
+    },
+    {
+      "name": "Purpose-built AI for offline-first and non-SaaS-native verticals",
+      "thesis": "These companies build industry-specific AI for operators whose work happens outside conventional SaaS—field technicians, hotel staff, equipment dealers, appointment-based businesses, and library managers—delivering leverage without requiring the buyer to change their stack.",
+      "member_slugs": [
+        "robby",
+        "lance",
+        "chasi",
+        "booko",
+        "librar-labs"
+      ]
+    },
+    {
+      "name": "Agentic GTM — pipeline intelligence, scheduling, and revenue-cycle automation",
+      "thesis": "These companies deploy autonomous agents across the full GTM motion—surfacing buyer intent, booking meetings, coaching live calls, optimizing ad spend, and arming CS and SE teams with on-demand product knowledge—so revenue teams close more pipeline without adding headcount.",
+      "member_slugs": [
+        "autumn-ai",
+        "vela",
+        "caretta",
+        "laurence",
+        "unisson"
+      ]
+    },
+    {
+      "name": "Natural-language workflow automation on top of existing enterprise tooling",
+      "thesis": "These companies let non-technical operators build and deploy production automations by describing workflows in plain English or chat, plugging agents into existing SaaS and systems of record without migration or custom engineering.",
+      "member_slugs": [
+        "bubble-lab",
+        "jinba",
+        "crow",
+        "ressl-ai",
+        "o11"
+      ]
+    },
+    {
+      "name": "Real-time autonomous monitoring with physical or infrastructure intervention",
+      "thesis": "These companies use computer vision or predictive ML to detect failure or loss events in real time—retail theft in physical stores and satellite network degradation—and trigger autonomous responses faster than any human operator could react.",
+      "member_slugs": [
+        "lexius",
+        "constellation-space"
+      ]
+    }
+  ],
+  "unclustered": [
+    "aurorin-cad",
+    "sitefire",
+    "skillsync",
+    "cardboard",
+    "samora-ai",
+    "ishiki-labs"
+  ],
+  "total_b2b": 26
+}
