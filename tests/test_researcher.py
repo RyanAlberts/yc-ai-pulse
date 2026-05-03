@@ -136,6 +136,48 @@ def test_validate_sources_rejects_invented_urls() -> None:
     assert _validate_sources(analysis, company) is False
 
 
+def test_validate_sources_rejects_subdomain_lookalike() -> None:
+    """An attacker-controlled subdomain that visually starts with the
+    allowed website must NOT pass the source check.
+
+    The previous ``startswith`` implementation accepted
+    ``https://acme.ai.attacker.example/x`` against ``https://acme.ai`` —
+    the host check rejects it because ``acme.ai.attacker.example`` is
+    not the same host as ``acme.ai``.
+    """
+    company = _make_company(slug="acme-ai", website="https://acme.ai")
+    payload = json.loads(_good_response("acme-ai"))
+    payload["sources"] = ["https://acme.ai.attacker.example/research"]
+    analysis = _parse_response(json.dumps(payload), slug="acme-ai")
+    assert analysis is not None
+    assert _validate_sources(analysis, company) is False
+
+
+def test_validate_sources_accepts_www_variant() -> None:
+    """``www.acme.ai`` should be treated as the same host as ``acme.ai``."""
+    company = _make_company(slug="acme-ai", website="https://acme.ai")
+    payload = json.loads(_good_response("acme-ai"))
+    payload["sources"] = ["https://www.acme.ai/about"]
+    analysis = _parse_response(json.dumps(payload), slug="acme-ai")
+    assert analysis is not None
+    assert _validate_sources(analysis, company) is True
+
+
+def test_validate_sources_rejects_non_http_scheme() -> None:
+    """``file://`` / ``ftp://`` / ``javascript:`` cannot be cited as evidence."""
+    company = _make_company(slug="acme-ai", website="https://acme.ai")
+    payload = json.loads(_good_response("acme-ai"))
+    payload["sources"] = ["file:///etc/passwd"]
+    # pydantic HttpUrl will likely reject this earlier, but the guard
+    # provides defense-in-depth even if a future schema relaxes.
+    try:
+        analysis = _parse_response(json.dumps(payload), slug="acme-ai")
+    except Exception:
+        return  # pydantic rejection is also acceptable
+    if analysis is not None:
+        assert _validate_sources(analysis, company) is False
+
+
 # ----- analyze() with MockBackend: end-to-end flow --------------------------------------------
 
 
