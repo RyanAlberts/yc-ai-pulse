@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Strand AI (strand-ai) — yc-ai-pulse</title>
+<style>
+  :root {
+    --bg: #F5F1E8;
+    --fg: #1B1B1B;
+    --muted: #6B6B6B;
+    --accent: #D24E01;
+    --line: #DDD8CB;
+    --ok: #15803D;
+    --warn: #B45309;
+    --bad: #B91C1C;
+  }
+  body { background: var(--bg); color: var(--fg);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Source Serif Pro", Georgia, serif;
+    margin: 0; padding: 0; }
+  .wrap { max-width: 920px; margin: 32px auto; padding: 0 24px; }
+  h1 { font-size: 32px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 32px 0 12px; }
+  h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted);
+    margin: 20px 0 8px; }
+  .subtitle { color: var(--muted); margin: 0 0 24px; }
+  .nav { font-size: 14px; margin: 0 0 24px; }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px;
+    background: #FFF; border: 1px solid var(--line); margin: 0 4px 4px 0; }
+  .pill-accent { background: #FED7AA; border-color: var(--accent); color: #7C2D12; }
+  .pill-ok { background: #DCFCE7; border-color: var(--ok); color: #14532D; }
+  .pill-warn { background: #FEF3C7; border-color: var(--warn); color: #78350F; }
+  .pill-bad { background: #FEE2E2; border-color: var(--bad); color: #7F1D1D; }
+  .card { background: white; border: 1px solid var(--line); padding: 20px 24px; margin: 0 0 16px;
+    border-radius: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; font-size: 14px; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left;
+    vertical-align: top; }
+  th { background: #FAFAFA; font-weight: 600; font-size: 13px; text-transform: uppercase;
+    letter-spacing: 0.4px; color: var(--muted); }
+  td.detail { font-size: 13px; }
+  td.detail a { color: var(--accent); }
+  .quote { font-style: italic; color: #444; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+  .meta-row .item { background: #FFF; border: 1px solid var(--line); padding: 8px 14px;
+    border-radius: 4px; min-width: 120px; }
+  .meta-row .item .label { color: var(--muted); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.4px; }
+  .meta-row .item .value { font-weight: 600; margin-top: 2px; }
+  .source-list { font-size: 13px; }
+  .source-list li { word-break: break-all; }
+  footer { color: var(--muted); font-size: 13px; margin: 48px 0 24px;
+    padding-top: 24px; border-top: 1px solid var(--line); }
+  input[type=search] { width: 100%; max-width: 400px; padding: 8px 12px;
+    border: 1px solid var(--line); border-radius: 4px; font-size: 15px; }
+  .siblings { font-size: 13px; }
+  .siblings a { color: var(--accent); margin-right: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="nav">
+    <a href="../dashboard.html">← Cohort dashboard</a> ·
+    <a href="index.html">Browse all companies</a>
+  </p>
+  <h1>Strand AI</h1>
+  <p class="subtitle">YC slug <code>strand-ai</code> · Winter 2026</p>
+
+  <div class="card">
+    <p class="quote" style="margin: 0;">Foundation models that predict missing biological modalities—proteomics, transcriptomics—from patient data you already have</p>
+  </div>
+
+  <div class="meta-row">
+    <div class="item"><div class="label">Industry</div><div class="value">Biotech</div></div>
+    <div class="item"><div class="label">OSS posture</div><div class="value"><span class="pill pill-warn">api-only</span></div></div>
+    <div class="item"><div class="label">Confidence</div><div class="value"><span class="pill pill-ok">confidence: high</span></div></div>
+  </div>
+
+  <h2>Capabilities</h2>
+  <p><span class="pill pill-accent">bio-ai</span><span class="pill pill-accent">multimodal</span><span class="pill pill-accent">vision</span><span class="pill pill-accent">data-pipeline</span><span class="pill pill-accent">training-infra</span></p>
+
+  <h3>Secondary industries</h3><p><span class="pill">Healthcare</span><span class="pill">AI Infrastructure</span></p>
+
+  <h2>Tech stack</h2>
+  <p><span class="pill">custom-model</span></p>
+
+
+
+  <h2>Traction signals</h2>
+  <table><thead><tr><th>Kind</th><th>Detail (verbatim)</th><th>Link</th></tr></thead><tbody><tr><td><span class="pill">funding-round</span></td><td class="detail quote">Backed by Y Combinator (W26)</td><td class="detail"><a href="https://strandai.com/about">source</a></td></tr><tr><td><span class="pill">other</span></td><td class="detail quote">Trained on a dataset of 20,000 slides of paired same-section H&amp;E + mIF data, the largest in the field</td><td class="detail"><a href="https://strandai.com/postman">source</a></td></tr><tr><td><span class="pill">press-coverage</span></td><td class="detail quote">Oded joins Kate Kreuger on the Minute 52 podcast to talk about building Strand AI, YC Demo Day, and spatial proteomics</td><td class="detail"><a href="https://strandai.com/blog">source</a></td></tr><tr><td><span class="pill">other</span></td><td class="detail quote">We ran CZI Biohub's VariantFormer on 538 new 1000 Genomes samples to generate free imputed RNA expression data — 37× faster on cheaper GPUs</td><td class="detail"><a href="https://strandai.com/blog">source</a></td></tr><tr><td><span class="pill">partnership</span></td><td class="detail quote">With researchers and advisors from Mount Sinai, Stanford, and Tsinghua</td><td class="detail"><a href="https://strandai.com/about">source</a></td></tr></tbody></table>
+
+  <h2>Sources</h2>
+  <ul class="source-list">
+    <li><a href="https://strandai.com/">https://strandai.com/</a></li><li><a href="https://strandai.com/about">https://strandai.com/about</a></li><li><a href="https://strandai.com/blog">https://strandai.com/blog</a></li><li><a href="https://strandai.com/postman">https://strandai.com/postman</a></li><li><a href="https://www.ycombinator.com/companies/strand-ai">https://www.ycombinator.com/companies/strand-ai</a></li>
+  </ul>
+
+  <h3>Why this classification</h3><p class="quote">The site explicitly states 'Predict missing biological modalities from the data you already have' and describes custom foundation models (POSTMAN for spatial proteomics, VariantFormer for gene expression imputation); access is gated via 'Request Access' and 'Request Early Access' with no open-source repository mentioned, confirming api-only posture.</p>
+
+  <h3>Other Biotech companies in this batch</h3><p class="siblings"><a href="10x-science.html"><code>10x-science</code></a> <a href="ditto-biosciences.html"><code>ditto-biosciences</code></a> <a href="origin-bio.html"><code>origin-bio</code></a> <a href="rhizome-ai.html"><code>rhizome-ai</code></a></p>
+
+  <footer>
+    <p>This page is generated from <code>analyses.jsonl</code> by yc-ai-pulse.
+    Every field above is the LLM's classification with sources cited; nothing is invented.
+    See <a href="../dashboard.html#dropped">the dropped register</a> for excluded companies.</p>
+    <p style="margin-top: 8px;">
+    Source code: <a href="https://github.com/RyanAlberts/yc-ai-pulse">github.com/RyanAlberts/yc-ai-pulse</a>
+    </p>
+  </footer>
+</div>
+</body>
+</html>

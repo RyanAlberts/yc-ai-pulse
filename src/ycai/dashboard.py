@@ -103,10 +103,17 @@ def _chart_card(
     return "".join(parts), echarts_option
 
 
-def _slug_table(rows: list[tuple[str, str, str]]) -> str:
-    body = "".join(
-        f"<tr><td><code>{_escape(s)}</code></td><td>{_escape(n)}</td><td>{_escape(v)}</td></tr>" for s, n, v in rows
-    )
+def _slug_table(rows: list[tuple[str, str, str]], *, link_to_pages: bool = False) -> str:
+    """Drill-down table. When ``link_to_pages`` is True the slug column links
+    to the per-company page at ``companies/<slug>.html``.
+    """
+    cells = []
+    for s, n, v in rows:
+        slug_html = f"<code>{_escape(s)}</code>"
+        if link_to_pages:
+            slug_html = f'<a href="companies/{_escape(s)}.html">{slug_html}</a>'
+        cells.append(f"<tr><td>{slug_html}</td><td>{_escape(n)}</td><td>{_escape(v)}</td></tr>")
+    body = "".join(cells)
     return f"<table><thead><tr><th>Slug</th><th>Name</th><th>Value</th></tr></thead><tbody>{body}</tbody></table>"
 
 
@@ -285,7 +292,7 @@ def _industry_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str,
     by_ind = analytics.industry_distribution(analyses)
     option = _bar_option(by_ind, top=12)
     rows = [(a.slug, a.tagline_rewrite[:60], a.industry_primary.value) for a in high]
-    drill = _slug_table(rows)
+    drill = _slug_table(rows, link_to_pages=True)
     body, _ = _chart_card(
         "chart-industry",
         "Industry distribution (LLM-classified, high+medium confidence only)",
@@ -307,7 +314,7 @@ def _capability_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[st
     for a in keep:
         caps = ", ".join(cap.value for cap in a.ai_capability)
         rows.append((a.slug, a.tagline_rewrite[:60], f"{a.industry_primary.value} | {caps}"))
-    drill = _slug_table(rows)
+    drill = _slug_table(rows, link_to_pages=True)
     aria = (
         f"Heatmap of {len(heatmap.capabilities)} AI capabilities across "
         f"{len(heatmap.industries)} top industries. "
@@ -332,7 +339,7 @@ def _stack_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, An
     rows: list[tuple[str, str, str]] = []
     for a in keep:
         rows.append((a.slug, a.tagline_rewrite[:60], ", ".join(s.value for s in a.tech_stack) or "unknown"))
-    drill = _slug_table(rows)
+    drill = _slug_table(rows, link_to_pages=True)
     aria = f"Bar chart of tech stack mentions across {len(keep)} high-confidence companies."
     body, _ = _chart_card(
         "chart-stack",
@@ -354,7 +361,7 @@ def _oss_card(analyses: list[CompanyAnalysis]) -> tuple[str, str, dict[str, Any]
     for a in keep:
         evidence = str(a.oss_evidence_url) if a.oss_evidence_url else "—"
         rows.append((a.slug, a.tagline_rewrite[:60], f"{a.oss_posture.value}  ({evidence})"))
-    drill = _slug_table(rows)
+    drill = _slug_table(rows, link_to_pages=True)
     aria = f"Pie chart of open-source posture across {len(keep)} companies."
     body, _ = _chart_card(
         "chart-oss",
@@ -457,6 +464,87 @@ def _yc_extra_charts(coverage: BatchCoverage, companies: list[RawCompany]) -> tu
     return "\n".join(parts), options
 
 
+def _build_company_rows(analyses: list[CompanyAnalysis], companies: list[RawCompany]) -> list[dict[str, Any]]:
+    """Compact per-company records for the client-side filter bar.
+
+    Only Tier A+B + high/medium-confidence rows are included (these are
+    exactly the rows that feed the charts). Each record carries the
+    minimum fields the filter + recompute logic needs:
+    slug, name, tagline, industry, capabilities, tech_stack, oss_posture,
+    confidence, traction_count.
+    """
+    name_by_slug = {c.slug: c.name for c in companies}
+    rows: list[dict[str, Any]] = []
+    for a in analyses:
+        if a.confidence == "low":
+            continue
+        rows.append(
+            {
+                "slug": a.slug,
+                "name": name_by_slug.get(a.slug, a.slug),
+                "tagline": a.tagline_rewrite,
+                "industry": a.industry_primary.value,
+                "capabilities": [c.value for c in a.ai_capability],
+                "tech_stack": [s.value for s in a.tech_stack],
+                "oss": a.oss_posture.value,
+                "confidence": a.confidence,
+                "traction_count": len(a.traction),
+            }
+        )
+    return rows
+
+
+def _filter_bar(rows: list[dict[str, Any]]) -> str:
+    """Build the filter UI. ``rows`` is the same list used by the JS recompute,
+    so we can populate dropdowns with only values that actually appear in the
+    cohort (no dead options).
+    """
+    if not rows:
+        return ""
+
+    industries = sorted({r["industry"] for r in rows})
+    capabilities = sorted({c for r in rows for c in r["capabilities"]})
+    oss_postures = sorted({r["oss"] for r in rows})
+
+    def _options(values: list[str]) -> str:
+        opts = ['<option value="">— any —</option>']
+        opts.extend(f'<option value="{_escape(v)}">{_escape(v)}</option>' for v in values)
+        return "".join(opts)
+
+    total = len(rows)
+    return f"""
+  <div class="filter-bar" id="filter-bar" role="region" aria-label="Cohort filter">
+    <div class="filter-row">
+      <label class="filter-field" style="flex: 1.5; min-width: 200px;">
+        <span>Search</span>
+        <input type="search" id="f-q" placeholder="slug, name, or tagline…" />
+      </label>
+      <label class="filter-field">
+        <span>Industry</span>
+        <select id="f-industry">{_options(industries)}</select>
+      </label>
+      <label class="filter-field">
+        <span>Capability</span>
+        <select id="f-capability">{_options(capabilities)}</select>
+      </label>
+      <label class="filter-field">
+        <span>OSS posture</span>
+        <select id="f-oss">{_options(oss_postures)}</select>
+      </label>
+      <label class="filter-checkbox">
+        <input type="checkbox" id="f-traction" />
+        <span>Has traction</span>
+      </label>
+      <button type="button" id="f-reset" class="filter-reset">Reset</button>
+    </div>
+    <div class="filter-status">
+      Showing <strong id="filter-count">{total}</strong> of <strong>{total}</strong> companies.
+      <a href="companies/index.html">Browse all →</a>
+    </div>
+  </div>
+"""
+
+
 def _link_verify_banner(broken_count: int, allowed_dead: bool) -> str:
     if broken_count == 0:
         return ""
@@ -521,6 +609,20 @@ DASHBOARD_TEMPLATE = """<!doctype html>
   .badge.tier-A {{ background: #DCFCE7; color: #15803D; }}
   .badge.tier-B {{ background: #FEF3C7; color: #B45309; }}
   .badge.tier-C {{ background: #FEE2E2; color: #B91C1C; }}
+  .filter-bar {{ background: white; border: 1px solid var(--line); padding: 16px 20px; border-radius: 4px; margin: 24px 0 16px; }}
+  .filter-row {{ display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }}
+  .filter-field {{ display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }}
+  .filter-field span {{ font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }}
+  .filter-field input[type=search], .filter-field select {{
+    padding: 8px 10px; border: 1px solid var(--line); border-radius: 3px;
+    font-size: 14px; background: white; color: var(--fg); }}
+  .filter-checkbox {{ display: flex; align-items: center; gap: 6px; font-size: 14px; padding-bottom: 8px; }}
+  .filter-checkbox input {{ margin: 0; }}
+  .filter-reset {{ padding: 8px 14px; background: white; border: 1px solid var(--line); border-radius: 3px;
+    font-size: 13px; cursor: pointer; color: var(--muted); }}
+  .filter-reset:hover {{ background: #FAF6E8; color: var(--fg); }}
+  .filter-status {{ font-size: 13px; color: var(--muted); margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line); }}
+  .filter-status a {{ color: var(--accent); margin-left: 12px; }}
 </style>
 </head>
 <body>
@@ -547,6 +649,7 @@ DASHBOARD_TEMPLATE = """<!doctype html>
     <div class="stat"><div class="num bad">{tier_c}</div><div class="label">Tier C · excluded</div></div>
   </div>
 
+  {filter_bar}
   {analysis_section}
   {yc_extra_section}
 
@@ -567,6 +670,7 @@ DASHBOARD_TEMPLATE = """<!doctype html>
   </footer>
 
   <script type="application/json" id="raw-data">{raw_data_json}</script>
+  <script type="application/json" id="companies-data">{companies_json}</script>
 </div>
 
 <script src="{echarts_cdn}"
@@ -577,23 +681,193 @@ DASHBOARD_TEMPLATE = """<!doctype html>
 (function() {{
   if (typeof echarts === 'undefined') {{
     document.querySelectorAll('.chart-canvas').forEach(function(el) {{
-      el.outerHTML = '<p style="color:#B91C1C;">ECharts failed to load. See the drill-down tables below for the underlying data.</p>';
+      var p = document.createElement('p');
+      p.style.color = '#B91C1C';
+      p.textContent = 'ECharts failed to load. See the drill-down tables below for the underlying data.';
+      el.parentNode.replaceChild(p, el);
     }});
     return;
   }}
+  var ACCENT = '#D24E01';
+  var OSS_COLORS = {{
+    'fully-open': '#15803D', 'weights-only': '#65A30D', 'source-available': '#84CC16',
+    'api-only': '#F59E0B', 'closed': '#B91C1C', 'unknown': '#9CA3AF'
+  }};
+
+  // ----- baseline render from server-built options
   var raw = document.getElementById('chart-options').textContent;
-  var options = JSON.parse(raw);
-  var instances = [];
-  Object.keys(options).forEach(function(id) {{
+  var staticOptions = JSON.parse(raw);
+  var instances = {{}};
+  Object.keys(staticOptions).forEach(function(id) {{
     var el = document.getElementById(id);
     if (!el) return;
     var inst = echarts.init(el, null, {{ renderer: 'canvas' }});
-    inst.setOption(options[id]);
-    instances.push(inst);
+    inst.setOption(staticOptions[id]);
+    instances[id] = inst;
   }});
   window.addEventListener('resize', function() {{
-    instances.forEach(function(i) {{ i.resize(); }});
+    Object.keys(instances).forEach(function(k) {{ instances[k].resize(); }});
   }});
+
+  // ----- filter bar (no-op if companies-data is missing or empty)
+  var dataNode = document.getElementById('companies-data');
+  if (!dataNode || !dataNode.textContent.trim()) return;
+  var rows;
+  try {{ rows = JSON.parse(dataNode.textContent); }} catch (e) {{ return; }}
+  if (!Array.isArray(rows) || rows.length === 0) return;
+
+  function counter(values) {{
+    var c = {{}};
+    values.forEach(function(v) {{ c[v] = (c[v] || 0) + 1; }});
+    return c;
+  }}
+  function topEntries(c, top) {{
+    return Object.keys(c).map(function(k) {{ return [k, c[k]]; }})
+      .sort(function(a, b) {{ return b[1] - a[1]; }})
+      .slice(0, top || 1000);
+  }}
+  function barOption(entries) {{
+    if (!entries.length) return null;
+    var rev = entries.slice().reverse();
+    return {{
+      tooltip: {{ trigger: 'axis', axisPointer: {{ type: 'shadow' }} }},
+      grid: {{ left: 200, right: 60, top: 16, bottom: 24, containLabel: true }},
+      xAxis: {{ type: 'value' }},
+      yAxis: {{ type: 'category', data: rev.map(function(e) {{ return e[0]; }}),
+        axisLabel: {{ interval: 0, fontSize: 12 }} }},
+      series: [{{ type: 'bar', data: rev.map(function(e) {{ return e[1]; }}),
+        itemStyle: {{ color: ACCENT, borderRadius: [0, 3, 3, 0] }},
+        label: {{ show: true, position: 'right' }} }}]
+    }};
+  }}
+  function pieOption(entries, colorMap) {{
+    if (!entries.length) return null;
+    return {{
+      tooltip: {{ trigger: 'item', formatter: '{{b}}: {{c}} ({{d}}%)' }},
+      legend: {{ orient: 'horizontal', bottom: 0, type: 'scroll' }},
+      series: [{{
+        type: 'pie', radius: ['40%', '70%'], center: ['50%', '45%'],
+        avoidLabelOverlap: true,
+        itemStyle: {{ borderRadius: 4, borderColor: '#fff', borderWidth: 2 }},
+        label: {{ show: true, formatter: '{{b}}\\n{{d}}%', fontSize: 11 }},
+        data: entries.map(function(e) {{
+          return {{ name: e[0], value: e[1],
+            itemStyle: {{ color: (colorMap || {{}})[e[0]] || '#9CA3AF' }} }};
+        }})
+      }}]
+    }};
+  }}
+  function heatmapOption(filtered) {{
+    if (!filtered.length) return null;
+    var indCounts = counter(filtered.map(function(r) {{ return r.industry; }}));
+    var capCounts = {{}};
+    filtered.forEach(function(r) {{ r.capabilities.forEach(function(c) {{
+      capCounts[c] = (capCounts[c] || 0) + 1; }}); }});
+    var industries = topEntries(indCounts, 8).map(function(e) {{ return e[0]; }});
+    var capabilities = topEntries(capCounts, 10).map(function(e) {{ return e[0]; }}).reverse();
+    var data = [];
+    var maxV = 1;
+    capabilities.forEach(function(cap, ri) {{
+      industries.forEach(function(ind, ci) {{
+        var v = filtered.filter(function(r) {{
+          return r.industry === ind && r.capabilities.indexOf(cap) !== -1;
+        }}).length;
+        data.push([ci, ri, v]);
+        if (v > maxV) maxV = v;
+      }});
+    }});
+    return {{
+      tooltip: {{ position: 'top', formatter: '<b>{{c2}}</b> companies' }},
+      grid: {{ left: 180, right: 24, top: 24, bottom: 80, containLabel: true }},
+      xAxis: {{ type: 'category', data: industries, splitArea: {{ show: true }},
+        axisLabel: {{ interval: 0, rotate: 25, fontSize: 11 }} }},
+      yAxis: {{ type: 'category', data: capabilities, splitArea: {{ show: true }},
+        axisLabel: {{ interval: 0, fontSize: 11 }} }},
+      visualMap: {{ min: 0, max: maxV, calculable: true, orient: 'horizontal',
+        left: 'center', bottom: 0,
+        inRange: {{ color: ['#FFF7ED', '#FED7AA', ACCENT, '#7C2D12'] }} }},
+      series: [{{ name: 'companies', type: 'heatmap', data: data,
+        label: {{ show: true, fontSize: 10 }},
+        emphasis: {{ itemStyle: {{ shadowBlur: 8, shadowColor: 'rgba(0,0,0,0.2)' }} }} }}]
+    }};
+  }}
+
+  function applyFilter(filter) {{
+    return rows.filter(function(r) {{
+      if (filter.industry && r.industry !== filter.industry) return false;
+      if (filter.capability && r.capabilities.indexOf(filter.capability) === -1) return false;
+      if (filter.oss && r.oss !== filter.oss) return false;
+      if (filter.hasTraction && r.traction_count === 0) return false;
+      if (filter.q) {{
+        var hay = (r.slug + ' ' + r.name + ' ' + r.tagline).toLowerCase();
+        if (hay.indexOf(filter.q) === -1) return false;
+      }}
+      return true;
+    }});
+  }}
+
+  function recompute(filter) {{
+    var filtered = applyFilter(filter);
+    var countEl = document.getElementById('filter-count');
+    if (countEl) countEl.textContent = String(filtered.length);
+
+    if (instances['chart-confidence']) {{
+      var cc = counter(filtered.map(function(r) {{ return r.confidence; }}));
+      var opt = pieOption(topEntries(cc),
+        {{ high: '#15803D', medium: '#F59E0B', low: '#B91C1C' }});
+      if (opt) instances['chart-confidence'].setOption(opt, true);
+    }}
+    if (instances['chart-industry']) {{
+      var ic = counter(filtered.map(function(r) {{ return r.industry; }}));
+      var iopt = barOption(topEntries(ic, 12));
+      if (iopt) instances['chart-industry'].setOption(iopt, true);
+    }}
+    if (instances['chart-capability']) {{
+      var hopt = heatmapOption(filtered);
+      if (hopt) instances['chart-capability'].setOption(hopt, true);
+    }}
+    if (instances['chart-stack']) {{
+      var sc = {{}};
+      filtered.forEach(function(r) {{ r.tech_stack.forEach(function(s) {{
+        sc[s] = (sc[s] || 0) + 1; }}); }});
+      var sopt = barOption(topEntries(sc, 10));
+      if (sopt) instances['chart-stack'].setOption(sopt, true);
+    }}
+    if (instances['chart-oss']) {{
+      var oc = counter(filtered.map(function(r) {{ return r.oss; }}));
+      var oopt = pieOption(topEntries(oc), OSS_COLORS);
+      if (oopt) instances['chart-oss'].setOption(oopt, true);
+    }}
+  }}
+
+  function readFilter() {{
+    return {{
+      q: (document.getElementById('f-q').value || '').trim().toLowerCase(),
+      industry: document.getElementById('f-industry').value,
+      capability: document.getElementById('f-capability').value,
+      oss: document.getElementById('f-oss').value,
+      hasTraction: document.getElementById('f-traction').checked
+    }};
+  }}
+  function onChange() {{ recompute(readFilter()); }}
+  ['f-q', 'f-industry', 'f-capability', 'f-oss', 'f-traction'].forEach(function(id) {{
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', onChange);
+    el.addEventListener('change', onChange);
+  }});
+  var resetBtn = document.getElementById('f-reset');
+  if (resetBtn) {{
+    resetBtn.addEventListener('click', function() {{
+      ['f-q', 'f-industry', 'f-capability', 'f-oss'].forEach(function(id) {{
+        var el = document.getElementById(id);
+        if (el) el.value = '';
+      }});
+      var t = document.getElementById('f-traction');
+      if (t) t.checked = false;
+      onChange();
+    }});
+  }}
 }})();
 </script>
 </body>
@@ -609,8 +883,16 @@ def render(
     analyses: list[CompanyAnalysis] | None = None,
     broken_link_count: int = 0,
     allowed_dead_links: bool = False,
+    write_company_pages: bool = True,
 ) -> Path:
-    """Render the dashboard. ``analyses`` triggers enriched-mode charts."""
+    """Render the dashboard. ``analyses`` triggers enriched-mode charts.
+
+    When ``analyses`` is provided and ``write_company_pages`` is True (the
+    default), per-company static pages are also written under
+    ``output_path.parent / "companies"``. Set ``write_company_pages=False``
+    if you only want the main dashboard regenerated (for example, during a
+    test run or when iterating on dashboard.py).
+    """
     if coverage.coverage_pct_of_official is not None:
         headline_pct = coverage.coverage_pct_of_official
         denominator = coverage.yc_official_count
@@ -621,6 +903,12 @@ def render(
     analysis_html, analysis_options = _analysis_section(analyses, companies, coverage)
     yc_extra_html, yc_options = _yc_extra_charts(coverage, companies)
     all_options = {**analysis_options, **yc_options}
+
+    company_rows: list[dict[str, Any]] = []
+    filter_bar_html = ""
+    if analyses:
+        company_rows = _build_company_rows(analyses, companies)
+        filter_bar_html = _filter_bar(company_rows)
 
     methodology_lines = [
         f"Data fetched from {coverage.source} (last upstream refresh: {coverage.source_last_updated}).",
@@ -666,6 +954,7 @@ def render(
         tier_c=coverage.tier_c_count,
         coverage_alert=_coverage_alert(coverage),
         link_verify_banner=_link_verify_banner(broken_link_count, allowed_dead_links),
+        filter_bar=filter_bar_html,
         analysis_section=analysis_html,
         yc_extra_section=yc_extra_html,
         dropped_table=_dropped_table(coverage),
@@ -678,10 +967,19 @@ def render(
         # The only escape needed is to prevent a literal "</script" inside the
         # JSON from closing the script tag prematurely.
         chart_options_json=json.dumps(all_options).replace("</script", r"<\/script"),
+        companies_json=json.dumps(company_rows).replace("</script", r"<\/script"),
     )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(html)
+
+    if analyses and write_company_pages:
+        # Lazy import to avoid a hard dependency cycle if dashboard_company
+        # ever needs to import from dashboard.
+        from ycai.dashboard_company import render_company_pages
+
+        render_company_pages(coverage, companies, analyses, output_dir=output_path.parent)
+
     return output_path
 
 

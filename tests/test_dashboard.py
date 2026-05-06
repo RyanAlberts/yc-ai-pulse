@@ -100,8 +100,12 @@ def test_coverage_only_dashboard_renders_yc_industry_chart(tmp_path: Path) -> No
     out = render(coverage, companies, tmp_path / "dashboard.html")
     html = out.read_text()
     assert "Industry distribution (YC-supplied" in html
-    # No LLM-derived charts in coverage-only mode.
-    assert "chart-capability" not in html
+    # No LLM-derived chart canvases in coverage-only mode (the recompute JS
+    # references the chart ids by name, so we check for the actual canvas div).
+    assert 'id="chart-capability"' not in html
+    assert 'id="chart-industry"' not in html
+    # Filter bar only renders when analyses are present.
+    assert 'id="filter-bar"' not in html
     # Headline shows official-count denominator.
     assert "of Winter 2026" in html
     # Dropped register named individually.
