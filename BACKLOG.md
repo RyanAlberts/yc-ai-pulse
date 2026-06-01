@@ -32,3 +32,5 @@ _(empty — moves here when the backing PR merges)_
 ## Babysitter self-disable note
 
 **2026-05-04: v0.1 babysitter auto-paused.** `v0.1.0` was tagged on 2026-05-01 and has shipped (v0.2.0 also released 2026-05-02). The babysitter pre-check stop condition was met. Tracking issue: #20. Do not re-enable this babysitter for the v0.1 milestone; start a new one for v0.2 or later milestones if needed.
+
+**2026-06-01: v0.1 babysitter auto-paused (repeat run).** Pre-check stop condition triggered again — `v0.1.0` tag confirmed present. No audit checks were run. Comment posted to #20.
