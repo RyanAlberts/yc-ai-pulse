@@ -1,0 +1,35 @@
+{
+  "andreessen": {
+    "figure_key": "andreessen",
+    "figure_name": "Marc Andreessen",
+    "affiliation": "a16z",
+    "paragraph": "Sixty of these 105 companies ship agents that take autonomous action in the world\u2014this is not a thesis, it is a market. Mendral has had 104 autonomous fixes accepted into production codebases in a single month across 240,000 CI runs per week; that is not a demo, that is a replacement function for an entire class of DevOps labor. Chamber is squeezing 50% more throughput from existing GPU clusters by acting as an autonomous AIOps layer between ML teams and their hardware\u2014compressing the capital cost of the compute buildout that every enterprise is now obligated to fund. Laurence is running a quantitative hedge-fund strategy against Amazon PPC at scale, automating millions in live ad spend and cutting cost-of-sales by 40% for merchants who cannot hire the quant teams that built it. The pattern is identical in each case: a function that previously required a human\u2014or an entire specialized team\u2014is now executed by software at continuous scale with no human in the loop. This is what industrial transitions look like from the inside. The correct allocation response is concentration, not the comfortable diversification across 105 bets that mistakes coverage for strategy\u2014the same instinct would have funded twelve search engines in 1998. Those who argue the data counsels patience or a redistribution of weight toward hard-asset or non-AI plays are reading a different document than this one. The risk absent from every pitch deck here, and unpriced by the traction signals, is regulatory capture: the moment a mandatory compliance layer lands, incumbents freeze and insurgents die. Concentration in the current winners is the only hedge against that asymmetric tail.",
+    "cited_slugs": [
+      "mendral",
+      "chamber",
+      "laurence"
+    ]
+  },
+  "dalio": {
+    "figure_key": "dalio",
+    "figure_name": "Ray Dalio",
+    "affiliation": "Bridgewater",
+    "paragraph": "Sixty of these 105 companies build agents \u2014 that ratio reads less like an innovation wave and more like a late-cycle crowding signal. When the debt supercycle turns, commoditized software margins compress faster than industrial ones, and most of this cohort is competing for the same enterprise automation budget. Laurence automates millions of dollars in live Amazon ad spend using quantitative techniques borrowed from hedge-fund math that genuinely deliver \u2014 a 40% reduction in advertising cost of sales is a real operating number \u2014 but its entire value chain runs on Amazon's platform goodwill and on dollar-denominated credit availability; a monetary regime shift or a single antitrust ruling resets that math overnight. Constellation Space, by contrast, was built by people who shipped at SpaceX, Blue Origin, and NASA, and it reroutes satellite traffic autonomously with zero data loss \u2014 that is critical infrastructure embedded in the geopolitical realignment toward space dominance, where state procurement budgets and strategic necessity underwrite demand independent of rate cycles. Kyten Technologies ships 5,000-plus aerospace-grade battery packs into orbit and carries no AI classification at all, which is precisely why it belongs in a diversified book: it is a physical-world, defense-adjacent manufacturer whose revenues are determined by allied-capital procurement, not by OpenAI API pricing. An investor who concentrates capital in the 60 agent companies is implicitly betting that this monetary regime holds and that no major power disrupts the cloud layer those agents depend on \u2014 both heroic assumptions that the historical record of regime transitions forbids. The correct allocation weights dual-use physical infrastructure heavily, treats the agent cluster as a satellite position sized to its optionality, and diversifies the remainder across biological AI and energy to isolate from any single cycle.",
+    "cited_slugs": [
+      "laurence",
+      "constellation-space",
+      "kyten-technologies"
+    ]
+  },
+  "acemoglu": {
+    "figure_key": "acemoglu",
+    "figure_name": "Daron Acemoglu",
+    "affiliation": "MIT, 2024 Nobel laureate in Economics",
+    "paragraph": "This cohort is a controlled experiment in labor displacement without a credible reabsorption mechanism, and capital allocators who read it as a productivity windfall are misreading the distributional signal. Consider what these companies actually do: Vela automates the negotiation and booking of thousands of interviews per week, eliminating scheduling coordinators; Mendral accepted 104 CI fixes in a single month with no human in the loop, displacing the junior engineers who historically caught those failures; Panta runs commercial insurance brokerage at software margins by removing the back-office workers who priced and bound those policies. Across 60 agent-focused companies in this cohort of 105, the operating thesis is identical \u2014 replace a category of human judgment with a model call. The aggregate productivity gain, if realized at all, will be narrowly captured by the firms deploying these tools and the equity holders of the tools themselves, not by the workers whose tasks are absorbed. My estimate of under 0.7% total-factor productivity growth over the next decade assumes significant friction in worker reabsorption; this cohort accelerates that friction without addressing it. The capital-allocation prescription is therefore not to concentrate into the agent layer \u2014 which is where Andreessen-style growth investors and effective-accelerationist readers of this same data would pile in \u2014 but to weight redistributive-risk exposure heavily: infrastructure and policy-adjacent positions that benefit from the regulatory and social response to displacement, and to discount agent-company valuations by the probability that political backlash compresses their addressable market before the productivity gains compound.",
+    "cited_slugs": [
+      "vela",
+      "mendral",
+      "panta"
+    ]
+  }
+}
