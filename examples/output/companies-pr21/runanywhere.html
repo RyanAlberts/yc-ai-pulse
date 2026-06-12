@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>RunAnywhere (runanywhere) — yc-ai-pulse</title>
+<style>
+  :root {
+    --bg: #F5F1E8;
+    --fg: #1B1B1B;
+    --muted: #6B6B6B;
+    --accent: #D24E01;
+    --line: #DDD8CB;
+    --ok: #15803D;
+    --warn: #B45309;
+    --bad: #B91C1C;
+  }
+  body { background: var(--bg); color: var(--fg);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Source Serif Pro", Georgia, serif;
+    margin: 0; padding: 0; }
+  .wrap { max-width: 920px; margin: 32px auto; padding: 0 24px; }
+  h1 { font-size: 32px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 32px 0 12px; }
+  h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted);
+    margin: 20px 0 8px; }
+  .subtitle { color: var(--muted); margin: 0 0 24px; }
+  .nav { font-size: 14px; margin: 0 0 24px; }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px;
+    background: #FFF; border: 1px solid var(--line); margin: 0 4px 4px 0; }
+  .pill-accent { background: #FED7AA; border-color: var(--accent); color: #7C2D12; }
+  .pill-ok { background: #DCFCE7; border-color: var(--ok); color: #14532D; }
+  .pill-warn { background: #FEF3C7; border-color: var(--warn); color: #78350F; }
+  .pill-bad { background: #FEE2E2; border-color: var(--bad); color: #7F1D1D; }
+  .card { background: white; border: 1px solid var(--line); padding: 20px 24px; margin: 0 0 16px;
+    border-radius: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; font-size: 14px; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left;
+    vertical-align: top; }
+  th { background: #FAFAFA; font-weight: 600; font-size: 13px; text-transform: uppercase;
+    letter-spacing: 0.4px; color: var(--muted); }
+  td.detail { font-size: 13px; }
+  td.detail a { color: var(--accent); }
+  .quote { font-style: italic; color: #444; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+  .meta-row .item { background: #FFF; border: 1px solid var(--line); padding: 8px 14px;
+    border-radius: 4px; min-width: 120px; }
+  .meta-row .item .label { color: var(--muted); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.4px; }
+  .meta-row .item .value { font-weight: 600; margin-top: 2px; }
+  .source-list { font-size: 13px; }
+  .source-list li { word-break: break-all; }
+  footer { color: var(--muted); font-size: 13px; margin: 48px 0 24px;
+    padding-top: 24px; border-top: 1px solid var(--line); }
+  input[type=search] { width: 100%; max-width: 400px; padding: 8px 12px;
+    border: 1px solid var(--line); border-radius: 4px; font-size: 15px; }
+  .siblings { font-size: 13px; }
+  .siblings a { color: var(--accent); margin-right: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="nav">
+    <a href="../dashboard.html">← Cohort dashboard</a> ·
+    <a href="index.html">Browse all companies</a>
+  </p>
+  <h1>RunAnywhere</h1>
+  <p class="subtitle">YC slug <code>runanywhere</code> · Winter 2026</p>
+
+  <div class="card">
+    <p class="quote" style="margin: 0;">On-device AI inference runtime + SDK that cuts cloud costs to zero — custom kernels, fleet control plane, enterprise observability.</p>
+  </div>
+
+  <div class="meta-row">
+    <div class="item"><div class="label">Industry</div><div class="value">AI Infrastructure</div></div>
+    <div class="item"><div class="label">OSS posture</div><div class="value"><span class="pill pill-ok">source-available</span></div></div>
+    <div class="item"><div class="label">Confidence</div><div class="value"><span class="pill pill-ok">confidence: high</span></div></div>
+  </div>
+
+  <h2>Capabilities</h2>
+  <p><span class="pill pill-accent">inference-infra</span><span class="pill pill-accent">speech</span><span class="pill pill-accent">voice</span><span class="pill pill-accent">vision</span><span class="pill pill-accent">multimodal</span></p>
+
+  <h3>Secondary industries</h3><p><span class="pill">Developer Tools</span><span class="pill">Hardware</span></p>
+
+  <h2>Tech stack</h2>
+  <p><span class="pill">qwen</span><span class="pill">custom-model</span></p>
+
+  <h3>OSS evidence</h3><p><a href="https://www.runanywhere.ai/">https://www.runanywhere.ai/</a></p>
+
+  <h2>Traction signals</h2>
+  <table><thead><tr><th>Kind</th><th>Detail (verbatim)</th><th>Link</th></tr></thead><tbody><tr><td><span class="pill">github-stars</span></td><td class="detail quote">10.4K</td><td class="detail"><a href="https://www.runanywhere.ai/">source</a></td></tr><tr><td><span class="pill">funding-round</span></td><td class="detail quote">Backed by Y Combinator</td><td class="detail"><a href="https://www.runanywhere.ai/">source</a></td></tr><tr><td><span class="pill">customer-logo</span></td><td class="detail quote">PickleRite — a pickleball performance tracker — runs a specialized LLM entirely on-device using RunAnywhere SDK</td><td class="detail"><a href="https://www.runanywhere.ai/blog">source</a></td></tr></tbody></table>
+
+  <h2>Sources</h2>
+  <ul class="source-list">
+    <li><a href="https://www.runanywhere.ai/">https://www.runanywhere.ai/</a></li><li><a href="https://www.runanywhere.ai/about">https://www.runanywhere.ai/about</a></li><li><a href="https://www.runanywhere.ai/research">https://www.runanywhere.ai/research</a></li><li><a href="https://www.runanywhere.ai/blog">https://www.runanywhere.ai/blog</a></li>
+  </ul>
+
+  <h3>Why this classification</h3><p class="quote">RunAnywhere builds 'custom kernels, operator fusion, unified memory optimization' inference engines (MetalRT) and a cross-platform SDK — squarely AI Infrastructure. The 'Open by default' stance, 10.4K GitHub stars, and 'Open Source' YC tag confirm meaningful open posture; multimodal coverage (LLM decode, speech-to-text, speech-to-speech, vision language models) drives the ai_capability set.</p>
+
+  <h3>Other AI Infrastructure companies in this batch</h3><p class="siblings"><a href="arc-prize-foundation.html"><code>arc-prize-foundation</code></a> <a href="bits-2.html"><code>bits-2</code></a> <a href="burt.html"><code>burt</code></a> <a href="chamber.html"><code>chamber</code></a> <a href="compresr.html"><code>compresr</code></a> <a href="cumulus-labs.html"><code>cumulus-labs</code></a> <a href="luel.html"><code>luel</code></a> <a href="mantis-biotechnology.html"><code>mantis-biotechnology</code></a> <a href="oximy.html"><code>oximy</code></a> <a href="polymath.html"><code>polymath</code></a> <a href="salus.html"><code>salus</code></a> <a href="sentrial.html"><code>sentrial</code></a></p>
+
+  <footer>
+    <p>This page is generated from <code>analyses.jsonl</code> by yc-ai-pulse.
+    Every field above is the LLM's classification with sources cited; nothing is invented.
+    See <a href="../dashboard.html#dropped">the dropped register</a> for excluded companies.</p>
+    <p style="margin-top: 8px;">
+    Source code: <a href="https://github.com/RyanAlberts/yc-ai-pulse">github.com/RyanAlberts/yc-ai-pulse</a>
+    </p>
+  </footer>
+</div>
+</body>
+</html>
