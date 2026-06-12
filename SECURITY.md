@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-If you believe you have found a security vulnerability in `yc-ai-pulse`, please **do not** open a public GitHub issue. Instead, email **25306145+RyanAlberts@users.noreply.github.com** with details.
+If you believe you have found a security vulnerability in `yc-ai-pulse`, please **do not** open a public GitHub issue. Instead, use **GitHub’s private vulnerability reporting** ("Security" → "Report a vulnerability" on this repository) with details.
 
 Reasonable response within 7 days. Acknowledgement within 30 days where possible.
 
