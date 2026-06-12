@@ -27,6 +27,7 @@ from urllib.robotparser import RobotFileParser
 
 import httpx
 
+from ycai.safe_http import is_safe_external_url
 from ycai.sanitizer import strip_pii
 
 log = logging.getLogger(__name__)
@@ -174,7 +175,14 @@ async def _fetch_one(
     max_bytes: int,
     timeout: float,
 ) -> CrawledPage | None:
-    """Fetch one page. Return None on any error."""
+    """Fetch one page. Return None on any error.
+
+    Refuses internal targets (loopback, RFC1918, link-local, cloud
+    metadata) before the network call.
+    """
+    if not is_safe_external_url(url):
+        log.debug("crawler refusing unsafe URL: %s", url)
+        return None
     async with semaphore:
         try:
             async with client.stream("GET", url, timeout=timeout, follow_redirects=True) as resp:
@@ -186,7 +194,12 @@ async def _fetch_one(
                     return None
                 buf = bytearray()
                 async for chunk in resp.aiter_bytes():
-                    buf.extend(chunk)
+                    # Truncate on overshoot so a single oversized chunk can't
+                    # blow past max_bytes by an arbitrary amount.
+                    remaining = max_bytes - len(buf)
+                    if remaining <= 0:
+                        break
+                    buf.extend(chunk[:remaining])
                     if len(buf) >= max_bytes:
                         break
                 html = bytes(buf[:max_bytes]).decode("utf-8", errors="replace")
@@ -221,6 +234,8 @@ async def crawl_company(
     """
     if not homepage or not homepage.startswith(("http://", "https://")):
         return CrawlResult(homepage=homepage, error="invalid-homepage-url")
+    if not is_safe_external_url(homepage):
+        return CrawlResult(homepage=homepage, error="unsafe-homepage-url")
 
     owns_client = client is None
     client = client or httpx.AsyncClient(

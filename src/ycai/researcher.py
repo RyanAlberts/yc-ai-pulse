@@ -24,6 +24,7 @@ from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
+from urllib.parse import urlparse
 
 from pydantic import ValidationError
 
@@ -372,9 +373,33 @@ def _looks_like_input_url(url: str, company: RawCompany, extra_allowed: list[str
 
     ``extra_allowed`` is the list of URLs reached via the depth=1 crawl. The
     model is allowed to cite any of them.
+
+    Compares hosts (case-insensitive, www-stripped), not raw string prefixes.
+    A naive ``startswith`` check on ``"https://example.com"`` accepts
+    ``"https://example.com.attacker.com/x"`` — the host check rejects that
+    because ``example.com.attacker.com`` is not the same host as
+    ``example.com``.
     """
-    allowed = [company.website, company.url, *(extra_allowed or [])]
-    return any(url.startswith(allowed_url.rstrip("/")) for allowed_url in allowed if allowed_url)
+
+    def _host(u: str) -> str:
+        try:
+            host = (urlparse(u).hostname or "").lower()
+        except ValueError:
+            return ""
+        return host[4:] if host.startswith("www.") else host
+
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return False
+    if parsed.scheme not in ("http", "https"):
+        return False
+    target_host = _host(url)
+    if not target_host:
+        return False
+    allowed_hosts = {_host(u) for u in (company.website, company.url, *(extra_allowed or [])) if u}
+    allowed_hosts.discard("")
+    return target_host in allowed_hosts
 
 
 def _validate_sources(analysis: CompanyAnalysis, company: RawCompany, extra_allowed: list[str] | None = None) -> bool:
@@ -479,15 +504,18 @@ def _log_raw_failure(path: Path | None, *, slug: str, reason: str, raw: str) -> 
     """Append a raw failure record to ``path`` (JSONL). No-op when path is None.
 
     Truncates raw payloads at 4000 chars so the file stays small but a
-    representative sample is captured for B008-style debugging.
+    representative sample is captured for B008-style debugging. The raw
+    payload is run through ``strip_pii`` first — defense-in-depth in case
+    a model ever echoes a credential or PII back in its output.
     """
     if path is None:
         return
+    sanitized = strip_pii((raw or "")[:4000])
     record = {
         "ts": datetime.now(UTC).isoformat(),
         "slug": slug,
         "reason": reason,
-        "raw": (raw or "")[:4000],
+        "raw": sanitized,
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a") as f:

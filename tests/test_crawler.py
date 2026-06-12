@@ -184,6 +184,20 @@ def test_crawl_company_handles_invalid_url_gracefully() -> None:
     assert result.pages == []
 
 
+def test_crawl_company_refuses_loopback_url() -> None:
+    """SSRF guard: a homepage pointing at loopback must be rejected before fetch."""
+    result = asyncio.run(crawl_company("http://127.0.0.1:8080/"))
+    assert result.error == "unsafe-homepage-url"
+    assert result.pages == []
+
+
+def test_crawl_company_refuses_metadata_endpoint() -> None:
+    """SSRF guard: cloud metadata endpoints must be rejected."""
+    result = asyncio.run(crawl_company("http://169.254.169.254/latest/meta-data/"))
+    assert result.error == "unsafe-homepage-url"
+    assert result.pages == []
+
+
 def test_crawl_company_skips_non_html_content_type() -> None:
     routes = {
         "https://acme.example/robots.txt": (200, "text/plain", "User-agent: *\nAllow: /\n"),

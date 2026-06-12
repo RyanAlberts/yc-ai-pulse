@@ -11,9 +11,11 @@ from typing import Literal
 
 import httpx
 
+from ycai.safe_http import is_safe_external_url
+
 log = logging.getLogger(__name__)
 
-Status = Literal["ok", "dead", "slow", "redirect", "error"]
+Status = Literal["ok", "dead", "slow", "redirect", "error", "blocked"]
 
 DEFAULT_TIMEOUT = 6.0
 DEFAULT_CONCURRENCY = 16
@@ -22,7 +24,14 @@ MAX_REDIRECTS = 3
 
 
 async def _check_one(client: httpx.AsyncClient, url: str) -> tuple[str, Status, str]:
-    """Return ``(url, status, reason)``. Never raises."""
+    """Return ``(url, status, reason)``. Never raises.
+
+    Refuses to fetch internal targets (loopback, RFC1918, link-local,
+    cloud metadata) and reports them as ``blocked`` so the caller can
+    distinguish ``blocked`` (we refused) from ``dead`` (the server said no).
+    """
+    if not is_safe_external_url(url):
+        return url, "blocked", "internal target"
     try:
         # HEAD first (cheaper). Some hosts 405 HEAD — fall back to GET.
         try:
@@ -84,6 +93,7 @@ def split_by_status(
         "slow": [],
         "redirect": [],
         "error": [],
+        "blocked": [],
     }
     for url, (status, reason) in statuses.items():
         out[status].append((url, reason))
